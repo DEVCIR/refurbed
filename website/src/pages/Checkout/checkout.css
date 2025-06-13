@@ -1,0 +1,96 @@
+/* Checkout process animations and styles */
+
+@keyframes shake {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    20%, 60% {
+      transform: translateX(-5px);
+    }
+    40%, 80% {
+      transform: translateX(5px);
+    }
+  }
+  
+  .shake {
+    animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+  
+  /* Transitions for form elements */
+  .form-control {
+    transition: all 0.3s ease;
+  }
+  
+  /* Payment processing animation */
+  @keyframes pulse {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    }
+    
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    }
+    
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+  }
+  
+  .pulse {
+    animation: pulse 2s infinite;
+  }
+  
+  /* Print-specific styles for order confirmation */
+  @media print {
+    body {
+      background-color: white;
+      color: black;
+    }
+    
+    .no-print {
+      display: none;
+    }
+    
+    .print-only {
+      display: block;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 100%;
+      padding: 0;
+      margin: 0;
+    }
+  }
+  
+  /* Custom credit card input styling */
+  .card-input-focused {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1px #3b82f6;
+  }
+  
+  /* Success animation */
+  @keyframes checkmark {
+    0% {
+      stroke-dashoffset: 100;
+    }
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+  
+  .checkmark {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: checkmark 1s ease-in-out forwards;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .payment-grid {
+      grid-template-columns: 1fr;
+    }
+  }
