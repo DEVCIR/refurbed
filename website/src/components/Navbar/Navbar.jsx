@@ -26,10 +26,10 @@ const Navbar = () => {
             <Link to="/products" className="hover:text-custom-pri-light">
               products
             </Link>
-            <Link to="/" className="hover:text-custom-pri-light">
+            <Link to="/sell" className="hover:text-custom-pri-light">
               Sell
             </Link>
-            <Link to="/" className="hover:text-custom-pri-light">
+            <Link to="/faq" className="hover:text-custom-pri-light">
               Help
             </Link>
             <Link to="/blog" className="hover:text-custom-pri-light">

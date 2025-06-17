@@ -1,0 +1,1 @@
+import{j as s}from"./index-P9AEKrjw.js";const i=t=>{const{children:o,onclick:r}=t;return s.jsx("button",{onClick:r,className:"px-6 py-3 text-sm font-semibold text-custom-pri-light border-1 border-custom-pri-light rounded-lg hover:border-custom-pri transition duration-200",children:o})};export{i as B};

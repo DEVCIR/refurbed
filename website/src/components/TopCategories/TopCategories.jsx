@@ -41,7 +41,7 @@ const CategoryCard = ({
 
 const topCategoriesData = [
   {
-    to: "/category/iphones",
+    to: "/c/iphones",
     imageSrc: Iphones,
     imageAlt: "iPhones collection",
     title: "iPhones",
@@ -49,7 +49,7 @@ const topCategoriesData = [
     className: "w-[98%] mx-auto", // Specific styling for these two cards
   },
   {
-    to: "/category/samsung",
+    to: "/c/samsung",
     imageSrc: Samsung,
     imageAlt: "Samsung phones collection",
     title: "Samsung phones",
@@ -60,35 +60,35 @@ const topCategoriesData = [
 
 const smallerCategoriesData = [
   {
-    to: "/category/macbooks",
+    to: "/c/macbooks",
     imageSrc: Macbook,
     imageAlt: "MacBooks collection",
     title: "MacBooks",
     aspectRatioClass: "aspect-square",
   },
   {
-    to: "/category/lenovo",
+    to: "/c/lenovo",
     imageSrc: Lenovo,
     imageAlt: "Lenovo collection",
     title: "Lenovo",
     aspectRatioClass: "aspect-square",
   },
   {
-    to: "/category/watches",
+    to: "/c/watches",
     imageSrc: Apple,
     imageAlt: "Apple Watches collection",
     title: "Apple Watches",
     aspectRatioClass: "aspect-square",
   },
   {
-    to: "/category/ipads",
+    to: "/c/ipads",
     imageSrc: Ipad,
     imageAlt: "iPads collection",
     title: "iPads",
     aspectRatioClass: "aspect-square",
   },
   {
-    to: "/category/airpods",
+    to: "/c/airpods",
     imageSrc: Airpod,
     imageAlt: "AirPods collection",
     title: "AirPods",

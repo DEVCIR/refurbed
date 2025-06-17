@@ -1,11 +1,9 @@
 // import { useEffect } from "react";
 // import iphoneImg from "../../assets/product-images/iphone.webp";
 
-// import { BASE_URL } from "../../service";
-
+// import { API_BASE_URL } from "../../service";
 
 // export const fetchAllProducts = () => {
- 
 
 //     const allProducts = [
 //         {
@@ -601,57 +599,39 @@
 //     return allProducts
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
 import { useEffect } from "react";
-import { BASE_URL } from "../../service";
+import { API_BASE_URL } from "../../service";
 
 export const fetchAllProducts = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/inventory`);
-    
+    const response = await fetch(`${API_BASE_URL}/inventory`);
+
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    
+
     const jsonData = await response.json();
     const apiProducts = jsonData.data.data;
-    
+
     // Map API data to the format your application expects
     const mappedProducts = apiProducts.map((item, index) => {
       // Extract product and variant information
       const { variant, supplier } = item;
       const { product } = variant;
-      
+
       return {
         id: item.id,
         name: product.model_name,
         color: variant.color,
         condition: item.condition,
         oldPrice: parseFloat(item.selling_price),
-        currentPrice: item.discount_price 
-          ? item.discount_type === "fixed" 
+        currentPrice: item.discount_price
+          ? item.discount_type === "fixed"
             ? parseFloat(item.selling_price) - parseFloat(item.discount_price)
-            : parseFloat(item.selling_price) * (1 - parseFloat(item.discount_price) / 100)
+            : parseFloat(item.selling_price) *
+              (1 - parseFloat(item.discount_price) / 100)
           : parseFloat(item.selling_price),
         material: "Aluminum", // Default if not provided in API
         image: product.feature_imageUrl,
@@ -666,10 +646,10 @@ export const fetchAllProducts = async () => {
         stockStatus: item.stock_status,
         location: item.location,
         imei: item.imei,
-        serialNo: item.serial_no
+        serialNo: item.serial_no,
       };
     });
-    
+
     return mappedProducts;
   } catch (error) {
     console.error("Error fetching products:", error);

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FadeUpAll } from "../../animations/gsapAnimations";
 import { toast } from "sonner";
 import axios from "axios";
-import { BASE_URL } from "../../service";
+import { API_BASE_URL } from "../../service";
 import playStoreLogo from "../../assets/logos/play_store.svg";
 import appStoreLogo from "../../assets/logos/app_store.svg";
 
@@ -35,7 +35,7 @@ const NewsLetter = () => {
 
     try {
       // First API call - Subscribe to newsletter
-      const response = await axios.post(`${BASE_URL}/newsletter`, {
+      const response = await axios.post(`${API_BASE_URL}/newsletter`, {
         email,
         name,
       });
@@ -44,12 +44,12 @@ const NewsLetter = () => {
         // Second API call - Send confirmation email
         try {
           const emailResponse = await axios.post(
-            `${BASE_URL}/sendsubscriptionmail`,
+            `${API_BASE_URL}/sendsubscriptionmail`,
             {
               email,
               name,
               role: "customer", // Set the role as customer
-            },
+            }
           );
 
           if (emailResponse.status === 200) {

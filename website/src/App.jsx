@@ -12,8 +12,8 @@ import Footer from "./components/Footer/Footer";
 // Lazy-loaded pages
 const Home = lazy(() => import("./pages/Home/Home"));
 const Products = lazy(() => import("./pages/Products/Products"));
-const ProductDetails = lazy(() =>
-  import("./pages/ProductDetails/ProductDetails")
+const ProductDetails = lazy(
+  () => import("./pages/ProductDetails/ProductDetails"),
 );
 const Cart = lazy(() => import("./pages/Cart/Cart"));
 const Contact = lazy(() => import("./pages/Contact/Contact"));
@@ -23,14 +23,15 @@ const Blog = lazy(() => import("./pages/Blog/Blog"));
 const Account = lazy(() => import("./pages/Accounts/Account"));
 const Checkout = lazy(() => import("./pages/Checkout/Checkout"));
 const PaymentPage = lazy(() => import("./pages/Checkout/PaymentPage"));
-const OrderSuccessPage = lazy(() =>
-  import("./pages/Checkout/OrderSuccessPage")
+const OrderSuccessPage = lazy(
+  () => import("./pages/Checkout/OrderSuccessPage"),
 );
 const Accessories = lazy(() => import("./pages/Accessories/Accessories"));
 const Sell = lazy(() => import("./pages/Sell/Sell"));
 const Faq = lazy(() => import("./pages/Faq/Faq"));
+const Benefits = lazy(() => import("./pages/Benefits/Benefits"));
 
-function App() {
+const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -50,7 +51,7 @@ function App() {
   const location = useLocation();
   const hideHeaderFooterRoutes = ["/cart"];
   const shouldHideHeaderFooter = hideHeaderFooterRoutes.includes(
-    location.pathname
+    location.pathname,
   );
 
   return (
@@ -60,13 +61,15 @@ function App() {
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/benefits" element={<Benefits />} />
           <Route path="/products" element={<Products />} />
           <Route path="/p/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/c/:category" element={<Categories />} />
           <Route path="/claim_refund" element={<ClaimRefund />} />
-          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog" element={<Blog CurrentView="list" />} />
+          <Route path="/blog/admin" element={<Blog CurrentView="admin" />} />
           <Route path="/account" element={<Account />} />
           <Route path="/sell" element={<Sell />} />
           <Route path="/faq" element={<Faq />} />
@@ -79,6 +82,6 @@ function App() {
       {!shouldHideHeaderFooter && <Footer />}
     </>
   );
-}
+};
 
 export default App;

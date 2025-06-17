@@ -24,7 +24,7 @@ const Footer = () => {
     <footer className="bg-black text-custom-light-text">
       <div className="w-[95%] py-8 md:py-12">
         {/* Footer */}
-        <div className="max-w-7xl mx-auto">
+        <div className="w-11/12 md:w-10/12 lg:w-8/12 mx-auto">
           {/* Top section with logo and social links */}
           <div className="flex justify-between items-center mb-12">
             <div className="text-lg sm:text-xl font-light text-custom-grey-text">
@@ -169,9 +169,17 @@ const Footer = () => {
               </h3>
               <div className="flex flex-wrap gap-2">
                 <img src={visaLogo} alt="Visa" className="w-12 h-8" />
-                <img src={mastercardLogo} alt="Mastercard" className="w-12 h-8" />
+                <img
+                  src={mastercardLogo}
+                  alt="Mastercard"
+                  className="w-12 h-8"
+                />
                 <img src={applePayLogo} alt="Apple Pay" className="w-12 h-8" />
-                <img src={googlePayLogo} alt="Google Pay" className="w-12 h-8" />
+                <img
+                  src={googlePayLogo}
+                  alt="Google Pay"
+                  className="w-12 h-8"
+                />
                 <img src={paypalLogo} alt="PayPal" className="w-12 h-8" />
                 <img src={klarnaLogo} alt="Klarna" className="w-12 h-8" />
               </div>
@@ -183,8 +191,16 @@ const Footer = () => {
                 GET THE REFURBED APP
               </h3>
               <div className="flex gap-4">
-                <img src={playStoreLogo} alt="Google Play Store" className="w-32 h-10" />
-                <img src={appStoreLogo} alt="Apple App Store" className="w-32 h-10" />
+                <img
+                  src={playStoreLogo}
+                  alt="Google Play Store"
+                  className="w-32 h-10"
+                />
+                <img
+                  src={appStoreLogo}
+                  alt="Apple App Store"
+                  className="w-32 h-10"
+                />
               </div>
             </div>
 
