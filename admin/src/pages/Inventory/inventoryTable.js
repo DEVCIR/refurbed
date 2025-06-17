@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { setBreadcrumbItems } from "../../store/actions";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
-import {BASE_URL} from '../../Service';
+import {API_BASE_URL} from '../../Service';
 
 const InventoryTable = (props) => {
     const navigate = useNavigate()
@@ -61,7 +61,7 @@ const InventoryTable = (props) => {
         categoryFilter = ""
     ) => {
         try {
-            let url = `${BASE_URL}/inventory`;
+            let url = `${API_BASE_URL}/inventory`;
             const params = new URLSearchParams();
 
             // Existing filters
@@ -156,7 +156,7 @@ const InventoryTable = (props) => {
     const handleStatusChange = async (id, status) => {
         const active = status === "Add";
         try {
-            const response = await fetch(`${BASE_URL}/inventory/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/inventory/${id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

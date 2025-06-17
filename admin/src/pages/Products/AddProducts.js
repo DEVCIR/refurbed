@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 import {
   Card,
@@ -15,19 +15,18 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 import { setBreadcrumbItems } from "../../store/actions";
-import Select from 'react-select';
+import Select from "react-select";
 import { Toaster, toast } from "sonner";
 
 function AddProducts({ props, setShowAddProduct }) {
-  document.title = "Add Product | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  document.title =
+    "Add Product | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
   const breadcrumbItems = [
     { title: "Lexa", link: "#" },
     { title: "Products", link: "#" },
     { title: "Add Product", link: "#" },
   ];
-
-
 
   const [formData, setFormData] = useState({
     BrandName: "",
@@ -67,18 +66,16 @@ function AddProducts({ props, setShowAddProduct }) {
   useEffect(() => {
     const fetchPlatforms = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/listing-platforms`,
-          {
-            method: "GET",
-            headers: {
-              // Authorization: "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
-            },
-          }
-        );
+        const response = await fetch(`${API_BASE_URL}/listing-platforms`, {
+          method: "GET",
+          headers: {
+            // Authorization: "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
+          },
+        });
         const data = await response.json();
-        const options = data.data.map(platform => ({
+        const options = data.data.map((platform) => ({
           value: platform.id,
-          label: platform.platform_name
+          label: platform.platform_name,
         }));
         setPlatformOptions(options);
       } catch (error) {
@@ -141,10 +138,11 @@ function AddProducts({ props, setShowAddProduct }) {
     }
 
     try {
-      const response = await fetch(`${BASE_URL}/products`, {
+      const response = await fetch(`${API_BASE_URL}/products`, {
         method: "POST",
         headers: {
-          'Authorization': "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
+          Authorization:
+            "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
         },
         body: formDataToSend,
       });
@@ -155,50 +153,52 @@ function AddProducts({ props, setShowAddProduct }) {
         const productId = result.ProductID;
 
         try {
-          const response = await fetch(`${BASE_URL}/inventory`, {
-            method: 'POST',
+          const response = await fetch(`${API_BASE_URL}/inventory`, {
+            method: "POST",
             headers: {
-               'Authorization': "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
-               'Accept': "application/json",
-               'content-type': "application/json"
+              Authorization:
+                "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
+              Accept: "application/json",
+              "content-type": "application/json",
             },
             body: JSON.stringify({
-              "productID": productId,
-              "stockQuantity": parseInt(formDataInventory.StockQuantity),
-              "purchaseOrderNo": formDataInventory.PurchaseOrderNo,
-              "barcode": formDataInventory.Barcode,
-              "location": formDataInventory.Location,
+              productID: productId,
+              stockQuantity: parseInt(formDataInventory.StockQuantity),
+              purchaseOrderNo: formDataInventory.PurchaseOrderNo,
+              barcode: formDataInventory.Barcode,
+              location: formDataInventory.Location,
             }),
           });
-          console.log('Response URL:', response.url);
+          console.log("Response URL:", response.url);
           if (response.ok) {
             const data = await response.json();
-            console.log('Success:', data);
-            alert('Inventory added successfully!');
+            console.log("Success:", data);
+            alert("Inventory added successfully!");
             props.setViewToTable();
           } else {
-            console.error('Error:', response.statusText);
+            console.error("Error:", response.statusText);
           }
         } catch (error) {
-          console.error('Error:', error);
+          console.error("Error:", error);
         }
 
         console.log("Product added successfully:", result);
         // alert("Product added successfully!");
-        toast.success('Product added successfully')
+        toast.success("Product added successfully");
 
         // Make a POST request for each selected platform
         for (const platform of selectedPlatforms) {
-          await fetch(`${BASE_URL}/product-and-platforms`, {
+          await fetch(`${API_BASE_URL}/product-and-platforms`, {
             method: "POST",
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
+              "Content-Type": "application/json",
+              Authorization:
+                "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
             },
             body: JSON.stringify({
-              'product_id': productId,
-              'platform_id': platform.value,
-              'is_sold': false, // Assuming default value for is_sold
+              product_id: productId,
+              platform_id: platform.value,
+              is_sold: false, // Assuming default value for is_sold
             }),
           });
         }
@@ -207,11 +207,11 @@ function AddProducts({ props, setShowAddProduct }) {
       } else {
         console.error("Error adding product:", result);
         // alert("Error adding product. Please try again.");
-        toast.error('Error adding product. Please try again.')
+        toast.error("Error adding product. Please try again.");
       }
     } catch (error) {
       console.error("Error adding product:", error);
-      toast.error('Error adding product. Please try again.')
+      toast.error("Error adding product. Please try again.");
       // alert("Error adding product. Please try again.");
     }
   };
@@ -224,10 +224,13 @@ function AddProducts({ props, setShowAddProduct }) {
           <Card>
             <CardBody>
               <CardTitle className="h4">Add Product</CardTitle>
-              
+
               <Form onSubmit={handleSubmit}>
                 <Row className="mb-3">
-                  <Label htmlFor="BrandName" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="BrandName"
+                    className="col-md-2 col-form-label"
+                  >
                     Brand Name
                   </Label>
                   <Col md={10}>
@@ -312,7 +315,10 @@ function AddProducts({ props, setShowAddProduct }) {
 
                 {/* Condition */}
                 <Row className="mb-3">
-                  <Label htmlFor="Condition" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="Condition"
+                    className="col-md-2 col-form-label"
+                  >
                     Condition
                   </Label>
                   <Col md={10}>
@@ -388,7 +394,10 @@ function AddProducts({ props, setShowAddProduct }) {
 
                 {/* Description */}
                 <Row className="mb-3">
-                  <Label htmlFor="Description" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="Description"
+                    className="col-md-2 col-form-label"
+                  >
                     Description
                   </Label>
                   <Col md={10}>
@@ -405,7 +414,10 @@ function AddProducts({ props, setShowAddProduct }) {
 
                 {/* Feature Image */}
                 <Row className="mb-3">
-                  <Label htmlFor="Feature_ImageURL" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="Feature_ImageURL"
+                    className="col-md-2 col-form-label"
+                  >
                     Feature Image
                   </Label>
                   <Col md={10}>
@@ -421,7 +433,10 @@ function AddProducts({ props, setShowAddProduct }) {
 
                 {/* All Images */}
                 <Row className="mb-3">
-                  <Label htmlFor="AllImageURLs" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="AllImageURLs"
+                    className="col-md-2 col-form-label"
+                  >
                     All Images
                   </Label>
                   <Col md={10}>
@@ -437,7 +452,10 @@ function AddProducts({ props, setShowAddProduct }) {
 
                 {/* Supplier ID */}
                 <Row className="mb-3">
-                  <Label htmlFor="SupplierID" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="SupplierID"
+                    className="col-md-2 col-form-label"
+                  >
                     Supplier ID
                   </Label>
                   <Col md={10}>
@@ -454,7 +472,10 @@ function AddProducts({ props, setShowAddProduct }) {
 
                 {/* Discount Type */}
                 <Row className="mb-3">
-                  <Label htmlFor="DiscountType" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="DiscountType"
+                    className="col-md-2 col-form-label"
+                  >
                     Discount Type
                   </Label>
                   <Col md={10}>
@@ -474,7 +495,10 @@ function AddProducts({ props, setShowAddProduct }) {
 
                 {/* Discount Amount */}
                 <Row className="mb-3">
-                  <Label htmlFor="DiscountAmount" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="DiscountAmount"
+                    className="col-md-2 col-form-label"
+                  >
                     Discount Amount
                   </Label>
                   <Col md={10}>
@@ -491,7 +515,10 @@ function AddProducts({ props, setShowAddProduct }) {
 
                 {/* Purchase Price */}
                 <Row className="mb-3">
-                  <Label htmlFor="PurchasePrice" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="PurchasePrice"
+                    className="col-md-2 col-form-label"
+                  >
                     Purchase Price
                   </Label>
                   <Col md={10}>
@@ -508,7 +535,10 @@ function AddProducts({ props, setShowAddProduct }) {
 
                 {/* Selling Price */}
                 <Row className="mb-3">
-                  <Label htmlFor="SellingPrice" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="SellingPrice"
+                    className="col-md-2 col-form-label"
+                  >
                     Selling Price
                   </Label>
                   <Col md={10}>
@@ -546,7 +576,10 @@ function AddProducts({ props, setShowAddProduct }) {
 
                 {/* Stock Quantity */}
                 <Row className="mb-3">
-                  <Label htmlFor="StockQuantity" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="StockQuantity"
+                    className="col-md-2 col-form-label"
+                  >
                     Stock Quantity
                   </Label>
                   <Col md={10}>
@@ -563,7 +596,10 @@ function AddProducts({ props, setShowAddProduct }) {
 
                 {/* Purchase Order No */}
                 <Row className="mb-3">
-                  <Label htmlFor="PurchaseOrderNo" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="PurchaseOrderNo"
+                    className="col-md-2 col-form-label"
+                  >
                     Purchase Order No
                   </Label>
                   <Col md={10}>
@@ -614,7 +650,10 @@ function AddProducts({ props, setShowAddProduct }) {
 
                 {/* Platform Multi-Select */}
                 <Row className="mb-3">
-                  <Label htmlFor="platforms" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="platforms"
+                    className="col-md-2 col-form-label"
+                  >
                     Platforms
                   </Label>
                   <Col md={10}>
@@ -644,6 +683,6 @@ function AddProducts({ props, setShowAddProduct }) {
       </Row>
     </React.Fragment>
   );
-};
+}
 
 export default connect(null, { setBreadcrumbItems })(AddProducts);

@@ -3,7 +3,7 @@ import { Row, Col, Card, CardBody, Button, CardTitle } from "reactstrap";
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../../Service";
+import { API_BASE_URL } from "../../Service";
 import axios from "axios";
 
 const OrderTable = ({ onAddOrderClick }) => {
@@ -15,7 +15,7 @@ const OrderTable = ({ onAddOrderClick }) => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/orders`);
+        const response = await axios.get(`${API_BASE_URL}/orders`);
         setOrders(response.data.data.data);
       } catch (err) {
         setError(err.response?.data?.message || err.message);

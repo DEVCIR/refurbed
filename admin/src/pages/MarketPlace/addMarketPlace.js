@@ -12,11 +12,12 @@ import {
   Button,
 } from "reactstrap";
 import { Toaster, toast } from "sonner";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 function AddMarketplaceItem({ onBackClick, setViewToTable }) {
-  document.title = "Add Marketplace Item | Lexa - Responsive Bootstrap 5 Admin Dashboard";
-  
+  document.title =
+    "Add Marketplace Item | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -26,7 +27,7 @@ function AddMarketplaceItem({ onBackClick, setViewToTable }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async () => {
@@ -38,7 +39,7 @@ function AddMarketplaceItem({ onBackClick, setViewToTable }) {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${BASE_URL}/marketplaces`, {
+      const response = await fetch(`${API_BASE_URL}/marketplaces`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,20 +48,20 @@ function AddMarketplaceItem({ onBackClick, setViewToTable }) {
       });
 
       const result = await response.json();
-      
+
       if (response.ok) {
         toast.success("Marketplace item created successfully");
         setTimeout(() => {
-            setViewToTable(); 
-          }, 1500);
+          setViewToTable();
+        }, 1500);
       } else {
-        const errorMessage = result.message || 
-                           result.error || 
-                           result.errors?.join(", ") || 
-                           "Failed to create marketplace item";
+        const errorMessage =
+          result.message ||
+          result.error ||
+          result.errors?.join(", ") ||
+          "Failed to create marketplace item";
         toast.error(errorMessage);
       }
-      
     } catch (error) {
       console.error("Error creating marketplace item:", error);
       toast.error("Network error occurred while creating marketplace item");
@@ -110,15 +111,19 @@ function AddMarketplaceItem({ onBackClick, setViewToTable }) {
 
                 <Row className="mb-3">
                   <Col className="text-end">
-                    <Button color="secondary" onClick={onBackClick} className="me-2">
+                    <Button
+                      color="secondary"
+                      onClick={onBackClick}
+                      className="me-2"
+                    >
                       Back
                     </Button>
-                    <Button 
-                      color="primary" 
-                      onClick={handleSubmit} 
+                    <Button
+                      color="primary"
+                      onClick={handleSubmit}
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? 'Saving...' : 'Save'}
+                      {isSubmitting ? "Saving..." : "Save"}
                     </Button>
                   </Col>
                 </Row>

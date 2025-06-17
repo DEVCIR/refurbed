@@ -1,71 +1,73 @@
-import React, { useState } from 'react';
+import { API_BASE_URL } from "../../Service";
+import React, { useState } from "react";
 
 export default function Newsletter() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: ''
+    name: "",
+    email: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState({ text: '', type: '' });
+  const [message, setMessage] = useState({ text: "", type: "" });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setMessage({ text: '', type: '' });
+    setMessage({ text: "", type: "" });
 
     try {
-      const response = await fetch('http://localhost:8000/api/newsletter', {
-        method: 'POST',
+      const response = await fetch(`${API_BASE_URL}/newsletter`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to subscribe');
+        throw new Error(data.message || "Failed to subscribe");
       }
 
-      const emailResponse = await fetch('http://localhost:8000/api/sendsubscriptionmail', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+      const emailResponse = await fetch(
+        `${API_BASE_URL}/sendsubscriptionmail`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            role: "Customer",
+            email: formData.email,
+          }),
         },
-        body: JSON.stringify({
-          name: formData.name,
-          role: "Customer",
-          email: formData.email
-        })
-      });
+      );
 
       if (!emailResponse.ok) {
-        throw new Error(data.message || 'Failed to subscribe');
+        throw new Error(data.message || "Failed to subscribe");
       }
-      
 
       setMessage({
-        text: 'Thank you for subscribing to our newsletter!',
-        type: 'success'
+        text: "Thank you for subscribing to our newsletter!",
+        type: "success",
       });
 
-
-      setFormData({ name: '', email: '' }); // Reset form
+      setFormData({ name: "", email: "" }); // Reset form
     } catch (error) {
       setMessage({
-        text: error.message || 'An error occurred. Please try again.',
-        type: 'error'
+        text: error.message || "An error occurred. Please try again.",
+        type: "error",
       });
     } finally {
       setIsSubmitting(false);
@@ -81,23 +83,28 @@ export default function Newsletter() {
               <div className="text-center mb-4">
                 <h2 className="fw-bold text-primary">Stay Updated</h2>
                 <p className="text-muted">
-                  Subscribe to our newsletter for the latest news, products, and offers.
+                  Subscribe to our newsletter for the latest news, products, and
+                  offers.
                 </p>
               </div>
 
               {message.text && (
-                <div className={`alert alert-${message.type === 'error' ? 'danger' : 'success'} mb-4`}>
+                <div
+                  className={`alert alert-${message.type === "error" ? "danger" : "success"} mb-4`}
+                >
                   {message.text}
                 </div>
               )}
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="name" className="form-label">Name</label>
-                  <input 
-                    type="text" 
-                    className="form-control" 
-                    id="name" 
+                  <label htmlFor="name" className="form-label">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="name"
                     name="name"
                     placeholder="Your name"
                     value={formData.name}
@@ -107,11 +114,13 @@ export default function Newsletter() {
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="email" className="form-label">Email address*</label>
-                  <input 
-                    type="email" 
-                    className="form-control" 
-                    id="email" 
+                  <label htmlFor="email" className="form-label">
+                    Email address*
+                  </label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="email"
                     name="email"
                     placeholder="your.email@example.com"
                     value={formData.email}
@@ -120,12 +129,12 @@ export default function Newsletter() {
                   />
                 </div>
 
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="btn btn-primary w-100 py-2"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Subscribing...' : 'Subscribe Now'}
+                  {isSubmitting ? "Subscribing..." : "Subscribe Now"}
                 </button>
               </form>
 

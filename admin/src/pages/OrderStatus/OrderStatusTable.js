@@ -4,16 +4,17 @@ import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 import { connect } from "react-redux";
 import { setBreadcrumbItems } from "../../store/actions";
-import AddOrderStatus from "./AddOrderStatus"; 
+import AddOrderStatus from "./AddOrderStatus";
 import { useNavigate } from "react-router-dom";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 const OrderStatusTable = (props) => {
-  document.title = "Order Status Table | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  document.title =
+    "Order Status Table | Lexa - Responsive Bootstrap 5 Admin Dashboard";
   const navigate = useNavigate();
 
   const [statuses, setStatuses] = useState([]);
-  const [showAddStatus, setShowAddStatus] = useState(false); 
+  const [showAddStatus, setShowAddStatus] = useState(false);
 
   const breadcrumbItems = [
     { title: "Lexa", link: "#" },
@@ -28,9 +29,10 @@ const OrderStatusTable = (props) => {
 
   const fetchStatuses = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/order-statuses`, {
+      const response = await fetch(`${API_BASE_URL}/order-statuses`, {
         headers: {
-          "Authorization": "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
+          Authorization:
+            "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
         },
       });
       const data = await response.json();
@@ -48,16 +50,22 @@ const OrderStatusTable = (props) => {
 
   // Handle delete action
   const handleDelete = async (statusId) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this order status?");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this order status?",
+    );
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`${BASE_URL}/order-statuses/${statusId}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
+      const response = await fetch(
+        `${API_BASE_URL}/order-statuses/${statusId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization:
+              "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
+          },
         },
-      });
+      );
 
       if (response.ok) {
         alert("Order status deleted successfully!");
@@ -92,7 +100,9 @@ const OrderStatusTable = (props) => {
                     <CardTitle className="h4">Order Status Table</CardTitle>
                   </Col>
                   <Col className="text-end">
-                    <Button color="success" onClick={handleAddStatus}>Add Order Status</Button>
+                    <Button color="success" onClick={handleAddStatus}>
+                      Add Order Status
+                    </Button>
                   </Col>
                 </Row>
               ) : (
@@ -101,7 +111,9 @@ const OrderStatusTable = (props) => {
                     <CardTitle className="h4">Add Order Status</CardTitle>
                   </Col>
                   <Col className="text-end">
-                    <Button color="secondary" onClick={handleBackToTable}>Back to Table</Button>
+                    <Button color="secondary" onClick={handleBackToTable}>
+                      Back to Table
+                    </Button>
                   </Col>
                 </Row>
               )}
@@ -111,8 +123,14 @@ const OrderStatusTable = (props) => {
                 <AddOrderStatus setShowAddStatus={setShowAddStatus} />
               ) : (
                 <div className="table-rep-plugin">
-                  <div className="table-responsive mb-0" data-pattern="priority-columns">
-                    <Table id="order-status-table" className="table table-striped table-bordered">
+                  <div
+                    className="table-responsive mb-0"
+                    data-pattern="priority-columns"
+                  >
+                    <Table
+                      id="order-status-table"
+                      className="table table-striped table-bordered"
+                    >
                       <Thead>
                         <Tr>
                           <Th>Status Name</Th>
@@ -124,8 +142,18 @@ const OrderStatusTable = (props) => {
                           <Tr key={status.id}>
                             <Td>{status.status_name}</Td>
                             <Td>
-                              <Button color="primary" onClick={() => handleEdit(status.id)}>Edit</Button>{" "}
-                              <Button color="danger" onClick={() => handleDelete(status.id)}>Delete</Button>
+                              <Button
+                                color="primary"
+                                onClick={() => handleEdit(status.id)}
+                              >
+                                Edit
+                              </Button>{" "}
+                              <Button
+                                color="danger"
+                                onClick={() => handleDelete(status.id)}
+                              >
+                                Delete
+                              </Button>
                             </Td>
                           </Tr>
                         ))}

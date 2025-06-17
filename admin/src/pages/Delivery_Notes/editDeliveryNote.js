@@ -12,10 +12,11 @@ import {
   Button,
 } from "reactstrap";
 import { Toaster, toast } from "sonner";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 function EditDeliveryNote({ note, onBackClick }) {
-  document.title = "Edit Delivery Note | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  document.title =
+    "Edit Delivery Note | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -31,24 +32,24 @@ function EditDeliveryNote({ note, onBackClick }) {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/orders`);
+        const response = await fetch(`${API_BASE_URL}/orders`);
         const data = await response.json();
-        
+
         if (data?.data?.data) {
           setOrders(data.data.data);
-          
-          
+
           if (note) {
-            const order = data.data.data.find(o => o.id === note.order.id);
+            const order = data.data.data.find((o) => o.id === note.order.id);
             setSelectedOrder(order);
             setCustomerName(order?.customer?.user?.name || "");
-            
-            
+
             setFormData({
               shipping_method: note.shipping_method || "",
               tracking_number: note.tracking_number || "",
               notes: note.notes || "",
-              delivery_date: note.delivery_date ? note.delivery_date.split('T')[0] : new Date().toISOString().split('T')[0],
+              delivery_date: note.delivery_date
+                ? note.delivery_date.split("T")[0]
+                : new Date().toISOString().split("T")[0],
             });
           }
         }
@@ -65,9 +66,9 @@ function EditDeliveryNote({ note, onBackClick }) {
   const handleOrderChange = (e) => {
     const orderId = e.target.value;
     if (orderId) {
-      const selected = orders.find(order => order.id.toString() === orderId);
+      const selected = orders.find((order) => order.id.toString() === orderId);
       setSelectedOrder(selected);
-      
+
       if (selected?.customer?.user) {
         setCustomerName(selected.customer.user.name || "");
       } else {
@@ -81,36 +82,39 @@ function EditDeliveryNote({ note, onBackClick }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!selectedOrder) {
       alert("Please select an order first");
       return;
     }
-    
+
     try {
-      const response = await fetch(`${BASE_URL}/delivery-notes/${note.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${API_BASE_URL}/delivery-notes/${note.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            order_id: selectedOrder.id,
+          }),
         },
-        body: JSON.stringify({
-          ...formData,
-          order_id: selectedOrder.id
-        })
-      });
-      
+      );
+
       if (!response.ok) {
-        throw new Error('Failed to update delivery note');
+        throw new Error("Failed to update delivery note");
       }
-      
+
       toast.success("Delivery note updated successfully");
       setTimeout(() => {
         onBackClick();
@@ -130,9 +134,10 @@ function EditDeliveryNote({ note, onBackClick }) {
             <CardBody>
               <CardTitle className="h4">Edit Delivery Note</CardTitle>
               <Form onSubmit={handleSubmit}>
-               
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Delivery Number</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Delivery Number
+                  </Label>
                   <Col md={10}>
                     <Input
                       type="text"
@@ -143,7 +148,6 @@ function EditDeliveryNote({ note, onBackClick }) {
                   </Col>
                 </Row>
 
-               
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Order</Label>
                   <Col md={10}>
@@ -170,7 +174,6 @@ function EditDeliveryNote({ note, onBackClick }) {
                   </Col>
                 </Row>
 
-                
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Customer</Label>
                   <Col md={10}>
@@ -183,9 +186,10 @@ function EditDeliveryNote({ note, onBackClick }) {
                   </Col>
                 </Row>
 
-               
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Delivery Date</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Delivery Date
+                  </Label>
                   <Col md={10}>
                     <Input
                       type="date"
@@ -197,9 +201,10 @@ function EditDeliveryNote({ note, onBackClick }) {
                   </Col>
                 </Row>
 
-                
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Shipping Method</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Shipping Method
+                  </Label>
                   <Col md={10}>
                     <Input
                       type="text"
@@ -212,9 +217,10 @@ function EditDeliveryNote({ note, onBackClick }) {
                   </Col>
                 </Row>
 
-                
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Tracking Number</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Tracking Number
+                  </Label>
                   <Col md={10}>
                     <Input
                       type="text"
@@ -226,7 +232,6 @@ function EditDeliveryNote({ note, onBackClick }) {
                   </Col>
                 </Row>
 
-                
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Notes</Label>
                   <Col md={10}>
@@ -241,10 +246,14 @@ function EditDeliveryNote({ note, onBackClick }) {
                   </Col>
                 </Row>
 
-              
                 <Row className="mb-3">
                   <Col className="text-end">
-                    <Button color="secondary" onClick={onBackClick} className="me-2" type="button">
+                    <Button
+                      color="secondary"
+                      onClick={onBackClick}
+                      className="me-2"
+                      type="button"
+                    >
                       Back
                     </Button>
                     <Button color="primary" type="submit">

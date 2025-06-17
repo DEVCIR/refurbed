@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "../../Service";
 import React, { useState, useEffect } from "react";
 import {
   Card,
@@ -13,8 +14,9 @@ import {
 import { Toaster, toast } from "sonner";
 
 function EditCampaignRecep({ onBackClick, recep }) {
-  document.title = "View Campaign Recipient | Lexa - Responsive Bootstrap 5 Admin Dashboard";
-  
+  document.title =
+    "View Campaign Recipient | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+
   const [campaigns, setCampaigns] = useState([]);
   const [subscribers, setSubscribers] = useState([]);
   const [isLoadingCampaigns, setIsLoadingCampaigns] = useState(true);
@@ -23,18 +25,18 @@ function EditCampaignRecep({ onBackClick, recep }) {
     campaign_id: recep?.campaign?.id || "",
     subscriber_id: recep?.subscriber?.id || "",
     email_address: recep?.email_address || "",
-    status: "Pending"
+    status: "Pending",
   });
 
   useEffect(() => {
     const fetchCampaigns = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/email-campaigns");
+        const response = await fetch(`${API_BASE_URL}/email-campaigns`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        
+
         if (data.data && Array.isArray(data.data.data)) {
           setCampaigns(data.data.data);
         } else {
@@ -50,12 +52,12 @@ function EditCampaignRecep({ onBackClick, recep }) {
 
     const fetchSubscribers = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/subscribers");
+        const response = await fetch(`${API_BASE_URL}/subscribers`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        
+
         if (data.data && Array.isArray(data.data.data)) {
           setSubscribers(data.data.data);
         } else {
@@ -75,22 +77,25 @@ function EditCampaignRecep({ onBackClick, recep }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:8000/api/campaign-recipients/${recep.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${API_BASE_URL}/campaign-recipients/${recep.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
         },
-        body: JSON.stringify(formData)
-      });
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -100,7 +105,7 @@ function EditCampaignRecep({ onBackClick, recep }) {
       toast.success("Recipient updated successfully");
       setTimeout(() => {
         onBackClick();
-      }, 1500); 
+      }, 1500);
     } catch (error) {
       console.error("Error updating recipient:", error);
       toast.error("Failed to update recipient");
@@ -116,7 +121,6 @@ function EditCampaignRecep({ onBackClick, recep }) {
             <CardBody>
               <CardTitle className="h4">Edit Campaign Recipient</CardTitle>
               <Form onSubmit={handleSubmit}>
-                
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Campaign</Label>
                   <Col md={10}>
@@ -128,20 +132,21 @@ function EditCampaignRecep({ onBackClick, recep }) {
                       disabled={isLoadingCampaigns}
                     >
                       <option value="">Select a campaign</option>
-                      {campaigns.map(campaign => (
+                      {campaigns.map((campaign) => (
                         <option key={campaign.id} value={campaign.id}>
                           {campaign.campaign_name}
                         </option>
                       ))}
                     </Input>
-                    {isLoadingCampaigns && <small className="text-muted">Loading campaigns...</small>}
+                    {isLoadingCampaigns && (
+                      <small className="text-muted">Loading campaigns...</small>
+                    )}
                     {!isLoadingCampaigns && campaigns.length === 0 && (
                       <small className="text-danger">No campaigns found</small>
                     )}
                   </Col>
                 </Row>
 
-                
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Subscriber</Label>
                   <Col md={10}>
@@ -153,21 +158,29 @@ function EditCampaignRecep({ onBackClick, recep }) {
                       disabled={isLoadingSubscribers}
                     >
                       <option value="">Select a subscriber</option>
-                      {subscribers.map(subscriber => (
+                      {subscribers.map((subscriber) => (
                         <option key={subscriber.id} value={subscriber.id}>
                           {subscriber.first_name}
                         </option>
                       ))}
                     </Input>
-                    {isLoadingSubscribers && <small className="text-muted">Loading subscribers...</small>}
+                    {isLoadingSubscribers && (
+                      <small className="text-muted">
+                        Loading subscribers...
+                      </small>
+                    )}
                     {!isLoadingSubscribers && subscribers.length === 0 && (
-                      <small className="text-danger">No subscribers found</small>
+                      <small className="text-danger">
+                        No subscribers found
+                      </small>
                     )}
                   </Col>
                 </Row>
 
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Email Address</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Email Address
+                  </Label>
                   <Col md={10}>
                     <Input
                       type="email"
@@ -182,7 +195,11 @@ function EditCampaignRecep({ onBackClick, recep }) {
 
                 <Row className="mb-3">
                   <Col className="text-end">
-                    <Button color="secondary" onClick={onBackClick} className="me-2">
+                    <Button
+                      color="secondary"
+                      onClick={onBackClick}
+                      className="me-2"
+                    >
                       Back
                     </Button>
                     <Button color="primary" type="submit">
@@ -200,4 +217,3 @@ function EditCampaignRecep({ onBackClick, recep }) {
 }
 
 export default EditCampaignRecep;
-

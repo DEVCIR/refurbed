@@ -12,10 +12,11 @@ import {
   Button,
 } from "reactstrap";
 import { Toaster, toast } from "sonner";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 function AddDeliveryNote({ onBackClick }) {
-  document.title = "Add Delivery Note | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  document.title =
+    "Add Delivery Note | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
   const delivery_number = `DEV-${Math.floor(Math.random() * 1000)}`;
   const [orders, setOrders] = useState([]);
@@ -27,17 +28,19 @@ function AddDeliveryNote({ onBackClick }) {
   const [formData, setFormData] = useState({
     shipping_method: "",
     tracking_number: "",
-    notes: ""
+    notes: "",
   });
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/orders`);
+        const response = await fetch(`${API_BASE_URL}/orders`);
         const data = await response.json();
-        
+
         if (data && data.data && data.data.data) {
-          const validOrders = data.data.data.filter(order => order.customer !== null);
+          const validOrders = data.data.data.filter(
+            (order) => order.customer !== null,
+          );
           setOrders(validOrders);
         }
         setLoading(false);
@@ -53,9 +56,11 @@ function AddDeliveryNote({ onBackClick }) {
   const fetchOrderItems = async (orderId) => {
     setItemsLoading(true);
     try {
-      const response = await fetch(`${BASE_URL}/order-items?order_id=${orderId}`);
+      const response = await fetch(
+        `${API_BASE_URL}/order-items?order_id=${orderId}`,
+      );
       const data = await response.json();
-      
+
       if (data && data.data && data.data.data) {
         setOrderItems(data.data.data);
         logInventoryIds(data.data.data);
@@ -71,22 +76,25 @@ function AddDeliveryNote({ onBackClick }) {
   };
 
   const logInventoryIds = (items) => {
-    console.log("Current inventory IDs:", items.map(item => item.inventory.id));
+    console.log(
+      "Current inventory IDs:",
+      items.map((item) => item.inventory.id),
+    );
   };
 
   const handleOrderChange = (e) => {
     const orderId = e.target.value;
     if (orderId) {
-      const selected = orders.find(order => order.id.toString() === orderId);
+      const selected = orders.find((order) => order.id.toString() === orderId);
       setSelectedOrder(selected);
-      
+
       console.log("Selected Order ID:", selected.id);
       console.log("Customer Id: ", selected.customer.id);
-      
+
       fetchOrderItems(selected.id);
-      
+
       if (selected.customer && selected.customer.user) {
-        setCustomerName(`${selected.customer.user.name || ''}`);
+        setCustomerName(`${selected.customer.user.name || ""}`);
       } else {
         setCustomerName("");
       }
@@ -98,86 +106,88 @@ function AddDeliveryNote({ onBackClick }) {
   };
 
   const handleDeleteItem = (itemId) => {
-    setOrderItems(prevItems => {
-      const updatedItems = prevItems.filter(item => item.id !== itemId);
+    setOrderItems((prevItems) => {
+      const updatedItems = prevItems.filter((item) => item.id !== itemId);
       console.log(`Deleted item with ID: ${itemId}`);
-      logInventoryIds(updatedItems); 
+      logInventoryIds(updatedItems);
       return updatedItems;
     });
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!selectedOrder) {
       alert("Please select an order first");
       return;
     }
-  
+
     if (orderItems.length === 0) {
       alert("Please select at least one item for the delivery note");
       return;
     }
-  
+
     const deliveryNoteData = {
       delivery_number,
       order_id: selectedOrder.id,
       customer_id: selectedOrder.customer.id,
-      delivery_date: new Date().toISOString().split('T')[0],
+      delivery_date: new Date().toISOString().split("T")[0],
       shipping_method: formData.shipping_method,
       tracking_number: formData.tracking_number.toString(),
       status: "Preparing",
       notes: formData.notes,
-      created_by: 1
+      created_by: 1,
     };
-  
+
     try {
-      
-      const response = await fetch(`${BASE_URL}/delivery-notes`, {
+      const response = await fetch(`${API_BASE_URL}/delivery-notes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(deliveryNoteData)
+        body: JSON.stringify(deliveryNoteData),
       });
-  
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         console.error("Error creating delivery note:", data);
-        alert("Error creating delivery note: " + (data.message || "Unknown error"));
+        alert(
+          "Error creating delivery note: " + (data.message || "Unknown error"),
+        );
         return;
       }
-  
-      
+
       const deliveryNoteId = data.id || data.data.id;
-      
-      
+
       const createdItems = [];
       const errors = [];
-      
+
       for (const item of orderItems) {
         try {
-          const itemResponse = await fetch(`${BASE_URL}/delivery-note-items`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+          const itemResponse = await fetch(
+            `${API_BASE_URL}/delivery-note-items`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                delivery_note_id: deliveryNoteId,
+                inventory_id: item.inventory.id,
+                quantity: item.quantity,
+              }),
             },
-            body: JSON.stringify({
-              delivery_note_id: deliveryNoteId,
-              inventory_id: item.inventory.id,
-              quantity: item.quantity
-            })
-          });
-          
+          );
+
           if (itemResponse.ok) {
             const itemData = await itemResponse.json();
             createdItems.push(itemData);
@@ -185,49 +195,50 @@ const handleSubmit = async (e) => {
             const errorData = await itemResponse.json();
             errors.push({
               item,
-              error: errorData.message || "Unknown error"
+              error: errorData.message || "Unknown error",
             });
             console.error("Error creating delivery note item:", errorData);
           }
         } catch (error) {
           errors.push({
             item,
-            error: error.message
+            error: error.message,
           });
           console.error("Network error creating item:", error);
         }
       }
-  
+
       if (errors.length > 0) {
-        alert(`Delivery note created but ${errors.length} items failed. See console for details.`);
+        alert(
+          `Delivery note created but ${errors.length} items failed. See console for details.`,
+        );
         console.log("Failed items:", errors);
       } else {
         // alert("Delivery note and all items created successfully!");
       }
       toast.success("Delivery note and all items created successfully");
-            setTimeout(() => {
-                onBackClick();
-            }, 1500);
-      
+      setTimeout(() => {
+        onBackClick();
+      }, 1500);
     } catch (error) {
       console.error("Network error:", error);
       alert("Network error occurred while creating delivery note");
     }
   };
 
-
   return (
     <React.Fragment>
-         <Toaster position="top-right" richColors />
+      <Toaster position="top-right" richColors />
       <Row>
         <Col>
           <Card>
             <CardBody>
               <CardTitle className="h4">Add Delivery Note</CardTitle>
               <Form onSubmit={handleSubmit}>
-              
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Delivery Number</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Delivery Number
+                  </Label>
                   <Col md={10}>
                     <Input
                       type="text"
@@ -238,7 +249,6 @@ const handleSubmit = async (e) => {
                   </Col>
                 </Row>
 
-              
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Order</Label>
                   <Col md={10}>
@@ -264,7 +274,6 @@ const handleSubmit = async (e) => {
                   </Col>
                 </Row>
 
-              
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Customer</Label>
                   <Col md={10}>
@@ -278,7 +287,6 @@ const handleSubmit = async (e) => {
                   </Col>
                 </Row>
 
-                
                 {itemsLoading ? (
                   <Row className="mb-3">
                     <Col md={{ offset: 2, size: 10 }}>
@@ -297,7 +305,10 @@ const handleSubmit = async (e) => {
                             <Input
                               type="text"
                               readOnly
-                              value={item.inventory?.variant?.product?.model_name || 'N/A'}
+                              value={
+                                item.inventory?.variant?.product?.model_name ||
+                                "N/A"
+                              }
                             />
                           </Col>
                           <Col md={2}>
@@ -316,40 +327,40 @@ const handleSubmit = async (e) => {
                             {`Quantity ${index + 1}`}
                           </Label>
                           <Col md={10}>
-                            <Input
-                              type="text"
-                              readOnly
-                              value={item.quantity}
-                            />
+                            <Input type="text" readOnly value={item.quantity} />
                           </Col>
                         </Row>
                       </React.Fragment>
                     ))}
                   </>
-                ) : selectedOrder && (
-                  <Row className="mb-3">
-                    <Col md={{ offset: 2, size: 10 }}>
-                      <p>No items found for this order.</p>
-                    </Col>
-                  </Row>
+                ) : (
+                  selectedOrder && (
+                    <Row className="mb-3">
+                      <Col md={{ offset: 2, size: 10 }}>
+                        <p>No items found for this order.</p>
+                      </Col>
+                    </Row>
+                  )
                 )}
 
-                
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Delivery Date</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Delivery Date
+                  </Label>
                   <Col md={10}>
                     <Input
                       type="date"
                       name="delivery_date"
-                      value={new Date().toISOString().split('T')[0]}
+                      value={new Date().toISOString().split("T")[0]}
                       readOnly
                     />
                   </Col>
                 </Row>
 
-               
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Shipping Method</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Shipping Method
+                  </Label>
                   <Col md={10}>
                     <Input
                       type="text"
@@ -362,9 +373,10 @@ const handleSubmit = async (e) => {
                   </Col>
                 </Row>
 
-                
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Tracking Number</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Tracking Number
+                  </Label>
                   <Col md={10}>
                     <Input
                       type="text"
@@ -376,7 +388,6 @@ const handleSubmit = async (e) => {
                   </Col>
                 </Row>
 
-               
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Notes</Label>
                   <Col md={10}>
@@ -391,10 +402,14 @@ const handleSubmit = async (e) => {
                   </Col>
                 </Row>
 
-               
                 <Row className="mb-3">
                   <Col className="text-end">
-                    <Button color="secondary" onClick={onBackClick} className="me-2" type="button">
+                    <Button
+                      color="secondary"
+                      onClick={onBackClick}
+                      className="me-2"
+                      type="button"
+                    >
                       Back
                     </Button>
                     <Button color="primary" type="submit">

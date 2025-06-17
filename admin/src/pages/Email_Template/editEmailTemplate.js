@@ -12,59 +12,63 @@ import {
   Button,
 } from "reactstrap";
 import { Toaster, toast } from "sonner";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 function EditEmailTemplate({ onBackClick, template }) {
-  document.title = "Edit Email Template | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  document.title =
+    "Edit Email Template | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
   const [formData, setFormData] = useState({
-    template_name: '',
-    subject: '',
-    content: ''
+    template_name: "",
+    subject: "",
+    content: "",
   });
 
   useEffect(() => {
     if (template) {
       setFormData({
-        template_name: template.template_name || '',
-        subject: template.subject || '',
-        content: template.content || ''
+        template_name: template.template_name || "",
+        subject: template.subject || "",
+        content: template.content || "",
       });
     }
   }, [template]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${BASE_URL}/email-templates/${template.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${API_BASE_URL}/email-templates/${template.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
         },
-        body: JSON.stringify(formData)
-      });
-      
+      );
+
       const result = await response.json();
-      
+
       if (result.success) {
-        toast.success('Email template updated successfully');
+        toast.success("Email template updated successfully");
         setTimeout(() => {
-            onBackClick();
-          }, 1500);
+          onBackClick();
+        }, 1500);
       } else {
-        toast.error(result.message || 'Failed to update email template');
+        toast.error(result.message || "Failed to update email template");
       }
     } catch (error) {
       console.error("Error updating email template:", error);
-      toast.error('An error occurred while updating the email template');
+      toast.error("An error occurred while updating the email template");
     }
   };
 
@@ -77,9 +81,10 @@ function EditEmailTemplate({ onBackClick, template }) {
             <CardBody>
               <CardTitle className="h4">Edit Email Template</CardTitle>
               <Form onSubmit={handleSubmit}>
-             
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Template Name</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Template Name
+                  </Label>
                   <Col md={10}>
                     <Input
                       type="text"
@@ -91,7 +96,6 @@ function EditEmailTemplate({ onBackClick, template }) {
                   </Col>
                 </Row>
 
-            
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Subject</Label>
                   <Col md={10}>
@@ -105,7 +109,6 @@ function EditEmailTemplate({ onBackClick, template }) {
                   </Col>
                 </Row>
 
-              
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Content</Label>
                   <Col md={10}>
@@ -122,7 +125,11 @@ function EditEmailTemplate({ onBackClick, template }) {
 
                 <Row className="mb-3">
                   <Col className="text-end">
-                    <Button color="secondary" onClick={onBackClick} className="me-2">
+                    <Button
+                      color="secondary"
+                      onClick={onBackClick}
+                      className="me-2"
+                    >
                       Back
                     </Button>
                     <Button color="primary" type="submit">

@@ -11,31 +11,34 @@ import {
   Button,
 } from "reactstrap";
 import { Toaster, toast } from "sonner";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 function EditSubscriber({ subscriberId, onBackClick }) {
-  document.title = "Edit Subscriber | Lexa - Responsive Bootstrap 5 Admin Dashboard";
-  
+  document.title =
+    "Edit Subscriber | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+
   const [subscriber, setSubscriber] = useState({
-    email: '',
-    first_name: '',
-    last_name: '',
-    subscription_date: ''
+    email: "",
+    first_name: "",
+    last_name: "",
+    subscription_date: "",
   });
 
   const formatDateForInput = (dateString) => {
-    if (!dateString) return '';
-    const cleanedDate = dateString.split('.')[0];
-    return cleanedDate.slice(0, 16); 
+    if (!dateString) return "";
+    const cleanedDate = dateString.split(".")[0];
+    return cleanedDate.slice(0, 16);
   };
 
   useEffect(() => {
     const fetchSubscriber = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/subscribers/${subscriberId}`);
+        const response = await fetch(
+          `${API_BASE_URL}/subscribers/${subscriberId}`,
+        );
         const result = await response.json();
-        console.log('API Response:', result);
-        
+        console.log("API Response:", result);
+
         if (result) {
           setSubscriber(result);
         }
@@ -51,36 +54,41 @@ function EditSubscriber({ subscriberId, onBackClick }) {
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
-    setSubscriber(prev => ({
+    setSubscriber((prev) => ({
       ...prev,
-      [id]: value
+      [id]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
-      const response = await fetch(`${BASE_URL}/subscribers/${subscriberId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${API_BASE_URL}/subscribers/${subscriberId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(subscriber),
         },
-        body: JSON.stringify(subscriber),
-      });
+      );
 
       if (response.ok) {
-        toast.success('Subscriber updated successfully!');
+        toast.success("Subscriber updated successfully!");
         setTimeout(() => {
-            onBackClick();
-          }, 2000);
+          onBackClick();
+        }, 2000);
       } else {
         const errorData = await response.json();
-        toast.error(`Error updating subscriber: ${errorData.message || 'Unknown error'}`);
+        toast.error(
+          `Error updating subscriber: ${errorData.message || "Unknown error"}`,
+        );
       }
     } catch (error) {
       console.error("Error updating subscriber:", error);
-      toast.error('Failed to update subscriber. Please try again.');
+      toast.error("Failed to update subscriber. Please try again.");
     }
   };
 
@@ -96,12 +104,12 @@ function EditSubscriber({ subscriberId, onBackClick }) {
                 {/* Email */}
                 <Row className="mb-3">
                   <Label htmlFor="email" className="col-md-2 col-form-label">
-                    Email 
+                    Email
                   </Label>
                   <Col md={10}>
-                    <Input 
-                      type="email" 
-                      id="email" 
+                    <Input
+                      type="email"
+                      id="email"
                       value={subscriber.email}
                       onChange={handleInputChange}
                     />
@@ -110,13 +118,16 @@ function EditSubscriber({ subscriberId, onBackClick }) {
 
                 {/* First Name */}
                 <Row className="mb-3">
-                  <Label htmlFor="first_name" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="first_name"
+                    className="col-md-2 col-form-label"
+                  >
                     First Name
                   </Label>
                   <Col md={10}>
-                    <Input 
-                      type="text" 
-                      id="first_name" 
+                    <Input
+                      type="text"
+                      id="first_name"
                       value={subscriber.first_name}
                       onChange={handleInputChange}
                     />
@@ -125,13 +136,16 @@ function EditSubscriber({ subscriberId, onBackClick }) {
 
                 {/* Last Name */}
                 <Row className="mb-3">
-                  <Label htmlFor="last_name" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="last_name"
+                    className="col-md-2 col-form-label"
+                  >
                     Last Name
                   </Label>
                   <Col md={10}>
-                    <Input 
-                      type="text" 
-                      id="last_name" 
+                    <Input
+                      type="text"
+                      id="last_name"
                       value={subscriber.last_name}
                       onChange={handleInputChange}
                     />
@@ -140,16 +154,19 @@ function EditSubscriber({ subscriberId, onBackClick }) {
 
                 {/* Subscription Date */}
                 <Row className="mb-3">
-                  <Label htmlFor="subscription_date" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="subscription_date"
+                    className="col-md-2 col-form-label"
+                  >
                     Subscription Date
                   </Label>
                   <Col md={10}>
-                    <Input 
-                      type="datetime-local" 
-                      id="subscription_date" 
+                    <Input
+                      type="datetime-local"
+                      id="subscription_date"
                       value={formatDateForInput(subscriber.subscription_date)}
                       onChange={handleInputChange}
-                      readOnly 
+                      readOnly
                     />
                   </Col>
                 </Row>
@@ -157,7 +174,12 @@ function EditSubscriber({ subscriberId, onBackClick }) {
                 {/* Buttons */}
                 <Row className="mb-3">
                   <Col className="text-end">
-                    <Button type="button" color="secondary" onClick={onBackClick} className="me-2">
+                    <Button
+                      type="button"
+                      color="secondary"
+                      onClick={onBackClick}
+                      className="me-2"
+                    >
                       Back
                     </Button>
                     <Button type="submit" color="primary">

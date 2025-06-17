@@ -12,11 +12,12 @@ import {
   Button,
 } from "reactstrap";
 import { Toaster, toast } from "sonner";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 function AddEmailTemplate({ onBackClick, setViewToTable }) {
-  document.title = "Add Email Template | Lexa - Responsive Bootstrap 5 Admin Dashboard";
-  
+  document.title =
+    "Add Email Template | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+
   const [formData, setFormData] = useState({
     template_name: "",
     subject: "",
@@ -27,7 +28,7 @@ function AddEmailTemplate({ onBackClick, setViewToTable }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async () => {
@@ -49,7 +50,7 @@ function AddEmailTemplate({ onBackClick, setViewToTable }) {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${BASE_URL}/email-templates`, {
+      const response = await fetch(`${API_BASE_URL}/email-templates`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -62,7 +63,7 @@ function AddEmailTemplate({ onBackClick, setViewToTable }) {
       }
 
       const result = await response.json();
-      
+
       if (result.success) {
         toast.success("Email template created successfully");
         setTimeout(() => {
@@ -71,7 +72,6 @@ function AddEmailTemplate({ onBackClick, setViewToTable }) {
       } else {
         toast.error(result.message || "Failed to create email template");
       }
-      
     } catch (error) {
       console.error("Error creating email template:", error);
       toast.error("Failed to create email template");
@@ -89,9 +89,10 @@ function AddEmailTemplate({ onBackClick, setViewToTable }) {
             <CardBody>
               <CardTitle className="h4">Add Email Template</CardTitle>
               <Form>
-                
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Template Name</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Template Name
+                  </Label>
                   <Col md={10}>
                     <Input
                       type="text"
@@ -104,7 +105,6 @@ function AddEmailTemplate({ onBackClick, setViewToTable }) {
                   </Col>
                 </Row>
 
-                
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Subject</Label>
                   <Col md={10}>
@@ -119,7 +119,6 @@ function AddEmailTemplate({ onBackClick, setViewToTable }) {
                   </Col>
                 </Row>
 
-               
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Content</Label>
                   <Col md={10}>
@@ -137,15 +136,19 @@ function AddEmailTemplate({ onBackClick, setViewToTable }) {
 
                 <Row className="mb-3">
                   <Col className="text-end">
-                    <Button color="secondary" onClick={onBackClick} className="me-2">
+                    <Button
+                      color="secondary"
+                      onClick={onBackClick}
+                      className="me-2"
+                    >
                       Back
                     </Button>
-                    <Button 
-                      color="primary" 
-                      onClick={handleSubmit} 
+                    <Button
+                      color="primary"
+                      onClick={handleSubmit}
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? 'Saving...' : 'Save'}
+                      {isSubmitting ? "Saving..." : "Save"}
                     </Button>
                   </Col>
                 </Row>

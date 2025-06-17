@@ -1,10 +1,11 @@
+import { API_BASE_URL } from "../../Service";
 import React, { useState, useEffect } from "react";
-import { 
-  Row, 
-  Col, 
-  Card, 
-  CardBody, 
-  Button, 
+import {
+  Row,
+  Col,
+  Card,
+  CardBody,
+  Button,
   CardTitle,
   Modal,
   ModalHeader,
@@ -14,13 +15,13 @@ import {
   FormGroup,
   Label,
   Input,
-  Alert
+  Alert,
 } from "reactstrap";
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 import { useNavigate } from "react-router-dom";
 
-const InvoiceTable = ({ }) => {
+const InvoiceTable = ({}) => {
   const navigate = useNavigate();
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,18 +32,18 @@ const InvoiceTable = ({ }) => {
   const [emailStatus, setEmailStatus] = useState({
     sending: false,
     success: false,
-    error: null
+    error: null,
   });
 
   useEffect(() => {
     const fetchInvoices = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/invoices");
+        const response = await fetch(`${API_BASE_URL}/invoices`);
         if (!response.ok) {
           throw new Error("Failed to fetch invoices");
         }
         const data = await response.json();
-        setInvoices(data.data.data); 
+        setInvoices(data.data.data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -57,12 +58,12 @@ const InvoiceTable = ({ }) => {
 
   const handleSendEmailClick = (invoice) => {
     setCurrentInvoice(invoice);
-    setEmail(invoice.customer.user.email); 
+    setEmail(invoice.customer.user.email);
     setEmailModal(true);
     setEmailStatus({
       sending: false,
       success: false,
-      error: null
+      error: null,
     });
   };
 
@@ -72,29 +73,31 @@ const InvoiceTable = ({ }) => {
     setEmailStatus({
       sending: true,
       success: false,
-      error: null
+      error: null,
     });
 
     try {
-      const response = await fetch(`http://localhost:8000/api/send-invoice-email/${currentInvoice.id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${API_BASE_URL}/send-invoice-email/${currentInvoice.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
         },
-        body: JSON.stringify({ email }) 
-      });
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to send email');
+        throw new Error("Failed to send email");
       }
 
       setEmailStatus({
         sending: false,
         success: true,
-        error: null
+        error: null,
       });
 
-      
       setTimeout(() => {
         setEmailModal(false);
       }, 2000);
@@ -102,27 +105,29 @@ const InvoiceTable = ({ }) => {
       setEmailStatus({
         sending: false,
         success: false,
-        error: err.message
+        error: err.message,
       });
     }
   };
 
   const handleGenerateInvoice = async (invoice) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/order-items?order_id=${invoice.order_id}`);
+      const response = await fetch(
+        `${API_BASE_URL}/order-items?order_id=${invoice.order_id}`,
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch order items");
       }
       const data = await response.json();
-      
+
       const taxFixed = data.data.data[0]?.order?.tax_amount || 0;
-      const invoiceItems = data.data.data.map(item => ({
+      const invoiceItems = data.data.data.map((item) => ({
         description: item.inventory.variant.product.model_name,
         qty: item.quantity,
         rate: item.unit_price,
-        amount: parseFloat(item.total_price)
+        amount: parseFloat(item.total_price),
       }));
-  
+
       navigate("/invoicetemplate", {
         state: {
           customerName: invoice.customer.user.name,
@@ -133,8 +138,8 @@ const InvoiceTable = ({ }) => {
           invoiceDate: new Date(invoice.invoice_date).toLocaleDateString(),
           dueDate: new Date(invoice.due_date).toLocaleDateString(),
           items: invoiceItems,
-          taxFixed: parseFloat(taxFixed)
-        }
+          taxFixed: parseFloat(taxFixed),
+        },
       });
     } catch (err) {
       console.error("Error fetching order items:", err);
@@ -147,8 +152,8 @@ const InvoiceTable = ({ }) => {
           invoiceDate: new Date(invoice.invoice_date).toLocaleDateString(),
           dueDate: new Date(invoice.due_date).toLocaleDateString(),
           items: [],
-          taxFixed: 0
-        }
+          taxFixed: 0,
+        },
       });
     }
   };
@@ -163,21 +168,29 @@ const InvoiceTable = ({ }) => {
 
   return (
     <React.Fragment>
-      <Row style={{ minHeight: '70vh' }}>
+      <Row style={{ minHeight: "70vh" }}>
         <Col>
           <Card>
             <CardBody>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "10px",
+                }}
+              >
                 <Col>
                   <CardTitle className="h4">Invoice Table</CardTitle>
                 </Col>
-                <Col style={{ display: 'flex' }} className="text-end">
-                </Col>
+                <Col style={{ display: "flex" }} className="text-end"></Col>
               </div>
-              
+
               <div className="table-rep-plugin">
                 <div className="table-responsive mb-0">
-                  <Table id="tech-companies-1" className="table table-striped table-bordered">
+                  <Table
+                    id="tech-companies-1"
+                    className="table table-striped table-bordered"
+                  >
                     <Thead>
                       <Tr>
                         <Th>Invoice Number</Th>
@@ -198,14 +211,26 @@ const InvoiceTable = ({ }) => {
                           <Td>{invoice.customer.user.name || "N/A"}</Td>
                           <Td>{invoice.customer.user.email || "N/A"}</Td>
                           <Td>{invoice.customer.city || "N/A"}</Td>
-                          <Td>{new Date(invoice.invoice_date).toLocaleDateString()}</Td>
-                          <Td>{new Date(invoice.due_date).toLocaleDateString()}</Td>
                           <Td>
-                            <div style={{ display: 'flex', gap: '5px' }}>
-                              <Button color="primary" onClick={() => handleGenerateInvoice(invoice)}>
+                            {new Date(
+                              invoice.invoice_date,
+                            ).toLocaleDateString()}
+                          </Td>
+                          <Td>
+                            {new Date(invoice.due_date).toLocaleDateString()}
+                          </Td>
+                          <Td>
+                            <div style={{ display: "flex", gap: "5px" }}>
+                              <Button
+                                color="primary"
+                                onClick={() => handleGenerateInvoice(invoice)}
+                              >
                                 Generate Template
                               </Button>
-                              <Button color="success" onClick={() => handleSendEmailClick(invoice)}>
+                              <Button
+                                color="success"
+                                onClick={() => handleSendEmailClick(invoice)}
+                              >
                                 Send Email
                               </Button>
                             </div>
@@ -225,13 +250,9 @@ const InvoiceTable = ({ }) => {
         <ModalHeader toggle={toggleEmailModal}>Send Invoice Email</ModalHeader>
         <ModalBody>
           {emailStatus.success ? (
-            <Alert color="success">
-              Email sent successfully!
-            </Alert>
+            <Alert color="success">Email sent successfully!</Alert>
           ) : emailStatus.error ? (
-            <Alert color="danger">
-              Error: {emailStatus.error}
-            </Alert>
+            <Alert color="danger">Error: {emailStatus.error}</Alert>
           ) : (
             <Form>
               <FormGroup>
@@ -245,9 +266,14 @@ const InvoiceTable = ({ }) => {
                 />
               </FormGroup>
               {currentInvoice && (
-                <div style={{ marginTop: '15px' }}>
-                  <p><strong>Invoice #:</strong> {currentInvoice.invoice_number}</p>
-                  <p><strong>Customer:</strong> {currentInvoice.customer.user.name}</p>
+                <div style={{ marginTop: "15px" }}>
+                  <p>
+                    <strong>Invoice #:</strong> {currentInvoice.invoice_number}
+                  </p>
+                  <p>
+                    <strong>Customer:</strong>{" "}
+                    {currentInvoice.customer.user.name}
+                  </p>
                 </div>
               )}
             </Form>
@@ -259,12 +285,12 @@ const InvoiceTable = ({ }) => {
               <Button color="secondary" onClick={toggleEmailModal}>
                 Cancel
               </Button>
-              <Button 
-                color="primary" 
+              <Button
+                color="primary"
                 onClick={handleSendEmail}
                 disabled={emailStatus.sending}
               >
-                {emailStatus.sending ? 'Sending...' : 'Send Email'}
+                {emailStatus.sending ? "Sending..." : "Send Email"}
               </Button>
             </>
           )}

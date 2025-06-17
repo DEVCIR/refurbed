@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {BASE_URL} from '../../Service';
+import {API_BASE_URL} from '../../Service';
 
 const EditInventory = (props) => {
   const [formData, setFormData] = useState({
@@ -13,7 +13,7 @@ const EditInventory = (props) => {
   useEffect(() => {
     const fetchProductData = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/inventory/${props.productId}`, {
+        const response = await fetch(`${API_BASE_URL}/inventory/${props.productId}`, {
           headers: {
             'Authorization': 'Bearer cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478'
           }
@@ -49,7 +49,7 @@ const EditInventory = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${BASE_URL}/inventory/${props.productId}`, {
+      const response = await fetch(`${API_BASE_URL}/inventory/${props.productId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react"
+import { API_BASE_URL } from "../../Service";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
@@ -10,24 +11,25 @@ import {
   Button,
   Table,
   Input,
-} from "reactstrap"
-import { Toaster, toast } from "sonner"
+} from "reactstrap";
+import { Toaster, toast } from "sonner";
 import { connect } from "react-redux";
 import { setBreadcrumbItems } from "../../store/actions";
 import GenerateCreditNote from "./generateCreditNote";
 
 const CreditNoteModule = (props) => {
-  document.title = "Credit Note | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  document.title =
+    "Credit Note | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
   const breadcrumbItems = [
     { title: "Lexa", link: "#" },
     { title: "Forms", link: "#" },
     { title: "Credit Note", link: "#" },
-  ]
+  ];
 
   useEffect(() => {
-    props.setBreadcrumbItems('Credit Note', breadcrumbItems)
-  })
+    props.setBreadcrumbItems("Credit Note", breadcrumbItems);
+  });
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -35,23 +37,22 @@ const CreditNoteModule = (props) => {
   const [orderItems, setOrderItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [reasons, setReasons] = useState({}); 
+  const [reasons, setReasons] = useState({});
   const [showCreditNote, setShowCreditNote] = useState(false);
   const [selectedItemsData, setSelectedItemsData] = useState([]);
 
   const handleGenerate = () => {
-    
-    const itemsData = selectedItems.map(id => {
-      const item = orderItems.find(item => item.inventory?.id === id);
+    const itemsData = selectedItems.map((id) => {
+      const item = orderItems.find((item) => item.inventory?.id === id);
       return {
         inventory_id: id,
         quantity: item?.quantity,
         reason: reasons[id] || "",
         product_name: item?.inventory?.variant?.product?.model_name,
-        total_price: item?.total_price
+        total_price: item?.total_price,
       };
     });
-    
+
     setSelectedItemsData(itemsData);
     setShowCreditNote(true);
   };
@@ -68,20 +69,26 @@ const CreditNoteModule = (props) => {
 
     setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:8000/api/invoices?name=${name}&email=${email}`);
+      const response = await fetch(
+        `${API_BASE_URL}/invoices?name=${name}&email=${email}`,
+      );
       const data = await response.json();
-      
+
       if (data.data.data.length > 0) {
         setCustomerData(data.data.data);
         toast.success("Customer data found successfully!");
 
-        const orderIds = data.data.data.map(invoice => invoice.order_id);
-        const orderItemsPromises = orderIds.map(orderId => 
-          fetch(`http://localhost:8000/api/order-items?order_id=${orderId}`).then(res => res.json())
+        const orderIds = data.data.data.map((invoice) => invoice.order_id);
+        const orderItemsPromises = orderIds.map((orderId) =>
+          fetch(`${API_BASE_URL}/order-items?order_id=${orderId}`).then((res) =>
+            res.json(),
+          ),
         );
 
         const orderItemsResults = await Promise.all(orderItemsPromises);
-        const allOrderItems = orderItemsResults.flatMap(result => result.data.data);
+        const allOrderItems = orderItemsResults.flatMap(
+          (result) => result.data.data,
+        );
         setOrderItems(allOrderItems);
         setSelectedItems([]);
         setReasons({});
@@ -101,23 +108,23 @@ const CreditNoteModule = (props) => {
   };
 
   const handleCheckboxChange = (inventoryId) => {
-    setSelectedItems(prevSelected => {
+    setSelectedItems((prevSelected) => {
       if (prevSelected.includes(inventoryId)) {
-        const newReasons = {...reasons};
+        const newReasons = { ...reasons };
         delete newReasons[inventoryId];
         setReasons(newReasons);
-        return prevSelected.filter(id => id !== inventoryId);
+        return prevSelected.filter((id) => id !== inventoryId);
       } else {
-        setReasons(prev => ({...prev, [inventoryId]: ""}));
+        setReasons((prev) => ({ ...prev, [inventoryId]: "" }));
         return [...prevSelected, inventoryId];
       }
     });
   };
 
   const handleReasonChange = (inventoryId, value) => {
-    setReasons(prev => ({
+    setReasons((prev) => ({
       ...prev,
-      [inventoryId]: value
+      [inventoryId]: value,
     }));
   };
 
@@ -125,8 +132,8 @@ const CreditNoteModule = (props) => {
     <React.Fragment>
       <Toaster position="top-right" richColors />
       {showCreditNote ? (
-        <GenerateCreditNote 
-          customerData={customerData} 
+        <GenerateCreditNote
+          customerData={customerData}
           selectedItems={selectedItemsData}
           onBack={handleBack}
         />
@@ -137,7 +144,10 @@ const CreditNoteModule = (props) => {
               <Card>
                 <CardBody>
                   <Row className="mb-3">
-                    <label htmlFor="name-input" className="col-md-2 col-form-label">
+                    <label
+                      htmlFor="name-input"
+                      className="col-md-2 col-form-label"
+                    >
                       Name
                     </label>
                     <div className="col-md-10">
@@ -152,7 +162,10 @@ const CreditNoteModule = (props) => {
                     </div>
                   </Row>
                   <Row className="mb-3">
-                    <label htmlFor="email-input" className="col-md-2 col-form-label">
+                    <label
+                      htmlFor="email-input"
+                      className="col-md-2 col-form-label"
+                    >
                       Email
                     </label>
                     <div className="col-md-10">
@@ -168,7 +181,11 @@ const CreditNoteModule = (props) => {
                   </Row>
                   <Row className="mb-3">
                     <div className="col-md-10 offset-md-2">
-                      <Button color="primary" onClick={handleSearch} disabled={isLoading}>
+                      <Button
+                        color="primary"
+                        onClick={handleSearch}
+                        disabled={isLoading}
+                      >
                         {isLoading ? "Searching..." : "Search"}
                       </Button>
                     </div>
@@ -208,9 +225,9 @@ const CreditNoteModule = (props) => {
                                 <td>{invoice.customer.user.name}</td>
                                 <td>{invoice.customer.user.email}</td>
                                 <td>{invoice.invoice_number}</td>
-                               <td>{invoice.order.total_amount}</td>
-                                <td>{invoice.order.discount_amount}</td> 
-                                <td>{invoice.order.grand_total}</td> 
+                                <td>{invoice.order.total_amount}</td>
+                                <td>{invoice.order.discount_amount}</td>
+                                <td>{invoice.order.grand_total}</td>
                                 <td>{invoice.order.payment_method}</td>
                                 <td>{invoice.customer.address}</td>
                                 <td>{invoice.customer.city}</td>
@@ -251,21 +268,41 @@ const CreditNoteModule = (props) => {
                                     <td>
                                       <Input
                                         type="checkbox"
-                                        checked={selectedItems.includes(item.inventory?.id)}
-                                        onChange={() => handleCheckboxChange(item.inventory?.id)}
+                                        checked={selectedItems.includes(
+                                          item.inventory?.id,
+                                        )}
+                                        onChange={() =>
+                                          handleCheckboxChange(
+                                            item.inventory?.id,
+                                          )
+                                        }
                                       />
                                     </td>
-                                    <td>{item.inventory?.variant?.product?.model_name}</td>
+                                    <td>
+                                      {
+                                        item.inventory?.variant?.product
+                                          ?.model_name
+                                      }
+                                    </td>
                                     <td>{item.quantity}</td>
                                     <td>{item.discount_amount}</td>
                                     <td>{item.total_price}</td>
                                     {selectedItems.length > 0 && (
                                       <td>
-                                        {selectedItems.includes(item.inventory?.id) ? (
+                                        {selectedItems.includes(
+                                          item.inventory?.id,
+                                        ) ? (
                                           <Input
                                             type="text"
-                                            value={reasons[item.inventory?.id] || ""}
-                                            onChange={(e) => handleReasonChange(item.inventory?.id, e.target.value)}
+                                            value={
+                                              reasons[item.inventory?.id] || ""
+                                            }
+                                            onChange={(e) =>
+                                              handleReasonChange(
+                                                item.inventory?.id,
+                                                e.target.value,
+                                              )
+                                            }
                                             placeholder="Enter reason"
                                           />
                                         ) : null}
@@ -297,7 +334,7 @@ const CreditNoteModule = (props) => {
         </>
       )}
     </React.Fragment>
-  )
-}
+  );
+};
 
 export default connect(null, { setBreadcrumbItems })(CreditNoteModule);

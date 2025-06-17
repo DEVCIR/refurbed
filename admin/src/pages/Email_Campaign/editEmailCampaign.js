@@ -12,20 +12,23 @@ import {
   Button,
 } from "reactstrap";
 import { Toaster, toast } from "sonner";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 function EditEmailCampaign({ onBackClick, campaign = null }) {
-  document.title = "Edit Email Campaign | Lexa - Responsive Bootstrap 5 Admin Dashboard";
-  
+  document.title =
+    "Edit Email Campaign | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+
   const currentDateTime = new Date().toISOString().slice(0, 16);
-  
+
   const [formData, setFormData] = useState({
     template_id: campaign?.template_id || "",
     campaign_name: campaign?.campaign_name || "",
     subject: campaign?.subject || "",
     content: campaign?.content || "",
-    scheduled_time: campaign?.scheduled_time ? new Date(campaign.scheduled_time).toISOString().slice(0, 16) : currentDateTime,
-    created_by: campaign?.created_by?.id || ""
+    scheduled_time: campaign?.scheduled_time
+      ? new Date(campaign.scheduled_time).toISOString().slice(0, 16)
+      : currentDateTime,
+    created_by: campaign?.created_by?.id || "",
   });
 
   const [templates, setTemplates] = useState([]);
@@ -41,10 +44,10 @@ function EditEmailCampaign({ onBackClick, campaign = null }) {
         campaign_name: campaign.campaign_name || "",
         subject: campaign.subject || "",
         content: campaign.content || "",
-        scheduled_time: campaign.scheduled_time 
+        scheduled_time: campaign.scheduled_time
           ? new Date(campaign.scheduled_time).toISOString().slice(0, 16)
           : currentDateTime,
-        created_by: campaign.created_by?.id || ""
+        created_by: campaign.created_by?.id || "",
       });
     }
   }, [campaign]);
@@ -52,7 +55,7 @@ function EditEmailCampaign({ onBackClick, campaign = null }) {
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/email-templates`);
+        const response = await fetch(`${API_BASE_URL}/email-templates`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -72,16 +75,16 @@ function EditEmailCampaign({ onBackClick, campaign = null }) {
 
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/users`);
+        const response = await fetch(`${API_BASE_URL}/users`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        
+
         if (data && Array.isArray(data.data)) {
-          const formattedUsers = data.data.map(user => ({
+          const formattedUsers = data.data.map((user) => ({
             id: user.id,
-            displayName: user.name || user.email 
+            displayName: user.name || user.email,
           }));
           setUsers(formattedUsers);
         } else {
@@ -101,23 +104,25 @@ function EditEmailCampaign({ onBackClick, campaign = null }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     if (name === "template_id") {
       if (value) {
-        const selectedTemplate = templates.find(t => t.id.toString() === value);
+        const selectedTemplate = templates.find(
+          (t) => t.id.toString() === value,
+        );
         if (selectedTemplate) {
-          setFormData(prev => ({
+          setFormData((prev) => ({
             ...prev,
             template_id: value,
             subject: selectedTemplate.subject,
-            content: selectedTemplate.content
+            content: selectedTemplate.content,
           }));
           return;
         }
       }
     }
-    
-    setFormData(prev => ({ ...prev, [name]: value }));
+
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async () => {
@@ -127,36 +132,41 @@ function EditEmailCampaign({ onBackClick, campaign = null }) {
     }
 
     setIsSubmitting(true);
-    
+
     try {
-      const response = await fetch(`${BASE_URL}/email-campaigns/${campaign.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${API_BASE_URL}/email-campaigns/${campaign.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            template_id: formData.template_id,
+            campaign_name: formData.campaign_name,
+            subject: formData.subject,
+            content: formData.content,
+            scheduled_time: formData.scheduled_time,
+            created_by: formData.created_by,
+          }),
         },
-        body: JSON.stringify({
-          template_id: formData.template_id,
-          campaign_name: formData.campaign_name,
-          subject: formData.subject,
-          content: formData.content,
-          scheduled_time: formData.scheduled_time,
-          created_by: formData.created_by
-        })
-      });
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to update campaign');
+        throw new Error(data.message || "Failed to update campaign");
       }
 
-      toast.success('Email campaign updated successfully');
+      toast.success("Email campaign updated successfully");
       setTimeout(() => {
         onBackClick();
-      }, 1500); 
+      }, 1500);
     } catch (error) {
-      console.error('Error updating email campaign:', error);
-      toast.error(error.message || 'An error occurred while updating the email campaign');
+      console.error("Error updating email campaign:", error);
+      toast.error(
+        error.message || "An error occurred while updating the email campaign",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -171,7 +181,6 @@ function EditEmailCampaign({ onBackClick, campaign = null }) {
             <CardBody>
               <CardTitle className="h4">Edit Email Campaign</CardTitle>
               <Form>
-                
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Template</Label>
                   <Col md={10}>
@@ -184,19 +193,22 @@ function EditEmailCampaign({ onBackClick, campaign = null }) {
                       disabled={isLoadingTemplates}
                     >
                       <option value="">Select a template</option>
-                      {templates.map(template => (
+                      {templates.map((template) => (
                         <option key={template.id} value={template.id}>
                           {template.template_name}
                         </option>
                       ))}
                     </Input>
-                    {isLoadingTemplates && <small className="text-muted">Loading templates...</small>}
+                    {isLoadingTemplates && (
+                      <small className="text-muted">Loading templates...</small>
+                    )}
                   </Col>
                 </Row>
 
-              
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Campaign Name</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Campaign Name
+                  </Label>
                   <Col md={10}>
                     <Input
                       type="text"
@@ -209,7 +221,6 @@ function EditEmailCampaign({ onBackClick, campaign = null }) {
                   </Col>
                 </Row>
 
-              
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Subject</Label>
                   <Col md={10}>
@@ -224,7 +235,6 @@ function EditEmailCampaign({ onBackClick, campaign = null }) {
                   </Col>
                 </Row>
 
-                
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Content</Label>
                   <Col md={10}>
@@ -240,9 +250,10 @@ function EditEmailCampaign({ onBackClick, campaign = null }) {
                   </Col>
                 </Row>
 
-             
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Scheduled Time</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Scheduled Time
+                  </Label>
                   <Col md={10}>
                     <Input
                       type="datetime-local"
@@ -253,7 +264,6 @@ function EditEmailCampaign({ onBackClick, campaign = null }) {
                   </Col>
                 </Row>
 
-              
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">User</Label>
                   <Col md={10}>
@@ -266,27 +276,33 @@ function EditEmailCampaign({ onBackClick, campaign = null }) {
                       disabled={isLoadingUsers}
                     >
                       <option value="">Select a user</option>
-                      {users.map(user => (
+                      {users.map((user) => (
                         <option key={user.id} value={user.id}>
                           {user.displayName}
                         </option>
                       ))}
                     </Input>
-                    {isLoadingUsers && <small className="text-muted">Loading users...</small>}
+                    {isLoadingUsers && (
+                      <small className="text-muted">Loading users...</small>
+                    )}
                   </Col>
                 </Row>
 
                 <Row className="mb-3">
                   <Col className="text-end">
-                    <Button color="secondary" onClick={onBackClick} className="me-2">
+                    <Button
+                      color="secondary"
+                      onClick={onBackClick}
+                      className="me-2"
+                    >
                       Back
                     </Button>
-                    <Button 
-                      color="primary" 
+                    <Button
+                      color="primary"
                       onClick={handleSubmit}
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? 'Saving...' : 'Save'}
+                      {isSubmitting ? "Saving..." : "Save"}
                     </Button>
                   </Col>
                 </Row>

@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "../../Service";
 import React, { useState, useEffect, useRef } from "react";
 import {
   Card,
@@ -171,7 +172,7 @@ function AddBlog({ props, onBackClick }) {
         formDataToSend.append("image", formData.image);
       }
 
-      const response = await fetch("http://localhost:8000/api/blog", {
+      const response = await fetch(`${API_BASE_URL}/blog`, {
         method: "POST",
         body: formDataToSend,
       });

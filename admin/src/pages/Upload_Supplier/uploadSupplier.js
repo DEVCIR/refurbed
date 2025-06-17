@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { setBreadcrumbItems } from "../../store/actions";
 import * as XLSX from "xlsx";
 import { Toaster, toast } from "sonner";
-import {BASE_URL} from '../../Service';
+import {API_BASE_URL} from '../../Service';
 
 const UploadSupplier = (props, setViewToTable) => {
   document.title = "Supplier Upload | Lexa - Responsive Bootstrap 5 Admin Dashboard";
@@ -52,7 +52,7 @@ const UploadSupplier = (props, setViewToTable) => {
 
   const fetchSupplierData = async (supplier_name, supplier_email) => {
     try {
-      const response = await fetch(`${BASE_URL}/users?name=${supplier_name}&email=${supplier_email}`);
+      const response = await fetch(`${API_BASE_URL}/users?name=${supplier_name}&email=${supplier_email}`);
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       return await response.json();
     } catch (error) {
@@ -92,7 +92,7 @@ const UploadSupplier = (props, setViewToTable) => {
               role: "supplier"
             };
             
-            const userResponse = await fetch(`${BASE_URL}/users`, {
+            const userResponse = await fetch(`${API_BASE_URL}/users`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ const UploadSupplier = (props, setViewToTable) => {
         console.log('Prepared supplier data:', supplierData);
         
         try {
-          const supplierResponse = await fetch(`${BASE_URL}/suppliers`, {
+          const supplierResponse = await fetch(`${API_BASE_URL}/suppliers`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

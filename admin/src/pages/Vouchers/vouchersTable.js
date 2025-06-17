@@ -5,7 +5,7 @@ import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 import { connect } from "react-redux";
 import { setBreadcrumbItems } from "../../store/actions";
 import { toast } from "sonner";
-import { BASE_URL } from "Service";
+import { API_BASE_URL } from "Service";
 
 const VouchersTable = (props) => {
   document.title = "Vouchers | Lexa - Responsive Bootstrap 5 Admin Dashboard";
@@ -21,7 +21,7 @@ const VouchersTable = (props) => {
 
   const fetchVouchers = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/api/voucher`);
+      const response = await fetch(`${API_BASE_URL}/voucher`);
       const result = await response.json();
       setVouchers(result);
     } catch (error) {
@@ -42,7 +42,7 @@ const VouchersTable = (props) => {
 
     setIsDeleting(true);
     try {
-      const response = await fetch(`${BASE_URL}/api/voucher/${voucherId}`, {
+      const response = await fetch(`${API_BASE_URL}/voucher/${voucherId}`, {
         method: "DELETE",
       });
 

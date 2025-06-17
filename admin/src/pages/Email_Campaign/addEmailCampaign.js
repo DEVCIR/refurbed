@@ -12,13 +12,14 @@ import {
   Button,
 } from "reactstrap";
 import { Toaster, toast } from "sonner";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 function AddEmailCampaign({ onBackClick, setViewToTable }) {
-  document.title = "Add Email Campaign | Lexa - Responsive Bootstrap 5 Admin Dashboard";
-  
+  document.title =
+    "Add Email Campaign | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+
   const currentDateTime = new Date().toISOString().slice(0, 16);
-  
+
   const [formData, setFormData] = useState({
     template_id: "",
     campaign_name: "",
@@ -28,7 +29,7 @@ function AddEmailCampaign({ onBackClick, setViewToTable }) {
     sent_count: 0,
     open_count: 0,
     click_count: 0,
-    created_by: ""
+    created_by: "",
   });
 
   const [templates, setTemplates] = useState([]);
@@ -40,7 +41,7 @@ function AddEmailCampaign({ onBackClick, setViewToTable }) {
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/email-templates`);
+        const response = await fetch(`${API_BASE_URL}/email-templates`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -59,30 +60,29 @@ function AddEmailCampaign({ onBackClick, setViewToTable }) {
     };
 
     const fetchUsers = async () => {
-        try {
-          const response = await fetch(`${BASE_URL}/users`);
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const data = await response.json();
-          
-          
-          if (data && Array.isArray(data.data)) {
-            const formattedUsers = data.data.map(user => ({
-              id: user.id,
-              displayName: user.name || user.email 
-            }));
-            setUsers(formattedUsers);
-          } else {
-            toast.error("Failed to load users");
-          }
-        } catch (error) {
-          console.error("Error fetching users:", error);
-          toast.error("Error loading users");
-        } finally {
-          setIsLoadingUsers(false);
+      try {
+        const response = await fetch(`${API_BASE_URL}/users`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-      };
+        const data = await response.json();
+
+        if (data && Array.isArray(data.data)) {
+          const formattedUsers = data.data.map((user) => ({
+            id: user.id,
+            displayName: user.name || user.email,
+          }));
+          setUsers(formattedUsers);
+        } else {
+          toast.error("Failed to load users");
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        toast.error("Error loading users");
+      } finally {
+        setIsLoadingUsers(false);
+      }
+    };
 
     fetchTemplates();
     fetchUsers();
@@ -90,29 +90,31 @@ function AddEmailCampaign({ onBackClick, setViewToTable }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     if (name === "template_id") {
       console.log("Selected template ID:", value);
-      
+
       if (value) {
-        const selectedTemplate = templates.find(t => t.id.toString() === value);
+        const selectedTemplate = templates.find(
+          (t) => t.id.toString() === value,
+        );
         if (selectedTemplate) {
-          setFormData(prev => ({
+          setFormData((prev) => ({
             ...prev,
             template_id: value,
             subject: selectedTemplate.subject,
-            content: selectedTemplate.content
+            content: selectedTemplate.content,
           }));
           return;
         }
       }
     }
-    
+
     if (name === "created_by") {
       console.log("Selected user ID:", value);
     }
-    
-    setFormData(prev => ({ ...prev, [name]: value }));
+
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async () => {
@@ -120,31 +122,31 @@ function AddEmailCampaign({ onBackClick, setViewToTable }) {
       toast.error("Please select a template");
       return;
     }
-  
+
     if (!formData.campaign_name) {
       toast.error("Please enter a campaign name");
       return;
     }
-  
+
     if (!formData.subject) {
       toast.error("Please enter a subject");
       return;
     }
-  
+
     if (!formData.content) {
       toast.error("Please enter content");
       return;
     }
-  
+
     if (!formData.created_by) {
       toast.error("Please select a user");
       return;
     }
-  
+
     setIsSubmitting(true);
-  
+
     try {
-      const response = await fetch(`${BASE_URL}/email-campaigns`, {
+      const response = await fetch(`${API_BASE_URL}/email-campaigns`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -155,25 +157,24 @@ function AddEmailCampaign({ onBackClick, setViewToTable }) {
           subject: formData.subject,
           content: formData.content,
           scheduled_time: formData.scheduled_time,
-          sent_count: 0, 
-          open_count: 0, 
-          click_count: 0, 
+          sent_count: 0,
+          open_count: 0,
+          click_count: 0,
           created_by: parseInt(formData.created_by),
-          status: "Draft"
+          status: "Draft",
         }),
       });
-  
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || "Failed to create email campaign");
       }
-  
+
       toast.success("Email campaign created successfully");
       setTimeout(() => {
         setViewToTable();
       }, 1500);
-      
     } catch (error) {
       console.error("Error creating email campaign:", error);
       toast.error(error.message || "Failed to create email campaign");
@@ -191,7 +192,6 @@ function AddEmailCampaign({ onBackClick, setViewToTable }) {
             <CardBody>
               <CardTitle className="h4">Add Email Campaign</CardTitle>
               <Form>
-                
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Template</Label>
                   <Col md={10}>
@@ -204,19 +204,22 @@ function AddEmailCampaign({ onBackClick, setViewToTable }) {
                       disabled={isLoadingTemplates}
                     >
                       <option value="">Select a template</option>
-                      {templates.map(template => (
+                      {templates.map((template) => (
                         <option key={template.id} value={template.id}>
                           {template.template_name}
                         </option>
                       ))}
                     </Input>
-                    {isLoadingTemplates && <small className="text-muted">Loading templates...</small>}
+                    {isLoadingTemplates && (
+                      <small className="text-muted">Loading templates...</small>
+                    )}
                   </Col>
                 </Row>
 
-               
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Campaign Name</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Campaign Name
+                  </Label>
                   <Col md={10}>
                     <Input
                       type="text"
@@ -229,7 +232,6 @@ function AddEmailCampaign({ onBackClick, setViewToTable }) {
                   </Col>
                 </Row>
 
-              
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Subject</Label>
                   <Col md={10}>
@@ -244,7 +246,6 @@ function AddEmailCampaign({ onBackClick, setViewToTable }) {
                   </Col>
                 </Row>
 
-               
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Content</Label>
                   <Col md={10}>
@@ -260,9 +261,10 @@ function AddEmailCampaign({ onBackClick, setViewToTable }) {
                   </Col>
                 </Row>
 
-               
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Scheduled Time</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Scheduled Time
+                  </Label>
                   <Col md={10}>
                     <Input
                       type="datetime-local"
@@ -274,42 +276,50 @@ function AddEmailCampaign({ onBackClick, setViewToTable }) {
                   </Col>
                 </Row>
 
-<Row className="mb-3">
-  <Label className="col-md-2 col-form-label">User</Label>
-  <Col md={10}>
-    <Input
-      type="select"
-      name="created_by"
-      value={formData.created_by}
-      onChange={handleChange}
-      required
-      disabled={isLoadingUsers}
-    >
-      <option value="">Select a user</option>
-      {users.map(user => (
-        <option key={user.id} value={user.id}>
-          {user.displayName}
-        </option>
-      ))}
-    </Input>
-    {isLoadingUsers && <small className="text-muted">Loading users...</small>}
-    {!isLoadingUsers && users.length === 0 && (
-      <small className="text-danger">No users found</small>
-    )}
-  </Col>
-</Row>
+                <Row className="mb-3">
+                  <Label className="col-md-2 col-form-label">User</Label>
+                  <Col md={10}>
+                    <Input
+                      type="select"
+                      name="created_by"
+                      value={formData.created_by}
+                      onChange={handleChange}
+                      required
+                      disabled={isLoadingUsers}
+                    >
+                      <option value="">Select a user</option>
+                      {users.map((user) => (
+                        <option key={user.id} value={user.id}>
+                          {user.displayName}
+                        </option>
+                      ))}
+                    </Input>
+                    {isLoadingUsers && (
+                      <small className="text-muted">Loading users...</small>
+                    )}
+                    {!isLoadingUsers && users.length === 0 && (
+                      <small className="text-danger">No users found</small>
+                    )}
+                  </Col>
+                </Row>
 
                 <Row className="mb-3">
                   <Col className="text-end">
-                    <Button color="secondary" onClick={onBackClick} className="me-2">
+                    <Button
+                      color="secondary"
+                      onClick={onBackClick}
+                      className="me-2"
+                    >
                       Back
                     </Button>
-                    <Button 
-                      color="primary" 
-                      onClick={handleSubmit} 
-                      disabled={isSubmitting || isLoadingTemplates || isLoadingUsers}
+                    <Button
+                      color="primary"
+                      onClick={handleSubmit}
+                      disabled={
+                        isSubmitting || isLoadingTemplates || isLoadingUsers
+                      }
                     >
-                      {isSubmitting ? 'Saving...' : 'Save'}
+                      {isSubmitting ? "Saving..." : "Save"}
                     </Button>
                   </Col>
                 </Row>

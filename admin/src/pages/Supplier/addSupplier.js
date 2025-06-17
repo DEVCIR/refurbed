@@ -12,18 +12,19 @@ import {
   Button,
 } from "reactstrap";
 import { Toaster, toast } from "sonner";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 function AddSupplier({ onBackClick, setViewToTable }) {
-  document.title = "Add Supplier | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  document.title =
+    "Add Supplier | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
   const [formData, setFormData] = useState({
-    user_id: '',
-    contact_person: '',
-    address: '',
-    tax_id: '',
-    payment_terms: '',
-    notes: ''
+    user_id: "",
+    contact_person: "",
+    address: "",
+    tax_id: "",
+    payment_terms: "",
+    notes: "",
   });
 
   const [users, setUsers] = useState([]);
@@ -32,7 +33,7 @@ function AddSupplier({ onBackClick, setViewToTable }) {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/users`);
+        const response = await fetch(`${API_BASE_URL}/users`);
         const result = await response.json();
         if (result.data) {
           setUsers(result.data);
@@ -49,27 +50,27 @@ function AddSupplier({ onBackClick, setViewToTable }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     // Log user_id when user is selected
-    if (name === 'user_id') {
+    if (name === "user_id") {
       console.log("Selected User ID:", value);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.user_id) {
       toast.error("Please select a user");
       return;
     }
 
     try {
-      const response = await fetch(`${BASE_URL}/suppliers`, {
+      const response = await fetch(`${API_BASE_URL}/suppliers`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +86,6 @@ function AddSupplier({ onBackClick, setViewToTable }) {
       setTimeout(() => {
         setViewToTable();
       }, 1500);
-      
     } catch (error) {
       console.error("Error adding supplier:", error);
       toast.error("Failed to add supplier");
@@ -121,7 +121,7 @@ function AddSupplier({ onBackClick, setViewToTable }) {
                         required
                       >
                         <option value="">Select User</option>
-                        {users.map(user => (
+                        {users.map((user) => (
                           <option key={user.id} value={user.id}>
                             {user.name} ({user.role})
                           </option>
@@ -133,7 +133,10 @@ function AddSupplier({ onBackClick, setViewToTable }) {
 
                 {/* Contact Person */}
                 <Row className="mb-3">
-                  <Label htmlFor="contact_person" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="contact_person"
+                    className="col-md-2 col-form-label"
+                  >
                     Contact Person
                   </Label>
                   <Col md={10}>
@@ -181,7 +184,10 @@ function AddSupplier({ onBackClick, setViewToTable }) {
 
                 {/* Payment Terms */}
                 <Row className="mb-3">
-                  <Label htmlFor="payment_terms" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="payment_terms"
+                    className="col-md-2 col-form-label"
+                  >
                     Payment Terms
                   </Label>
                   <Col md={10}>
@@ -213,7 +219,12 @@ function AddSupplier({ onBackClick, setViewToTable }) {
 
                 <Row className="mb-3">
                   <Col className="text-end">
-                    <Button type="button" color="secondary" onClick={onBackClick} className="me-2">
+                    <Button
+                      type="button"
+                      color="secondary"
+                      onClick={onBackClick}
+                      className="me-2"
+                    >
                       Back
                     </Button>
                     <Button type="submit" color="primary">

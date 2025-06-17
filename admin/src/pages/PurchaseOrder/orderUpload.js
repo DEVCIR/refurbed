@@ -13,7 +13,7 @@ import {
   ModalFooter,
   Alert,
   Spinner,
-  Badge
+  Badge,
 } from "reactstrap";
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
@@ -21,10 +21,11 @@ import { connect } from "react-redux";
 import { setBreadcrumbItems } from "../../store/actions";
 import * as XLSX from "xlsx";
 import { Toaster, toast } from "sonner";
-import { BASE_URL } from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 const PurchaseOrderUpload = ({ onBackClick }) => {
-  document.title = "Purchase Orders | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  document.title =
+    "Purchase Orders | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
   const [showAddExcel, setShowAddExcel] = useState(false);
   const [excelFile, setExcelFile] = useState(null);
@@ -44,14 +45,14 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
       setIsLoading(true);
       try {
         // Fetch suppliers
-        const suppliersResponse = await fetch(`${BASE_URL}/suppliers`);
+        const suppliersResponse = await fetch(`${API_BASE_URL}/suppliers`);
         const suppliersData = await suppliersResponse.json();
         if (suppliersData.data && suppliersData.data.data) {
           setSuppliers(suppliersData.data.data);
         }
 
         // Fetch users
-        const usersResponse = await fetch(`${BASE_URL}/users`);
+        const usersResponse = await fetch(`${API_BASE_URL}/users`);
         const usersData = await usersResponse.json();
         if (usersData.data) {
           setUsers(usersData.data);
@@ -72,7 +73,10 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
     const resolveSupplierIds = async () => {
       const newSupplierIds = {};
       for (const [index, row] of excelData.entries()) {
-        const supplierId = await findSupplierId(row.supplier_name, row.supplier_email);
+        const supplierId = await findSupplierId(
+          row.supplier_name,
+          row.supplier_email,
+        );
         newSupplierIds[index] = supplierId;
       }
       setSupplierIds(newSupplierIds);
@@ -87,7 +91,7 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
     try {
       // Check if user already exists
       const userSearchResponse = await fetch(
-        `${BASE_URL}/users?email=${encodeURIComponent(email)}`
+        `${API_BASE_URL}/users?email=${encodeURIComponent(email)}`,
       );
 
       if (!userSearchResponse.ok) throw new Error("User search failed");
@@ -99,16 +103,16 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
         userId = userSearchData.data[0].id;
       } else {
         // Create new user
-        const userResponse = await fetch(`${BASE_URL}/users`, {
+        const userResponse = await fetch(`${API_BASE_URL}/users`, {
           method: "POST",
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name: supplierName,
             email: email,
             password: "Supplier123",
             role: "supplier",
-            is_active: true
-          })
+            is_active: true,
+          }),
         });
 
         if (!userResponse.ok) {
@@ -116,8 +120,8 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
           // Handle email conflict race condition
           if (errorData.errors?.email?.[0]?.includes("taken")) {
             const retryUser = await fetch(
-              `${BASE_URL}/users?email=${encodeURIComponent(email)}`
-            ).then(res => res.json());
+              `${API_BASE_URL}/users?email=${encodeURIComponent(email)}`,
+            ).then((res) => res.json());
             if (retryUser.data?.length) {
               userId = retryUser.data[0].id;
             } else {
@@ -133,14 +137,14 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
       }
 
       // Create supplier
-      const supplierResponse = await fetch(`${BASE_URL}/suppliers`, {
+      const supplierResponse = await fetch(`${API_BASE_URL}/suppliers`, {
         method: "POST",
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           user_id: userId,
           contact_person: supplierName,
-          is_active: true
-        })
+          is_active: true,
+        }),
       });
 
       if (!supplierResponse.ok) {
@@ -152,23 +156,24 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
       return {
         supplierId: supplierData.id,
         userId,
-        email
+        email,
       };
-
     } catch (error) {
       console.error("Supplier creation error:", error);
       throw new Error(`Supplier creation failed: ${error.message}`);
     }
   };
 
-
   const findSupplierId = async (supplierName, email) => {
     if (!supplierName) return null;
 
     // First try to find existing supplier
-    const supplier = suppliers.find(s =>
-      s.user?.name?.toLowerCase() === supplierName.toLowerCase() ||
-      `${s.user?.name || ''} ${s.user?.last_name || ''}`.trim().toLowerCase() === supplierName.toLowerCase()
+    const supplier = suppliers.find(
+      (s) =>
+        s.user?.name?.toLowerCase() === supplierName.toLowerCase() ||
+        `${s.user?.name || ""} ${s.user?.last_name || ""}`
+          .trim()
+          .toLowerCase() === supplierName.toLowerCase(),
     );
 
     if (supplier) return supplier.id;
@@ -177,14 +182,17 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
     try {
       toast.info(`Creating new supplier: ${supplierName}`);
 
-      const { userId, supplierId } = await createSupplierWithUser(supplierName, email);
+      const { userId, supplierId } = await createSupplierWithUser(
+        supplierName,
+        email,
+      );
 
       // Update local state
       const newUser = { id: userId, name: supplierName, role: "supplier" };
       const newSupplier = { id: supplierId, user_id: userId, user: newUser };
 
-      setUsers(prev => [...prev, newUser]);
-      setSuppliers(prev => [...prev, newSupplier]);
+      setUsers((prev) => [...prev, newUser]);
+      setSuppliers((prev) => [...prev, newSupplier]);
 
       toast.success(`Successfully created new supplier: ${supplierName}`);
       return supplierId;
@@ -200,14 +208,16 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
 
     // Try to find by ID first (in case created_by contains ID)
     if (!isNaN(userName)) {
-      const userById = users.find(u => u.id == userName);
+      const userById = users.find((u) => u.id == userName);
       if (userById) return userById.id;
     }
 
     // Then try to find by name
-    const user = users.find(u =>
-      u.name?.toLowerCase() === userName.toLowerCase() ||
-      `${u.name || ''} ${u.last_name || ''}`.trim().toLowerCase() === userName.toLowerCase()
+    const user = users.find(
+      (u) =>
+        u.name?.toLowerCase() === userName.toLowerCase() ||
+        `${u.name || ""} ${u.last_name || ""}`.trim().toLowerCase() ===
+          userName.toLowerCase(),
     );
     return user ? user.id : null;
   };
@@ -225,7 +235,10 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
     if (row.order_date && isNaN(new Date(row.order_date))) {
       errors.order_date = "Invalid date format";
     }
-    if (row.expected_delivery_date && isNaN(new Date(row.expected_delivery_date))) {
+    if (
+      row.expected_delivery_date &&
+      isNaN(new Date(row.expected_delivery_date))
+    ) {
       errors.expected_delivery_date = "Invalid date format";
     }
 
@@ -279,7 +292,11 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
         const formattedData = rows
           .map((row, rowIndex) => {
             // Skip empty rows
-            if (!row.some(cell => cell !== null && cell !== undefined && cell !== '')) {
+            if (
+              !row.some(
+                (cell) => cell !== null && cell !== undefined && cell !== "",
+              )
+            ) {
               return null;
             }
 
@@ -301,10 +318,10 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
               total_amount: parseFloat(obj.total_amount) || 0,
               notes: String(obj.notes || ""),
               created_by: String(obj.created_by || ""),
-              is_active: true
+              is_active: true,
             };
           })
-          .filter(row => row !== null)
+          .filter((row) => row !== null)
           .map((row, index) => {
             const rowErrors = validateRow(row, index);
             if (rowErrors) {
@@ -317,9 +334,13 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
         setValidationErrors(errors);
 
         if (Object.keys(errors).length > 0) {
-          toast.warning("Some rows have validation errors. Please check before submitting.");
+          toast.warning(
+            "Some rows have validation errors. Please check before submitting.",
+          );
         } else if (formattedData.length > 0) {
-          toast.success(`Successfully imported ${formattedData.length} purchase orders`);
+          toast.success(
+            `Successfully imported ${formattedData.length} purchase orders`,
+          );
         }
       } catch (error) {
         console.error("Error processing Excel file:", error);
@@ -329,7 +350,8 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
     reader.readAsBinaryString(excelFile);
   };
 
-  const toggleConfirmDeleteModal = () => setConfirmDeleteModal(!confirmDeleteModal);
+  const toggleConfirmDeleteModal = () =>
+    setConfirmDeleteModal(!confirmDeleteModal);
 
   const handleDeleteRowRequest = (rowIndex) => {
     setSelectedRowIndex(rowIndex);
@@ -337,13 +359,15 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
   };
 
   const handleConfirmDeleteRow = () => {
-    setExcelData(prevData => prevData.filter((_, index) => index !== selectedRowIndex));
-    setValidationErrors(prev => {
+    setExcelData((prevData) =>
+      prevData.filter((_, index) => index !== selectedRowIndex),
+    );
+    setValidationErrors((prev) => {
       const newErrors = { ...prev };
       delete newErrors[selectedRowIndex];
       return newErrors;
     });
-    setSupplierIds(prev => {
+    setSupplierIds((prev) => {
       const newIds = { ...prev };
       delete newIds[selectedRowIndex];
       return newIds;
@@ -356,7 +380,6 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
     setSelectedRowIndex(null);
     toggleConfirmDeleteModal();
   };
-
 
   const handleSubmitPurchaseOrders = async () => {
     if (excelData.length === 0) return;
@@ -382,18 +405,21 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
       try {
         // Validate PO group consistency
         const firstRow = poRows[0];
-        const consistentFields = ['supplier_name', 'created_by', 'order_date'];
-        const isConsistent = poRows.every(row =>
-          consistentFields.every(field => row[field] === firstRow[field])
+        const consistentFields = ["supplier_name", "created_by", "order_date"];
+        const isConsistent = poRows.every((row) =>
+          consistentFields.every((field) => row[field] === firstRow[field]),
         );
 
         if (!isConsistent) {
-          throw new Error("Inconsistent data in PO group (supplier, creator, or dates)");
+          throw new Error(
+            "Inconsistent data in PO group (supplier, creator, or dates)",
+          );
         }
 
         // Process supplier and user (using first row)
         const supplierId = supplierIds[excelData.indexOf(firstRow)];
-        if (!supplierId) throw new Error(`Supplier "${firstRow.supplier_name}" not found`);
+        if (!supplierId)
+          throw new Error(`Supplier "${firstRow.supplier_name}" not found`);
 
         const userId = findUserId(firstRow.created_by);
         if (!userId) throw new Error(`User "${firstRow.created_by}" not found`);
@@ -405,10 +431,11 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
             // Fetch inventory data
             if (!row.Sku) throw new Error(`Row ${index + 1}: SKU is required`);
             const inventoryResponse = await fetch(
-              `${BASE_URL}/inventory?sku=${encodeURIComponent(row.Sku)}`
+              `${API_BASE_URL}/inventory?sku=${encodeURIComponent(row.Sku)}`,
             );
 
-            if (!inventoryResponse.ok) throw new Error("Inventory fetch failed");
+            if (!inventoryResponse.ok)
+              throw new Error("Inventory fetch failed");
             const inventoryData = await inventoryResponse.json();
 
             if (!inventoryData?.data?.data?.length) {
@@ -435,9 +462,9 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
               unitPrice,
               itemTotal,
               sku: row.Sku,
-              notes: row.notes
+              notes: row.notes,
             };
-          })
+          }),
         );
 
         // Create purchase order
@@ -452,13 +479,13 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
           status: firstRow.status || "draft",
           notes: firstRow.notes,
           total_amount: poTotal,
-          is_active: true
+          is_active: true,
         };
 
-        const poResponse = await fetch(`${BASE_URL}/purchase-orders`, {
+        const poResponse = await fetch(`${API_BASE_URL}/purchase-orders`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(poPayload)
+          body: JSON.stringify(poPayload),
         });
 
         if (!poResponse.ok) {
@@ -479,20 +506,23 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
               unit_price: item.unitPrice,
               total_price: item.itemTotal,
               notes: item.notes,
-              is_active: true
+              is_active: true,
             };
 
-            const itemResponse = await fetch(`${BASE_URL}/purchase-order-items`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(itemPayload)
-            });
+            const itemResponse = await fetch(
+              `${API_BASE_URL}/purchase-order-items`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(itemPayload),
+              },
+            );
 
             if (!itemResponse.ok) {
               const errorData = await itemResponse.json();
               throw new Error(`Item creation failed: ${errorData.message}`);
             }
-          })
+          }),
         );
 
         successCount++;
@@ -514,14 +544,18 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
     } else {
       toast.error(
         <div>
-          <p>Completed with errors ({successCount} success, {failCount} fails)</p>
+          <p>
+            Completed with errors ({successCount} success, {failCount} fails)
+          </p>
           <div style={{ maxHeight: "200px", overflowY: "auto" }}>
             {errors.map((error, i) => (
-              <p key={i} style={{ fontSize: "12px", margin: "2px 0" }}>{error}</p>
+              <p key={i} style={{ fontSize: "12px", margin: "2px 0" }}>
+                {error}
+              </p>
             ))}
           </div>
         </div>,
-        { duration: 10000 }
+        { duration: 10000 },
       );
     }
   };
@@ -531,7 +565,7 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
   };
 
   const formatDateDisplay = (dateStr) => {
-    if (!dateStr) return '';
+    if (!dateStr) return "";
     try {
       return new Date(dateStr).toLocaleDateString();
     } catch {
@@ -551,7 +585,11 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
                     <CardTitle className="h4">Purchase Orders</CardTitle>
                   </Col>
                   <Col className="text-end">
-                    <Button color="secondary" onClick={onBackClick} className="me-2">
+                    <Button
+                      color="secondary"
+                      onClick={onBackClick}
+                      className="me-2"
+                    >
                       Back to Table
                     </Button>
                     <Button color="success" onClick={handleShowExcelForm}>
@@ -604,7 +642,7 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
                         onClick={handleImportExcel}
                         disabled={isLoading || !excelFile}
                       >
-                        {isLoading ? 'Loading...' : 'Import'}
+                        {isLoading ? "Loading..." : "Import"}
                       </Button>
                     </Col>
                   </Row>
@@ -615,18 +653,29 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
                 <React.Fragment>
                   <Row className="mb-3">
                     <Col>
-                      <CardTitle className="h5">Imported Purchase Orders</CardTitle>
+                      <CardTitle className="h5">
+                        Imported Purchase Orders
+                      </CardTitle>
                       <Badge color="info" className="me-2">
                         Total: {excelData.length}
                       </Badge>
-                      <Badge color={Object.keys(validationErrors).length > 0 ? "danger" : "success"}>
+                      <Badge
+                        color={
+                          Object.keys(validationErrors).length > 0
+                            ? "danger"
+                            : "success"
+                        }
+                      >
                         Errors: {Object.keys(validationErrors).length}
                       </Badge>
                     </Col>
                   </Row>
 
                   <div className="table-rep-plugin">
-                    <div className="table-responsive mb-0" data-pattern="priority-columns">
+                    <div
+                      className="table-responsive mb-0"
+                      data-pattern="priority-columns"
+                    >
                       <Table className="table table-striped table-bordered">
                         <Thead>
                           <Tr>
@@ -649,56 +698,74 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
                             const supplierId = supplierIds[rowIndex];
                             const userId = findUserId(row.created_by);
                             const rowErrors = validationErrors[rowIndex];
-                            const hasErrors = rowErrors && Object.keys(rowErrors).length > 0;
+                            const hasErrors =
+                              rowErrors && Object.keys(rowErrors).length > 0;
 
                             return (
-                              <Tr key={rowIndex} className={hasErrors ? "table-warning" : ""}>
+                              <Tr
+                                key={rowIndex}
+                                className={hasErrors ? "table-warning" : ""}
+                              >
                                 <Td>{rowIndex + 1}</Td>
                                 <Td>
                                   {row.supplier_name}
-                                  {getErrorForCell(rowIndex, 'supplier_name') && (
+                                  {getErrorForCell(
+                                    rowIndex,
+                                    "supplier_name",
+                                  ) && (
                                     <div className="text-danger small">
-                                      {getErrorForCell(rowIndex, 'supplier_name')}
+                                      {getErrorForCell(
+                                        rowIndex,
+                                        "supplier_name",
+                                      )}
                                     </div>
                                   )}
                                 </Td>
                                 <Td>
                                   {row.po_number}
-                                  {getErrorForCell(rowIndex, 'po_number') && (
+                                  {getErrorForCell(rowIndex, "po_number") && (
                                     <div className="text-danger small">
-                                      {getErrorForCell(rowIndex, 'po_number')}
+                                      {getErrorForCell(rowIndex, "po_number")}
                                     </div>
                                   )}
                                 </Td>
                                 <Td>
                                   {formatDateDisplay(row.order_date)}
-                                  {getErrorForCell(rowIndex, 'order_date') && (
+                                  {getErrorForCell(rowIndex, "order_date") && (
                                     <div className="text-danger small">
-                                      {getErrorForCell(rowIndex, 'order_date')}
+                                      {getErrorForCell(rowIndex, "order_date")}
                                     </div>
                                   )}
                                 </Td>
                                 <Td>
-                                  {formatDateDisplay(row.expected_delivery_date)}
-                                  {getErrorForCell(rowIndex, 'expected_delivery_date') && (
+                                  {formatDateDisplay(
+                                    row.expected_delivery_date,
+                                  )}
+                                  {getErrorForCell(
+                                    rowIndex,
+                                    "expected_delivery_date",
+                                  ) && (
                                     <div className="text-danger small">
-                                      {getErrorForCell(rowIndex, 'expected_delivery_date')}
+                                      {getErrorForCell(
+                                        rowIndex,
+                                        "expected_delivery_date",
+                                      )}
                                     </div>
                                   )}
                                 </Td>
                                 <Td>
                                   {row.status}
-                                  {getErrorForCell(rowIndex, 'status') && (
+                                  {getErrorForCell(rowIndex, "status") && (
                                     <div className="text-danger small">
-                                      {getErrorForCell(rowIndex, 'status')}
+                                      {getErrorForCell(rowIndex, "status")}
                                     </div>
                                   )}
                                 </Td>
                                 <Td>
                                   {row.Sku}
-                                  {getErrorForCell(rowIndex, 'Sku') && (
+                                  {getErrorForCell(rowIndex, "Sku") && (
                                     <div className="text-danger small">
-                                      {getErrorForCell(rowIndex, 'Sku')}
+                                      {getErrorForCell(rowIndex, "Sku")}
                                     </div>
                                   )}
                                 </Td>
@@ -712,9 +779,9 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
                                 </Td> */}
                                 <Td>
                                   {row.created_by}
-                                  {getErrorForCell(rowIndex, 'created_by') && (
+                                  {getErrorForCell(rowIndex, "created_by") && (
                                     <div className="text-danger small">
-                                      {getErrorForCell(rowIndex, 'created_by')}
+                                      {getErrorForCell(rowIndex, "created_by")}
                                     </div>
                                   )}
                                 </Td>
@@ -730,7 +797,9 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
                                   <Button
                                     color="danger"
                                     size="sm"
-                                    onClick={() => handleDeleteRowRequest(rowIndex)}
+                                    onClick={() =>
+                                      handleDeleteRowRequest(rowIndex)
+                                    }
                                   >
                                     Delete
                                   </Button>
@@ -748,14 +817,17 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
                       <Button
                         color="primary"
                         onClick={handleSubmitPurchaseOrders}
-                        disabled={isSubmitting || Object.keys(validationErrors).length > 0}
+                        disabled={
+                          isSubmitting ||
+                          Object.keys(validationErrors).length > 0
+                        }
                       >
                         {isSubmitting ? (
                           <>
                             <Spinner size="sm" /> Submitting...
                           </>
                         ) : (
-                          'Submit Purchase Orders'
+                          "Submit Purchase Orders"
                         )}
                       </Button>
                     </Col>
@@ -767,7 +839,8 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
                 <Row>
                   <Col>
                     <Alert color="info">
-                      No data imported yet. Please choose an Excel file and click Import.
+                      No data imported yet. Please choose an Excel file and
+                      click Import.
                     </Alert>
                   </Col>
                 </Row>
@@ -778,7 +851,9 @@ const PurchaseOrderUpload = ({ onBackClick }) => {
       </Row>
 
       <Modal isOpen={confirmDeleteModal} toggle={toggleConfirmDeleteModal}>
-        <ModalHeader toggle={toggleConfirmDeleteModal}>Confirm Delete</ModalHeader>
+        <ModalHeader toggle={toggleConfirmDeleteModal}>
+          Confirm Delete
+        </ModalHeader>
         <ModalBody>
           Are you sure you want to delete this purchase order?
         </ModalBody>

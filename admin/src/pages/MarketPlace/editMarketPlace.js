@@ -12,11 +12,12 @@ import {
   Button,
 } from "reactstrap";
 import { Toaster, toast } from "sonner";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 function EditMarketplaceItem({ onBackClick, item }) {
-  document.title = "Edit Marketplace Item | Lexa - Responsive Bootstrap 5 Admin Dashboard";
-  
+  document.title =
+    "Edit Marketplace Item | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+
   const [formData, setFormData] = useState({
     name: item?.name || "",
     description: item?.description || "",
@@ -26,7 +27,7 @@ function EditMarketplaceItem({ onBackClick, item }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async () => {
@@ -36,19 +37,18 @@ function EditMarketplaceItem({ onBackClick, item }) {
     }
 
     setIsSubmitting(true);
-    
+
     try {
-      const response = await fetch(`${BASE_URL}/marketplaces/${item.id}`, {
-        method: 'PUT',
+      const response = await fetch(`${API_BASE_URL}/marketplaces/${item.id}`, {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update marketplace item');
+        throw new Error("Failed to update marketplace item");
       }
 
       toast.success("Marketplace item updated successfully");
@@ -56,7 +56,7 @@ function EditMarketplaceItem({ onBackClick, item }) {
         onBackClick();
       }, 1500);
     } catch (error) {
-      console.error('Error updating marketplace item:', error);
+      console.error("Error updating marketplace item:", error);
       toast.error("Failed to update marketplace item");
     } finally {
       setIsSubmitting(false);
@@ -104,15 +104,19 @@ function EditMarketplaceItem({ onBackClick, item }) {
 
                 <Row className="mb-3">
                   <Col className="text-end">
-                    <Button color="secondary" onClick={onBackClick} className="me-2">
+                    <Button
+                      color="secondary"
+                      onClick={onBackClick}
+                      className="me-2"
+                    >
                       Back
                     </Button>
-                    <Button 
-                      color="primary" 
-                      onClick={handleSubmit} 
+                    <Button
+                      color="primary"
+                      onClick={handleSubmit}
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? 'Saving...' : 'Save'}
+                      {isSubmitting ? "Saving..." : "Save"}
                     </Button>
                   </Col>
                 </Row>

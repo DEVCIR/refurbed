@@ -12,7 +12,7 @@ import {
   Button,
 } from "reactstrap";
 import { Toaster, toast } from "sonner";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 function EditRmas({ rma, onBackClick, setViewToTable }) {
   document.title = "Edit RMA | Lexa - Responsive Bootstrap 5 Admin Dashboard";
@@ -26,17 +26,19 @@ function EditRmas({ rma, onBackClick, setViewToTable }) {
   const [formData, setFormData] = useState({
     reason: "",
     resolution: "",
-    resolved_date: ""
+    resolved_date: "",
   });
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/orders`);
+        const response = await fetch(`${API_BASE_URL}/orders`);
         const data = await response.json();
-        
+
         if (data && data.data && data.data.data) {
-          const validOrders = data.data.data.filter(order => order.customer !== null);
+          const validOrders = data.data.data.filter(
+            (order) => order.customer !== null,
+          );
           setOrders(validOrders);
         }
         setLoading(false);
@@ -53,7 +55,8 @@ function EditRmas({ rma, onBackClick, setViewToTable }) {
       setFormData({
         reason: rma.reason || "",
         resolution: rma.resolution || "",
-        resolved_date: rma.resolved_date || new Date().toISOString().split('T')[0]
+        resolved_date:
+          rma.resolved_date || new Date().toISOString().split("T")[0],
       });
 
       // If RMA has an order, set it as selected
@@ -68,9 +71,11 @@ function EditRmas({ rma, onBackClick, setViewToTable }) {
   const fetchOrderItems = async (orderId) => {
     setItemsLoading(true);
     try {
-      const response = await fetch(`${BASE_URL}/order-items?order_id=${orderId}`);
+      const response = await fetch(
+        `${API_BASE_URL}/order-items?order_id=${orderId}`,
+      );
       const data = await response.json();
-      
+
       if (data && data.data && data.data.data) {
         setOrderItems(data.data.data);
       } else {
@@ -87,12 +92,12 @@ function EditRmas({ rma, onBackClick, setViewToTable }) {
   const handleOrderChange = (e) => {
     const orderId = e.target.value;
     if (orderId) {
-      const selected = orders.find(order => order.id.toString() === orderId);
+      const selected = orders.find((order) => order.id.toString() === orderId);
       setSelectedOrder(selected);
       fetchOrderItems(selected.id);
-      
+
       if (selected.customer && selected.customer.user) {
-        setCustomerName(`${selected.customer.user.name || ''}`);
+        setCustomerName(`${selected.customer.user.name || ""}`);
       } else {
         setCustomerName("");
       }
@@ -105,26 +110,26 @@ function EditRmas({ rma, onBackClick, setViewToTable }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!selectedOrder) {
       alert("Please select an order first");
       return;
     }
-  
+
     try {
       setLoading(true);
-      const response = await fetch(`${BASE_URL}/rmas/${rma.id}`, {
-        method: 'PUT',
+      const response = await fetch(`${API_BASE_URL}/rmas/${rma.id}`, {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           reason: formData.reason,
@@ -132,11 +137,11 @@ function EditRmas({ rma, onBackClick, setViewToTable }) {
           resolved_date: formData.resolved_date,
         }),
       });
-  
+
       if (!response.ok) {
-        throw new Error('Failed to update RMA');
+        throw new Error("Failed to update RMA");
       }
-  
+
       const data = await response.json();
       toast.success("RMA updated successfully");
       setTimeout(() => {
@@ -159,7 +164,6 @@ function EditRmas({ rma, onBackClick, setViewToTable }) {
             <CardBody>
               <CardTitle className="h4">Edit RMA</CardTitle>
               <Form onSubmit={handleSubmit}>
-              
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">RMA Number</Label>
                   <Col md={10}>
@@ -239,7 +243,12 @@ function EditRmas({ rma, onBackClick, setViewToTable }) {
 
                 <Row className="mb-3">
                   <Col className="text-end">
-                    <Button color="secondary" onClick={onBackClick} className="me-2" type="button">
+                    <Button
+                      color="secondary"
+                      onClick={onBackClick}
+                      className="me-2"
+                      type="button"
+                    >
                       Back
                     </Button>
                     <Button color="primary" type="submit">

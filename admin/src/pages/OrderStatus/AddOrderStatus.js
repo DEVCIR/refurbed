@@ -13,16 +13,24 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 import { setBreadcrumbItems } from "../../store/actions";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 function AddOrderStatus({ setShowAddStatus }) {
-  document.title = "Add Order Status | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  document.title =
+    "Add Order Status | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
   const [formData, setFormData] = useState({
     status_name: "pending",
   });
 
-  const allowedStatuses = ["pending", "processing", "shipped", "delivered", "cancelled", "returned"];
+  const allowedStatuses = [
+    "pending",
+    "processing",
+    "shipped",
+    "delivered",
+    "cancelled",
+    "returned",
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,11 +44,12 @@ function AddOrderStatus({ setShowAddStatus }) {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${BASE_URL}/order-statuses`, {
+      const response = await fetch(`${API_BASE_URL}/order-statuses`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
+          Authorization:
+            "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
         },
         body: JSON.stringify(formData),
       });
@@ -64,7 +73,10 @@ function AddOrderStatus({ setShowAddStatus }) {
               <CardTitle className="h4">Add Order Status</CardTitle>
               <Form onSubmit={handleSubmit}>
                 <Row className="mb-3">
-                  <Label htmlFor="status_name" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="status_name"
+                    className="col-md-2 col-form-label"
+                  >
                     Status
                   </Label>
                   <Col md={10}>

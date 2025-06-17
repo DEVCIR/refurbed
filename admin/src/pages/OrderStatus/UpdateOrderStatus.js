@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardBody, Col, Row, CardTitle, Form, Label, Input, Button } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  Col,
+  Row,
+  CardTitle,
+  Form,
+  Label,
+  Input,
+  Button,
+} from "reactstrap";
 import { connect } from "react-redux";
 import { setBreadcrumbItems } from "../../store/actions";
 import { useParams, useNavigate } from "react-router-dom";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 const UpdateOrderStatus = (props) => {
-  document.title = "Update Order Status | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  document.title =
+    "Update Order Status | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -21,7 +32,14 @@ const UpdateOrderStatus = (props) => {
     status_name: "pending",
   });
 
-  const allowedStatuses = ["pending", "processing", "shipped", "delivered", "cancelled", "returned"];
+  const allowedStatuses = [
+    "pending",
+    "processing",
+    "shipped",
+    "delivered",
+    "cancelled",
+    "returned",
+  ];
 
   useEffect(() => {
     props.setBreadcrumbItems("Update Order Status", breadcrumbItems);
@@ -30,9 +48,10 @@ const UpdateOrderStatus = (props) => {
 
   const fetchStatus = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/order-statuses/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/order-statuses/${id}`, {
         headers: {
-          "Authorization": "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
+          Authorization:
+            "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
         },
       });
       const data = await response.json();
@@ -56,11 +75,12 @@ const UpdateOrderStatus = (props) => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${BASE_URL}/order-statuses/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/order-statuses/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
+          Authorization:
+            "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
         },
         body: JSON.stringify(formData),
       });
@@ -84,7 +104,10 @@ const UpdateOrderStatus = (props) => {
               <CardTitle className="h4">Update Order Status</CardTitle>
               <Form onSubmit={handleSubmit}>
                 <Row className="mb-3">
-                  <Label htmlFor="status_name" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="status_name"
+                    className="col-md-2 col-form-label"
+                  >
                     Status
                   </Label>
                   <Col md={10}>

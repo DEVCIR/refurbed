@@ -12,19 +12,20 @@ import {
   Button,
 } from "reactstrap";
 import { Toaster, toast } from "sonner";
-import Select from 'react-select';
-import {BASE_URL} from '../../Service';
+import Select from "react-select";
+import { API_BASE_URL } from "../../Service";
 
 function AddPurchaseOrder({ onBackClick, setViewToTable }) {
-  document.title = "Add Purchase Order | Lexa - Responsive Bootstrap 5 Admin Dashboard";
-  
+  document.title =
+    "Add Purchase Order | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+
   // Set default dates
   const today = new Date();
   const deliveryDate = new Date();
   deliveryDate.setDate(today.getDate() + 5);
-  
+
   const formatDate = (date) => {
-    return date.toISOString().split('T')[0];
+    return date.toISOString().split("T")[0];
   };
 
   const generatePONumber = () => {
@@ -52,7 +53,7 @@ function AddPurchaseOrder({ onBackClick, setViewToTable }) {
   useEffect(() => {
     const fetchSuppliers = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/suppliers`);
+        const response = await fetch(`${API_BASE_URL}/suppliers`);
         const result = await response.json();
         if (result.data) {
           setSuppliers(result.data.data);
@@ -69,23 +70,27 @@ function AddPurchaseOrder({ onBackClick, setViewToTable }) {
 
   const handleSupplierChange = async (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     setSelectedProducts([]);
 
     if (value) {
       setLoadingProducts(true);
       try {
-        const response = await fetch(`${BASE_URL}/inventory?supplier_id=${value}`);
+        const response = await fetch(
+          `${API_BASE_URL}/inventory?supplier_id=${value}`,
+        );
         const result = await response.json();
         if (result.data?.data) {
-          setProducts(result.data.data.map(product => ({
-            ...product,
-            label: `${product.variant.product.model_name}`,
-            value: product.id,
-            price: parseFloat(product.purchase_price) || 0,
-            variant_id: `${product.variant.id}`,
-            product_id: `${product.variant.product.id}`,
-          })));
+          setProducts(
+            result.data.data.map((product) => ({
+              ...product,
+              label: `${product.variant.product.model_name}`,
+              value: product.id,
+              price: parseFloat(product.purchase_price) || 0,
+              variant_id: `${product.variant.id}`,
+              product_id: `${product.variant.product.id}`,
+            })),
+          );
         }
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -97,25 +102,29 @@ function AddPurchaseOrder({ onBackClick, setViewToTable }) {
   };
 
   const handleProductSelect = (selectedOptions) => {
-    const newSelectedProducts = selectedOptions.map(option => {
-      const existingProduct = selectedProducts.find(p => p.value === option.value);
+    const newSelectedProducts = selectedOptions.map((option) => {
+      const existingProduct = selectedProducts.find(
+        (p) => p.value === option.value,
+      );
       return existingProduct || { ...option, quantity: 1 };
     });
-    
+
     setSelectedProducts(newSelectedProducts);
   };
 
   const handleQuantityChange = (productId, value) => {
     const quantity = Math.max(1, parseInt(value) || 1);
-    setSelectedProducts(prev => 
-      prev.map(product => 
-        product.value === productId ? { ...product, quantity } : product
-      )
+    setSelectedProducts((prev) =>
+      prev.map((product) =>
+        product.value === productId ? { ...product, quantity } : product,
+      ),
     );
   };
 
   const removeProduct = (productId) => {
-    setSelectedProducts(prev => prev.filter(product => product.value !== productId));
+    setSelectedProducts((prev) =>
+      prev.filter((product) => product.value !== productId),
+    );
   };
 
   const calculateTotalQuantity = () => {
@@ -124,13 +133,13 @@ function AddPurchaseOrder({ onBackClick, setViewToTable }) {
 
   const calculateTotalAmount = () => {
     return selectedProducts.reduce((sum, product) => {
-      return sum + (product.price * product.quantity);
+      return sum + product.price * product.quantity;
     }, 0);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const createPurchaseOrderItems = async (poId) => {
@@ -147,10 +156,10 @@ function AddPurchaseOrder({ onBackClick, setViewToTable }) {
           unit_price: product.price,
           total_price: product.price * product.quantity,
           received_quantity: 0,
-          is_active: true
+          is_active: true,
         };
 
-        const response = await fetch(`${BASE_URL}/purchase-order-items`, {
+        const response = await fetch(`${API_BASE_URL}/purchase-order-items`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -159,7 +168,9 @@ function AddPurchaseOrder({ onBackClick, setViewToTable }) {
         });
 
         if (!response.ok) {
-          throw new Error(`Failed to create purchase order item for product ${product.product_id}`);
+          throw new Error(
+            `Failed to create purchase order item for product ${product.product_id}`,
+          );
         }
 
         return response.json();
@@ -189,13 +200,13 @@ function AddPurchaseOrder({ onBackClick, setViewToTable }) {
 
     try {
       // First, create the purchase order
-      const poResponse = await fetch(`${BASE_URL}/purchase-orders`, {
+      const poResponse = await fetch(`${API_BASE_URL}/purchase-orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...formData,    
+          ...formData,
           quantity: calculateTotalQuantity(),
           total_amount: calculateTotalAmount(),
         }),
@@ -215,7 +226,6 @@ function AddPurchaseOrder({ onBackClick, setViewToTable }) {
       setTimeout(() => {
         setViewToTable();
       }, 1500);
-      
     } catch (error) {
       console.error("Error in purchase order creation:", error);
       toast.error("Failed to create purchase order");
@@ -250,7 +260,7 @@ function AddPurchaseOrder({ onBackClick, setViewToTable }) {
                         required
                       >
                         <option value="">Select Supplier</option>
-                        {suppliers.map(supplier => (
+                        {suppliers.map((supplier) => (
                           <option key={supplier.id} value={supplier.id}>
                             {supplier.user.name}
                           </option>
@@ -277,8 +287,14 @@ function AddPurchaseOrder({ onBackClick, setViewToTable }) {
                       options={products}
                       onChange={handleProductSelect}
                       value={selectedProducts}
-                      isDisabled={!formData.supplier_id || products.length === 0}
-                      placeholder={loadingProducts ? "Loading products..." : "Select products..."}
+                      isDisabled={
+                        !formData.supplier_id || products.length === 0
+                      }
+                      placeholder={
+                        loadingProducts
+                          ? "Loading products..."
+                          : "Select products..."
+                      }
                       isLoading={loadingProducts}
                     />
                   </Col>
@@ -294,13 +310,21 @@ function AddPurchaseOrder({ onBackClick, setViewToTable }) {
                           <Col md={4}>
                             <FormGroup>
                               <Label>Product Name</Label>
-                              <Input type="text" value={product.label} readOnly />
+                              <Input
+                                type="text"
+                                value={product.label}
+                                readOnly
+                              />
                             </FormGroup>
                           </Col>
                           <Col md={2}>
                             <FormGroup>
                               <Label>Unit Price</Label>
-                              <Input type="text" value={`$${product.price.toFixed(2)}`} readOnly />
+                              <Input
+                                type="text"
+                                value={`$${product.price.toFixed(2)}`}
+                                readOnly
+                              />
                             </FormGroup>
                           </Col>
                           <Col md={2}>
@@ -310,24 +334,29 @@ function AddPurchaseOrder({ onBackClick, setViewToTable }) {
                                 type="number"
                                 min="1"
                                 value={product.quantity}
-                                onChange={(e) => handleQuantityChange(product.value, e.target.value)}
+                                onChange={(e) =>
+                                  handleQuantityChange(
+                                    product.value,
+                                    e.target.value,
+                                  )
+                                }
                               />
                             </FormGroup>
                           </Col>
                           <Col md={2}>
                             <FormGroup>
                               <Label>Total</Label>
-                              <Input 
-                                type="text" 
-                                value={`$${(product.price * product.quantity).toFixed(2)}`} 
-                                readOnly 
+                              <Input
+                                type="text"
+                                value={`$${(product.price * product.quantity).toFixed(2)}`}
+                                readOnly
                               />
                             </FormGroup>
                           </Col>
                           <Col md={2} className="text-end">
-                            <Button 
-                              color="danger" 
-                              size="sm" 
+                            <Button
+                              color="danger"
+                              size="sm"
                               onClick={() => removeProduct(product.value)}
                             >
                               Remove
@@ -365,16 +394,23 @@ function AddPurchaseOrder({ onBackClick, setViewToTable }) {
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Order Date</Label>
                   <Col md={10}>
-                    <Input type="date" name="order_date" value={formData.order_date} readOnly />
+                    <Input
+                      type="date"
+                      name="order_date"
+                      value={formData.order_date}
+                      readOnly
+                    />
                   </Col>
                 </Row>
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Expected Delivery Date</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Expected Delivery Date
+                  </Label>
                   <Col md={10}>
-                    <Input 
-                      type="date" 
-                      name="expected_delivery_date" 
-                      value={formData.expected_delivery_date} 
+                    <Input
+                      type="date"
+                      name="expected_delivery_date"
+                      value={formData.expected_delivery_date}
                       onChange={handleChange}
                     />
                   </Col>
@@ -392,11 +428,11 @@ function AddPurchaseOrder({ onBackClick, setViewToTable }) {
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Notes</Label>
                   <Col md={10}>
-                    <Input 
-                      type="textarea" 
-                      name="notes" 
-                      value={formData.notes} 
-                      onChange={handleChange} 
+                    <Input
+                      type="textarea"
+                      name="notes"
+                      value={formData.notes}
+                      onChange={handleChange}
                       rows="3"
                     />
                   </Col>
@@ -405,9 +441,19 @@ function AddPurchaseOrder({ onBackClick, setViewToTable }) {
                 {/* Buttons */}
                 <Row className="mb-3">
                   <Col className="text-end">
-                    <Button color="secondary" onClick={onBackClick} className="me-2">Back</Button>
-                    <Button color="primary" onClick={handleSubmit} disabled={isSubmitting}>
-                      {isSubmitting ? 'Saving...' : 'Save'}
+                    <Button
+                      color="secondary"
+                      onClick={onBackClick}
+                      className="me-2"
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      color="primary"
+                      onClick={handleSubmit}
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Saving..." : "Save"}
                     </Button>
                   </Col>
                 </Row>

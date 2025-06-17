@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "../../Service";
 import React, { useState, useEffect } from "react";
 import {
   Card,
@@ -12,17 +13,17 @@ import {
 } from "reactstrap";
 import { Toaster, toast } from "sonner";
 
-
 function EditSupplier({ onBackClick, setViewToTable, supplierId }) {
-  document.title = "EditSupplier | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  document.title =
+    "EditSupplier | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
   const [formData, setFormData] = useState({
-    user_id: '',
-    contact_person: '',
-    address: '',
-    tax_id: '',
-    payment_terms: '',
-    notes: ''
+    user_id: "",
+    contact_person: "",
+    address: "",
+    tax_id: "",
+    payment_terms: "",
+    notes: "",
   });
 
   const [users, setUsers] = useState([]);
@@ -33,33 +34,40 @@ function EditSupplier({ onBackClick, setViewToTable, supplierId }) {
     const fetchData = async () => {
       try {
         // Fetch users
-        const usersResponse = await fetch('http://localhost:8000/api/users');
+        const usersResponse = await fetch(`${API_BASE_URL}/users`);
         const usersResult = await usersResponse.json();
         console.log("Users response:", usersResult);
 
-        if (!usersResponse.ok) throw new Error(usersResult.message || 'Failed to fetch users');
+        if (!usersResponse.ok)
+          throw new Error(usersResult.message || "Failed to fetch users");
         setUsers(usersResult.data || usersResult || []);
 
         // Fetch supplier data if supplierId exists
         if (supplierId) {
           console.log(`Fetching supplier ${supplierId}...`);
-          const supplierResponse = await fetch(`http://localhost:8000/api/suppliers/${supplierId}`);
+          const supplierResponse = await fetch(
+            `${API_BASE_URL}/suppliers/${supplierId}`,
+          );
           const supplierResult = await supplierResponse.json();
           console.log("Supplier response:", supplierResult);
 
-          if (!supplierResponse.ok) throw new Error(supplierResult.message || 'Failed to fetch supplier');
+          if (!supplierResponse.ok)
+            throw new Error(
+              supplierResult.message || "Failed to fetch supplier",
+            );
 
-          const supplierData = supplierResult.data?.data || supplierResult.data || supplierResult;
+          const supplierData =
+            supplierResult.data?.data || supplierResult.data || supplierResult;
           console.log("Extracted supplier data:", supplierData);
 
           if (supplierData) {
             setFormData({
-              user_id: supplierData.user_id?.toString() || '',
-              contact_person: supplierData.contact_person || '',
-              address: supplierData.address || '',
-              tax_id: supplierData.tax_id || '',
-              payment_terms: supplierData.payment_terms || '',
-              notes: supplierData.notes || ''
+              user_id: supplierData.user_id?.toString() || "",
+              contact_person: supplierData.contact_person || "",
+              address: supplierData.address || "",
+              tax_id: supplierData.tax_id || "",
+              payment_terms: supplierData.payment_terms || "",
+              notes: supplierData.notes || "",
             });
           }
         }
@@ -71,31 +79,31 @@ function EditSupplier({ onBackClick, setViewToTable, supplierId }) {
         setLoadingSupplier(false);
       }
     };
-    
+
     fetchData();
   }, [supplierId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:8000/api/suppliers/${supplierId}`, {
-        method: 'PUT',
+      const response = await fetch(`${API_BASE_URL}/suppliers/${supplierId}`, {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
-      
+
       const result = await response.json();
-      
+
       if (response.ok) {
         toast.success("Supplier updated successfully");
         setViewToTable();
@@ -122,7 +130,10 @@ function EditSupplier({ onBackClick, setViewToTable, supplierId }) {
                 <Form onSubmit={handleSubmit}>
                   {/* User Selection */}
                   <Row className="mb-3">
-                    <Label htmlFor="user_id" className="col-md-2 col-form-label">
+                    <Label
+                      htmlFor="user_id"
+                      className="col-md-2 col-form-label"
+                    >
                       User
                     </Label>
                     <Col md={10}>
@@ -140,7 +151,7 @@ function EditSupplier({ onBackClick, setViewToTable, supplierId }) {
                           required
                         >
                           <option value="">Select User</option>
-                          {users.map(user => (
+                          {users.map((user) => (
                             <option key={user.id} value={user.id}>
                               {user.name} ({user.role})
                             </option>
@@ -152,7 +163,10 @@ function EditSupplier({ onBackClick, setViewToTable, supplierId }) {
 
                   {/* Contact Person */}
                   <Row className="mb-3">
-                    <Label htmlFor="contact_person" className="col-md-2 col-form-label">
+                    <Label
+                      htmlFor="contact_person"
+                      className="col-md-2 col-form-label"
+                    >
                       Contact Person
                     </Label>
                     <Col md={10}>
@@ -168,7 +182,10 @@ function EditSupplier({ onBackClick, setViewToTable, supplierId }) {
 
                   {/* Address */}
                   <Row className="mb-3">
-                    <Label htmlFor="address" className="col-md-2 col-form-label">
+                    <Label
+                      htmlFor="address"
+                      className="col-md-2 col-form-label"
+                    >
                       Address
                     </Label>
                     <Col md={10}>
@@ -200,7 +217,10 @@ function EditSupplier({ onBackClick, setViewToTable, supplierId }) {
 
                   {/* Payment Terms */}
                   <Row className="mb-3">
-                    <Label htmlFor="payment_terms" className="col-md-2 col-form-label">
+                    <Label
+                      htmlFor="payment_terms"
+                      className="col-md-2 col-form-label"
+                    >
                       Payment Terms
                     </Label>
                     <Col md={10}>
@@ -232,7 +252,12 @@ function EditSupplier({ onBackClick, setViewToTable, supplierId }) {
 
                   <Row className="mb-3">
                     <Col className="text-end">
-                      <Button type="button" color="secondary" onClick={onBackClick} className="me-2">
+                      <Button
+                        type="button"
+                        color="secondary"
+                        onClick={onBackClick}
+                        className="me-2"
+                      >
                         Back
                       </Button>
                       <Button type="submit" color="primary">

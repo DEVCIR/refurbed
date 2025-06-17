@@ -15,14 +15,14 @@ import { connect } from "react-redux";
 import { setBreadcrumbItems } from "../../store/actions";
 import { useParams, useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL, BASE_URL } from "../../Service";
 
 const UpdateProduct = (props) => {
-  document.title = "Update Product | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  document.title =
+    "Update Product | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
   const { id } = useParams();
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
 
   const breadcrumbItems = [
     { title: "Lexa", link: "#" },
@@ -58,11 +58,11 @@ const UpdateProduct = (props) => {
 
   const fetchProduct = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/inventory?id=${id}`, {
+      const response = await fetch(`${API_BASE_URL}/inventory?id=${id}`, {
         headers: {
-          "content-type":"application/json",
+          "content-type": "application/json",
           // "Authorization": "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478"
-        }
+        },
       });
       const data = await response.json();
       setFormData({
@@ -85,7 +85,7 @@ const UpdateProduct = (props) => {
         selling_price: data.data.data[0].selling_price,
         stock_status: data.data.data[0].stock_status,
       });
-      console.log('mmm', data.data.data[0]);
+      console.log("mmm", data.data.data[0]);
     } catch (error) {
       console.error("Error fetching product:", error);
     }
@@ -117,24 +117,36 @@ const UpdateProduct = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Create a copy of formData and remove supplier
     // console.log("Updated ", formData)
     let filteredFormData = { ...formData };
-    if (typeof filteredFormData.feature_imageUrl === 'string' && 
-        filteredFormData.feature_imageUrl.startsWith(`${BASE_URL}/storage/images/products/`)) {
-        delete filteredFormData.feature_imageUrl;
+    if (
+      typeof filteredFormData.feature_imageUrl === "string" &&
+      filteredFormData.feature_imageUrl.startsWith(
+        `${BASE_URL}/storage/images/products/`,
+      )
+    ) {
+      delete filteredFormData.feature_imageUrl;
     }
-    if (Array.isArray(filteredFormData.all_imageUrls) && 
-        filteredFormData.all_imageUrls.some(url => typeof url === 'string' && url.startsWith(`${BASE_URL}/storage/images/products/`))) {
-        delete filteredFormData.all_imageUrls;
+    if (
+      Array.isArray(filteredFormData.all_imageUrls) &&
+      filteredFormData.all_imageUrls.some(
+        (url) =>
+          typeof url === "string" &&
+          url.startsWith(`${BASE_URL}/storage/images/products/`),
+      )
+    ) {
+      delete filteredFormData.all_imageUrls;
     }
-    console.log("ASDQe", filteredFormData)
-    let hasImages = filteredFormData.feature_imageUrl || filteredFormData.all_imageUrls;
+    console.log("ASDQe", filteredFormData);
+    let hasImages =
+      filteredFormData.feature_imageUrl || filteredFormData.all_imageUrls;
     let requestBody;
     let headers = {
-      'Content-Type': 'multipart/form-data',
-      'Authorization': "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
+      "Content-Type": "multipart/form-data",
+      Authorization:
+        "Bearer 44|cz0HARoeeIbtXnowBxEZ3PfcBPOhXyxdeKwXGeQ148685478",
     };
 
     if (hasImages) {
@@ -154,7 +166,7 @@ const UpdateProduct = (props) => {
     }
 
     try {
-      const response = await fetch(`${BASE_URL}/api/inventory/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/inventory/${id}`, {
         method: "POST",
         headers: hasImages ? { Authorization: headers.Authorization } : headers,
         body: requestBody,
@@ -166,19 +178,19 @@ const UpdateProduct = (props) => {
         console.log("Product updated successfully:", result);
         toast.success("Product has been updated sucessfully", {
           duration: 2000,
-        })
+        });
         setTimeout(() => {
-          navigate('/products');
-        }, 2000); 
+          navigate("/products");
+        }, 2000);
         // navigate("/products");
       } catch (jsonError) {
         console.error("Invalid JSON response:", text);
-        toast.error("Product while updating Product. Please try again.")
+        toast.error("Product while updating Product. Please try again.");
         // alert("Unexpected server response. Check the console for details.");
       }
     } catch (error) {
       console.error("Error updating product:", error);
-      toast.error("Product while updating Product. Please try again.")
+      toast.error("Product while updating Product. Please try again.");
       // alert("Error updating product. Please try again.");
     }
   };
@@ -194,7 +206,10 @@ const UpdateProduct = (props) => {
               <Form onSubmit={handleSubmit}>
                 {/* Brand Name */}
                 <Row className="mb-3">
-                  <Label htmlFor="brand_name" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="brand_name"
+                    className="col-md-2 col-form-label"
+                  >
                     Brand Name
                   </Label>
                   <Col md={10}>
@@ -211,7 +226,10 @@ const UpdateProduct = (props) => {
 
                 {/* model_name */}
                 <Row className="mb-3">
-                  <Label htmlFor="model_name" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="model_name"
+                    className="col-md-2 col-form-label"
+                  >
                     Model
                   </Label>
                   <Col md={10}>
@@ -228,7 +246,10 @@ const UpdateProduct = (props) => {
 
                 {/* storage_gb */}
                 <Row className="mb-3">
-                  <Label htmlFor="storage_gb" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="storage_gb"
+                    className="col-md-2 col-form-label"
+                  >
                     GB
                   </Label>
                   <Col md={10}>
@@ -262,7 +283,10 @@ const UpdateProduct = (props) => {
 
                 {/* network_type */}
                 <Row className="mb-3">
-                  <Label htmlFor="network_type" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="network_type"
+                    className="col-md-2 col-form-label"
+                  >
                     Network
                   </Label>
                   <Col md={10}>
@@ -279,7 +303,10 @@ const UpdateProduct = (props) => {
 
                 {/* condition */}
                 <Row className="mb-3">
-                  <Label htmlFor="condition" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="condition"
+                    className="col-md-2 col-form-label"
+                  >
                     Condition
                   </Label>
                   <Col md={10}>
@@ -321,7 +348,10 @@ const UpdateProduct = (props) => {
 
                 {/* Serial No */}
                 <Row className="mb-3">
-                  <Label htmlFor="serial_no" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="serial_no"
+                    className="col-md-2 col-form-label"
+                  >
                     Serial No
                   </Label>
                   <Col md={10}>
@@ -355,7 +385,10 @@ const UpdateProduct = (props) => {
 
                 {/* Description */}
                 <Row className="mb-3">
-                  <Label htmlFor="description" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="description"
+                    className="col-md-2 col-form-label"
+                  >
                     Description
                   </Label>
                   <Col md={10}>
@@ -374,7 +407,10 @@ const UpdateProduct = (props) => {
                 {/* {console.log("314", formData.feature_imageUrl)} */}
 
                 <Row className="mb-3">
-                  <Label htmlFor="feature_imageUrl" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="feature_imageUrl"
+                    className="col-md-2 col-form-label"
+                  >
                     Feature Image
                   </Label>
                   <Col md={10}>
@@ -395,7 +431,10 @@ const UpdateProduct = (props) => {
 
                 {/* All Images */}
                 <Row className="mb-3">
-                  <Label htmlFor="all_imageUrls" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="all_imageUrls"
+                    className="col-md-2 col-form-label"
+                  >
                     All Images
                   </Label>
                   <Col md={10}>
@@ -411,7 +450,10 @@ const UpdateProduct = (props) => {
 
                 {/* Supplier ID */}
                 <Row className="mb-3">
-                  <Label htmlFor="supplier_id" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="supplier_id"
+                    className="col-md-2 col-form-label"
+                  >
                     Supplier ID
                   </Label>
                   <Col md={10}>
@@ -428,7 +470,10 @@ const UpdateProduct = (props) => {
 
                 {/* Discount Type */}
                 <Row className="mb-3">
-                  <Label htmlFor="discount_type" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="discount_type"
+                    className="col-md-2 col-form-label"
+                  >
                     Discount Type
                   </Label>
                   <Col md={10}>
@@ -448,7 +493,10 @@ const UpdateProduct = (props) => {
 
                 {/* Discount Amount */}
                 <Row className="mb-3">
-                  <Label htmlFor="discount_price" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="discount_price"
+                    className="col-md-2 col-form-label"
+                  >
                     Discount Amount
                   </Label>
                   <Col md={10}>
@@ -465,7 +513,10 @@ const UpdateProduct = (props) => {
 
                 {/* Purchase Price */}
                 <Row className="mb-3">
-                  <Label htmlFor="purchase_price" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="purchase_price"
+                    className="col-md-2 col-form-label"
+                  >
                     Purchase Price
                   </Label>
                   <Col md={10}>
@@ -482,7 +533,10 @@ const UpdateProduct = (props) => {
 
                 {/* Selling Price */}
                 <Row className="mb-3">
-                  <Label htmlFor="selling_price" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="selling_price"
+                    className="col-md-2 col-form-label"
+                  >
                     Selling Price
                   </Label>
                   <Col md={10}>
@@ -499,7 +553,10 @@ const UpdateProduct = (props) => {
 
                 {/* stock_status */}
                 <Row className="mb-3">
-                  <Label htmlFor="stock_status" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="stock_status"
+                    className="col-md-2 col-form-label"
+                  >
                     Status
                   </Label>
                   <Col md={10}>

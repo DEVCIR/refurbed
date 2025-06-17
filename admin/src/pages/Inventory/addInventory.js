@@ -14,14 +14,15 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 import { setBreadcrumbItems } from "../../store/actions";
-import Select from 'react-select';
+import Select from "react-select";
 import { Toaster, toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 function AddInventory({ props, onInventoryAdded }) {
-  const navigate = useNavigate()
-  document.title = "Add Product | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  const navigate = useNavigate();
+  document.title =
+    "Add Product | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
   const breadcrumbItems = [
     { title: "Lexa", link: "#" },
@@ -55,20 +56,18 @@ function AddInventory({ props, onInventoryAdded }) {
     category: "",
   });
 
-
   const [supplierOptions, setSupplierOptions] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategoryName, setSelectedCategoryName] = useState("");
 
   useEffect(() => {
-    
     const fetchSuppliers = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/suppliers`);
+        const response = await fetch(`${API_BASE_URL}/suppliers`);
         const data = await response.json();
-        const options = data.data.data.map(supplier => ({
+        const options = data.data.data.map((supplier) => ({
           value: supplier.id,
-          label: supplier.user.name
+          label: supplier.user.name,
         }));
         setSupplierOptions(options);
       } catch (error) {
@@ -81,47 +80,50 @@ function AddInventory({ props, onInventoryAdded }) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/api/product-categories");
+        const response = await fetch(
+          "http://127.0.0.1:8000/api/product-categories",
+        );
         const data = await response.json();
         setCategories(data);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
     };
-  
+
     fetchCategories();
   }, []);
 
-const handleChange = (e) => {
-  const { name, value } = e.target;
-  setFormData({
-    ...formData,
-    [name]: value,
-  });
-  if (name === "category") {
-    const selectedCategory = categories.find(cat => cat.id.toString() === value);
-    setSelectedCategoryName(selectedCategory ? selectedCategory.name : "");
-  }
-};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+    if (name === "category") {
+      const selectedCategory = categories.find(
+        (cat) => cat.id.toString() === value,
+      );
+      setSelectedCategoryName(selectedCategory ? selectedCategory.name : "");
+    }
+  };
 
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     if (name === "feature_imageUrl") {
       setFormData({
         ...formData,
-        [name]: files[0], 
+        [name]: files[0],
       });
     } else if (name === "all_imageUrls") {
       setFormData({
         ...formData,
-        [name]: Array.from(files), 
+        [name]: Array.from(files),
       });
     }
   };
 
-  
   const generateBarcode = () => {
-    return Math.floor(100000 + Math.random() * 900000).toString(); 
+    return Math.floor(100000 + Math.random() * 900000).toString();
   };
 
   const handleSubmit = async (e) => {
@@ -131,7 +133,7 @@ const handleChange = (e) => {
 
     const formDataToSend = new FormData();
     const generatedBarcode = generateBarcode();
-    
+
     for (const key in formData) {
       if (key === "all_imageUrls") {
         formData[key].forEach((file, index) => {
@@ -142,31 +144,29 @@ const handleChange = (e) => {
       }
     }
 
-    formDataToSend.append('barcode', generatedBarcode);
-    console.log("BArcode: ", generatedBarcode)
+    formDataToSend.append("barcode", generatedBarcode);
+    console.log("BArcode: ", generatedBarcode);
 
     try {
-      const response = await fetch(`${BASE_URL}/inventory`, {
+      const response = await fetch(`${API_BASE_URL}/inventory`, {
         method: "POST",
         body: formDataToSend,
       });
 
       const result = await response.json();
-      console.log('Result', result)
-      toast.success('Inventory Added Successfully');
-      
+      console.log("Result", result);
+      toast.success("Inventory Added Successfully");
+
       setTimeout(() => {
-        if (typeof onInventoryAdded === 'function') {
+        if (typeof onInventoryAdded === "function") {
           onInventoryAdded();
         } else {
           console.error("onInventoryAdded is not a function");
         }
       }, 2000);
-
     } catch (error) {
       console.error("Error adding inventory:", error);
-      toast.error('Error adding inventory. Please try again.')
-      
+      toast.error("Error adding inventory. Please try again.");
     }
   };
 
@@ -180,7 +180,10 @@ const handleChange = (e) => {
               <CardTitle className="h4">Add Product</CardTitle>
               <Form onSubmit={handleSubmit}>
                 <Row className="mb-3">
-                  <Label htmlFor="brand_name" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="brand_name"
+                    className="col-md-2 col-form-label"
+                  >
                     Brand Name
                   </Label>
                   <Col md={10}>
@@ -195,9 +198,11 @@ const handleChange = (e) => {
                   </Col>
                 </Row>
 
-                
                 <Row className="mb-3">
-                  <Label htmlFor="model_name" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="model_name"
+                    className="col-md-2 col-form-label"
+                  >
                     Model
                   </Label>
                   <Col md={10}>
@@ -213,7 +218,10 @@ const handleChange = (e) => {
                 </Row>
 
                 <Row className="mb-3">
-                  <Label htmlFor="storage_gb" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="storage_gb"
+                    className="col-md-2 col-form-label"
+                  >
                     Storage
                   </Label>
                   <Col md={10}>
@@ -245,66 +253,72 @@ const handleChange = (e) => {
                 </Row>
 
                 <Row className="mb-3">
-  <Label htmlFor="category" className="col-md-2 col-form-label">
-    Category
-  </Label>
-  <Col md={10}>
-    <Input
-      type="select"
-      name="category"
-      id="category"
-      value={formData.category}
-      onChange={handleChange}
-      required
-    >
-      <option value="">Select a category</option>
-      {categories.map((category) => (
-        <option key={category.id} value={category.id}>
-          {category.name}
-        </option>
-      ))}
-    </Input>
-  </Col>
-</Row>
+                  <Label htmlFor="category" className="col-md-2 col-form-label">
+                    Category
+                  </Label>
+                  <Col md={10}>
+                    <Input
+                      type="select"
+                      name="category"
+                      id="category"
+                      value={formData.category}
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value="">Select a category</option>
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </Input>
+                  </Col>
+                </Row>
 
-{selectedCategoryName === "phones" && (
-  <Row className="mb-3">
-    <Label htmlFor="network_type" className="col-md-2 col-form-label">
-      Network Type
-    </Label>
-    <Col md={10}>
-      <Input
-        type="text"
-        name="network_type"
-        id="network_type"
-        value={formData.network_type}
-        onChange={handleChange}
-        required={selectedCategoryName === "phones"}
-      />
-    </Col>
-  </Row>
-)}
+                {selectedCategoryName === "phones" && (
+                  <Row className="mb-3">
+                    <Label
+                      htmlFor="network_type"
+                      className="col-md-2 col-form-label"
+                    >
+                      Network Type
+                    </Label>
+                    <Col md={10}>
+                      <Input
+                        type="text"
+                        name="network_type"
+                        id="network_type"
+                        value={formData.network_type}
+                        onChange={handleChange}
+                        required={selectedCategoryName === "phones"}
+                      />
+                    </Col>
+                  </Row>
+                )}
 
-{selectedCategoryName === "phones" && (
-  <Row className="mb-3">
-    <Label htmlFor="imei" className="col-md-2 col-form-label">
-      IMEI
-    </Label>
-    <Col md={10}>
-      <Input
-        type="text"
-        name="imei"
-        id="imei"
-        value={formData.imei}
-        onChange={handleChange}
-        required={selectedCategoryName === "phones"}
-      />
-    </Col>
-  </Row>
-)}
-              
+                {selectedCategoryName === "phones" && (
+                  <Row className="mb-3">
+                    <Label htmlFor="imei" className="col-md-2 col-form-label">
+                      IMEI
+                    </Label>
+                    <Col md={10}>
+                      <Input
+                        type="text"
+                        name="imei"
+                        id="imei"
+                        value={formData.imei}
+                        onChange={handleChange}
+                        required={selectedCategoryName === "phones"}
+                      />
+                    </Col>
+                  </Row>
+                )}
+
                 <Row className="mb-3">
-                  <Label htmlFor="condition" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="condition"
+                    className="col-md-2 col-form-label"
+                  >
                     Condition
                   </Label>
                   <Col md={10}>
@@ -316,13 +330,28 @@ const handleChange = (e) => {
                       onChange={handleChange}
                       required
                     >
-                      <option value="Brand New">Brand New (Sealed device)</option>
-                      <option value="14 Days">14 Days (Open-box device with all accessories)</option>
-                      <option value="Grade A">Grade A (Excellent condition, no cosmetic signs)</option>
-                      <option value="Grade B">Grade B (Minor wear and tear, fully functional)</option>
-                      <option value="Grade C">Grade C (Heavy wear and tear, fully functional)</option>
-                      <option value="Grade D">Grade D (1-2 issues, stock list items, no iCloud issues)</option>
-                      <option value="Grade E">Grade E (Doesn't power up, 3-5 problems, requires assignment)</option>
+                      <option value="Brand New">
+                        Brand New (Sealed device)
+                      </option>
+                      <option value="14 Days">
+                        14 Days (Open-box device with all accessories)
+                      </option>
+                      <option value="Grade A">
+                        Grade A (Excellent condition, no cosmetic signs)
+                      </option>
+                      <option value="Grade B">
+                        Grade B (Minor wear and tear, fully functional)
+                      </option>
+                      <option value="Grade C">
+                        Grade C (Heavy wear and tear, fully functional)
+                      </option>
+                      <option value="Grade D">
+                        Grade D (1-2 issues, stock list items, no iCloud issues)
+                      </option>
+                      <option value="Grade E">
+                        Grade E (Doesn't power up, 3-5 problems, requires
+                        assignment)
+                      </option>
                     </Input>
                   </Col>
                 </Row>
@@ -344,7 +373,10 @@ const handleChange = (e) => {
                 </Row>
 
                 <Row className="mb-3">
-                  <Label htmlFor="serial_no" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="serial_no"
+                    className="col-md-2 col-form-label"
+                  >
                     Serial No
                   </Label>
                   <Col md={10}>
@@ -360,7 +392,10 @@ const handleChange = (e) => {
                 </Row>
 
                 <Row className="mb-3">
-                  <Label htmlFor="product_description" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="product_description"
+                    className="col-md-2 col-form-label"
+                  >
                     Product Description
                   </Label>
                   <Col md={10}>
@@ -376,7 +411,10 @@ const handleChange = (e) => {
                 </Row>
 
                 <Row className="mb-3">
-                  <Label htmlFor="feature_imageUrl" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="feature_imageUrl"
+                    className="col-md-2 col-form-label"
+                  >
                     Feature Image
                   </Label>
                   <Col md={10}>
@@ -389,9 +427,11 @@ const handleChange = (e) => {
                   </Col>
                 </Row>
 
-               
                 <Row className="mb-3">
-                  <Label htmlFor="all_imageUrls" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="all_imageUrls"
+                    className="col-md-2 col-form-label"
+                  >
                     All Images
                   </Label>
                   <Col md={10}>
@@ -406,20 +446,31 @@ const handleChange = (e) => {
                 </Row>
 
                 <Row className="mb-3">
-                  <Label htmlFor="supplier_id" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="supplier_id"
+                    className="col-md-2 col-form-label"
+                  >
                     Supplier ID
                   </Label>
                   <Col md={10}>
                     <Select
                       options={supplierOptions}
-                      onChange={(selectedOption) => setFormData({ ...formData, supplier_id: selectedOption.value })}
+                      onChange={(selectedOption) =>
+                        setFormData({
+                          ...formData,
+                          supplier_id: selectedOption.value,
+                        })
+                      }
                       required
                     />
                   </Col>
                 </Row>
 
                 <Row className="mb-3">
-                  <Label htmlFor="discount_type" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="discount_type"
+                    className="col-md-2 col-form-label"
+                  >
                     Discount Type
                   </Label>
                   <Col md={10}>
@@ -437,9 +488,11 @@ const handleChange = (e) => {
                   </Col>
                 </Row>
 
-              
                 <Row className="mb-3">
-                  <Label htmlFor="discount_price" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="discount_price"
+                    className="col-md-2 col-form-label"
+                  >
                     Discount Amount
                   </Label>
                   <Col md={10}>
@@ -455,7 +508,10 @@ const handleChange = (e) => {
                 </Row>
 
                 <Row className="mb-3">
-                  <Label htmlFor="wholesale_price" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="wholesale_price"
+                    className="col-md-2 col-form-label"
+                  >
                     Wholesale Price
                   </Label>
                   <Col md={10}>
@@ -470,9 +526,11 @@ const handleChange = (e) => {
                   </Col>
                 </Row>
 
-                
                 <Row className="mb-3">
-                  <Label htmlFor="purchase_price" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="purchase_price"
+                    className="col-md-2 col-form-label"
+                  >
                     Purchase Price
                   </Label>
                   <Col md={10}>
@@ -487,9 +545,11 @@ const handleChange = (e) => {
                   </Col>
                 </Row>
 
-                
                 <Row className="mb-3">
-                  <Label htmlFor="selling_price" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="selling_price"
+                    className="col-md-2 col-form-label"
+                  >
                     Selling Price
                   </Label>
                   <Col md={10}>
@@ -504,9 +564,11 @@ const handleChange = (e) => {
                   </Col>
                 </Row>
 
-                
                 <Row className="mb-3">
-                  <Label htmlFor="stock_status" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="stock_status"
+                    className="col-md-2 col-form-label"
+                  >
                     Status
                   </Label>
                   <Col md={10}>
@@ -526,7 +588,6 @@ const handleChange = (e) => {
                   </Col>
                 </Row>
 
-                
                 <Row className="mb-3">
                   <Label htmlFor="quantity" className="col-md-2 col-form-label">
                     Stock Quantity
@@ -543,7 +604,6 @@ const handleChange = (e) => {
                   </Col>
                 </Row>
 
-                
                 <Row className="mb-3">
                   <Label htmlFor="location" className="col-md-2 col-form-label">
                     Location
@@ -560,7 +620,6 @@ const handleChange = (e) => {
                   </Col>
                 </Row>
 
-                
                 <Row className="mb-3">
                   <Col className="text-end">
                     <Button type="submit" color="primary">
@@ -575,6 +634,6 @@ const handleChange = (e) => {
       </Row>
     </React.Fragment>
   );
-};
+}
 
 export default connect(null, { setBreadcrumbItems })(AddInventory);

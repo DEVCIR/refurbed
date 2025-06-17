@@ -12,16 +12,17 @@ import {
   Button,
 } from "reactstrap";
 import { Toaster, toast } from "sonner";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 function AddGenerateReport({ onBackClick, onReportGenerated }) {
-  document.title = "Generate Report | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  document.title =
+    "Generate Report | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
   const [formData, setFormData] = useState({
     template_id: "",
     report_name: "",
     generated_by: "",
-    file_path: ""
+    file_path: "",
   });
   const [templates, setTemplates] = useState([]);
   const [users, setUsers] = useState([]);
@@ -29,22 +30,19 @@ function AddGenerateReport({ onBackClick, onReportGenerated }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-
-useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        
-        const templatesResponse = await fetch(`${BASE_URL}/report-templates`);
+        const templatesResponse = await fetch(
+          `${API_BASE_URL}/report-templates`,
+        );
         const templatesData = await templatesResponse.json();
-        
-       
+
         setTemplates(templatesData.data?.data || templatesData.data || []);
-  
-        
-        const usersResponse = await fetch(`${BASE_URL}/users`);
+
+        const usersResponse = await fetch(`${API_BASE_URL}/users`);
         const usersData = await usersResponse.json();
         setUsers(usersData.data?.data || usersData.data || []);
-  
       } catch (error) {
         console.error("Error fetching data:", error);
         toast.error("Failed to load required data");
@@ -54,7 +52,7 @@ useEffect(() => {
         setIsLoading(false);
       }
     };
-  
+
     fetchData();
   }, []);
 
@@ -66,25 +64,25 @@ useEffect(() => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.template_id) {
       toast.error("Please select a template");
       return;
     }
-    
+
     if (!formData.report_name.trim()) {
       toast.error("Please enter a report name");
       return;
     }
-    
+
     if (!formData.generated_by) {
       toast.error("Please select a user");
       return;
@@ -96,29 +94,28 @@ useEffect(() => {
     }
 
     setIsSubmitting(true);
-    
-    try {
-      
-      const formDataToSend = new FormData();
-      formDataToSend.append('template_id', formData.template_id);
-      formDataToSend.append('report_name', formData.report_name);
-      formDataToSend.append('generated_by', formData.generated_by);
-      formDataToSend.append('generation_date', new Date().toISOString());
-      formDataToSend.append('file', selectedFile);
 
-      const response = await fetch(`${BASE_URL}/generated-reports`, {
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("template_id", formData.template_id);
+      formDataToSend.append("report_name", formData.report_name);
+      formDataToSend.append("generated_by", formData.generated_by);
+      formDataToSend.append("generation_date", new Date().toISOString());
+      formDataToSend.append("file", selectedFile);
+
+      const response = await fetch(`${API_BASE_URL}/generated-reports`, {
         method: "POST",
         body: formDataToSend,
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.log('Full error response:', errorData);
-        throw new Error(errorData.message || 'Failed to generate report');
+        console.log("Full error response:", errorData);
+        throw new Error(errorData.message || "Failed to generate report");
       }
 
       const result = await response.json();
-      
+
       if (onReportGenerated) {
         onReportGenerated(result.data);
       }
@@ -126,7 +123,6 @@ useEffect(() => {
       setTimeout(() => {
         onBackClick();
       }, 1500);
-      
     } catch (error) {
       console.error("Error generating report:", error);
       toast.error(error.message || "Error generating report");
@@ -158,24 +154,24 @@ useEffect(() => {
                 <Row className="mb-3">
                   <Label className="col-md-2 col-form-label">Template</Label>
                   <Col md={10}>
-                  <Input
-  type="select"
-  name="template_id"
-  value={formData.template_id}
-  onChange={handleChange}
-  required
->
-  <option value="">Select a template</option>
-  {templates && templates.length > 0 ? (
-    templates.map(template => (
-      <option key={template.id} value={template.id}>
-        {template.template_name}
-      </option>
-    ))
-  ) : (
-    <option disabled>No templates available</option>
-  )}
-</Input>
+                    <Input
+                      type="select"
+                      name="template_id"
+                      value={formData.template_id}
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value="">Select a template</option>
+                      {templates && templates.length > 0 ? (
+                        templates.map((template) => (
+                          <option key={template.id} value={template.id}>
+                            {template.template_name}
+                          </option>
+                        ))
+                      ) : (
+                        <option disabled>No templates available</option>
+                      )}
+                    </Input>
                   </Col>
                 </Row>
 
@@ -194,7 +190,9 @@ useEffect(() => {
                 </Row>
 
                 <Row className="mb-3">
-                  <Label className="col-md-2 col-form-label">Generated By</Label>
+                  <Label className="col-md-2 col-form-label">
+                    Generated By
+                  </Label>
                   <Col md={10}>
                     <Input
                       type="select"
@@ -204,7 +202,7 @@ useEffect(() => {
                       required
                     >
                       <option value="">Select a user</option>
-                      {users.map(user => (
+                      {users.map((user) => (
                         <option key={user.id} value={user.id}>
                           {user.name}
                         </option>
@@ -225,7 +223,8 @@ useEffect(() => {
                     />
                     {selectedFile && (
                       <div className="mt-2 text-muted">
-                        Selected file: {selectedFile.name} ({Math.round(selectedFile.size / 1024)} KB)
+                        Selected file: {selectedFile.name} (
+                        {Math.round(selectedFile.size / 1024)} KB)
                       </div>
                     )}
                   </Col>
@@ -233,10 +232,19 @@ useEffect(() => {
 
                 <Row className="mb-3">
                   <Col className="text-end">
-                    <Button color="secondary" onClick={onBackClick} className="me-2" type="button">
+                    <Button
+                      color="secondary"
+                      onClick={onBackClick}
+                      className="me-2"
+                      type="button"
+                    >
                       Back
                     </Button>
-                    <Button color="primary" type="submit" disabled={isSubmitting}>
+                    <Button
+                      color="primary"
+                      type="submit"
+                      disabled={isSubmitting}
+                    >
                       {isSubmitting ? "Generating..." : "Generate Report"}
                     </Button>
                   </Col>

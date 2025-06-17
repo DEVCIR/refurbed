@@ -12,44 +12,45 @@ import {
   Button,
 } from "reactstrap";
 import { Toaster, toast } from "sonner";
-import {BASE_URL} from '../../Service';
+import { API_BASE_URL } from "../../Service";
 
 function AddSubscriber({ onBackClick, setViewToTable }) {
-  document.title = "Add Subscriber | Lexa - Responsive Bootstrap 5 Admin Dashboard";
+  document.title =
+    "Add Subscriber | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
   const [formData, setFormData] = useState({
-    email: '',
-    first_name: '',
-    last_name: '',
-    subscription_date: '',
+    email: "",
+    first_name: "",
+    last_name: "",
+    subscription_date: "",
   });
 
   useEffect(() => {
     const now = new Date();
-    const formattedDate = now.toISOString().slice(0, 16); 
-    setFormData(prev => ({
+    const formattedDate = now.toISOString().slice(0, 16);
+    setFormData((prev) => ({
       ...prev,
-      subscription_date: formattedDate
+      subscription_date: formattedDate,
     }));
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const formatDateForAPI = (dateString) => {
     if (!dateString) return null;
     const date = new Date(dateString);
-    return date.toISOString().slice(0, 19).replace('T', ' ');
+    return date.toISOString().slice(0, 19).replace("T", " ");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.email.trim()) {
       toast.error("Email is required");
       return;
@@ -62,7 +63,7 @@ function AddSubscriber({ onBackClick, setViewToTable }) {
         subscription_date: formatDateForAPI(formData.subscription_date),
       };
 
-      const response = await fetch(`${BASE_URL}/subscribers`, {
+      const response = await fetch(`${API_BASE_URL}/subscribers`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,7 +79,6 @@ function AddSubscriber({ onBackClick, setViewToTable }) {
       setTimeout(() => {
         setViewToTable();
       }, 1500);
-      
     } catch (error) {
       console.error("Error adding subscriber:", error);
       toast.error("Failed to add subscriber");
@@ -97,7 +97,7 @@ function AddSubscriber({ onBackClick, setViewToTable }) {
                 {/* Email */}
                 <Row className="mb-3">
                   <Label htmlFor="email" className="col-md-2 col-form-label">
-                    Email 
+                    Email
                   </Label>
                   <Col md={10}>
                     <Input
@@ -113,7 +113,10 @@ function AddSubscriber({ onBackClick, setViewToTable }) {
 
                 {/* First Name */}
                 <Row className="mb-3">
-                  <Label htmlFor="first_name" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="first_name"
+                    className="col-md-2 col-form-label"
+                  >
                     First Name
                   </Label>
                   <Col md={10}>
@@ -129,7 +132,10 @@ function AddSubscriber({ onBackClick, setViewToTable }) {
 
                 {/* Last Name */}
                 <Row className="mb-3">
-                  <Label htmlFor="last_name" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="last_name"
+                    className="col-md-2 col-form-label"
+                  >
                     Last Name
                   </Label>
                   <Col md={10}>
@@ -145,7 +151,10 @@ function AddSubscriber({ onBackClick, setViewToTable }) {
 
                 {/* Subscription Date */}
                 <Row className="mb-3">
-                  <Label htmlFor="subscription_date" className="col-md-2 col-form-label">
+                  <Label
+                    htmlFor="subscription_date"
+                    className="col-md-2 col-form-label"
+                  >
                     Subscription Date
                   </Label>
                   <Col md={10}>
@@ -162,7 +171,12 @@ function AddSubscriber({ onBackClick, setViewToTable }) {
 
                 <Row className="mb-3">
                   <Col className="text-end">
-                    <Button type="button" color="secondary" onClick={onBackClick} className="me-2">
+                    <Button
+                      type="button"
+                      color="secondary"
+                      onClick={onBackClick}
+                      className="me-2"
+                    >
                       Back
                     </Button>
                     <Button type="submit" color="primary">
