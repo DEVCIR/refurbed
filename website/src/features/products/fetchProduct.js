@@ -1,7 +1,7 @@
 // import { useEffect } from "react";
-// import iphoneImg from "../../assets/product-images/iphone.webp";
+// import iphoneImg from "@/assets/product-images/iphone.webp";
 
-// import { API_BASE_URL } from "../../service";
+// import { API_BASE_URL } from "@/service";
 
 // export const fetchAllProducts = () => {
 
@@ -602,7 +602,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { useEffect } from "react";
-import { API_BASE_URL } from "../../service";
+import { API_BASE_URL } from "@/service";
 
 export const fetchAllProducts = async () => {
   try {

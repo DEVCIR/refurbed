@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Calendar, ArrowRight, Search } from "lucide-react";
-import blogAPI from "../../../services/blogAPI";
+import blogAPI from "@/services/blogAPI";
 import { API_BASE_URL, BASE_URL } from "../../../service";
 
 const BlogList = ({ onSelectBlog }) => {

@@ -10,7 +10,7 @@ import {
   Shield,
   AlertCircle,
 } from "lucide-react";
-import blogImg from "../../assets/product-images/tablets.webp";
+import blogImg from "@/assets/product-images/tablets.webp";
 
 export default function PaymentPage() {
   const location = useLocation();

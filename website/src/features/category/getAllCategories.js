@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../../service";
+import { API_BASE_URL } from "@/service";
 
 export const fetchCategories = async () => {
   try {

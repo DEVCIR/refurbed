@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import {
   Table,
@@ -12,10 +11,10 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter
+  ModalFooter,
 } from "reactstrap";
 import { connect } from "react-redux";
-import { setBreadcrumbItems } from "../../store/actions";
+import { setBreadcrumbItems } from "@/store/actions";
 import { Toaster, toast } from "sonner";
 
 const RmasTable = (props) => {
@@ -36,14 +35,13 @@ const RmasTable = (props) => {
   ];
 
   useEffect(() => {
-    props.setBreadcrumbItems('RMA Items', breadcrumbItems);
+    props.setBreadcrumbItems("RMA Items", breadcrumbItems);
     fetchRmaItems();
   }, []);
 
-  useEffect(()=>{
-    console.log("Selected RMA Data",rmaItems);
-   
-  },[rmaItems]);
+  useEffect(() => {
+    console.log("Selected RMA Data", rmaItems);
+  }, [rmaItems]);
 
   useEffect(() => {
     console.log("Total Price:", totalPrice);
@@ -51,15 +49,17 @@ const RmasTable = (props) => {
 
   const fetchRmaItems = async () => {
     try {
-      const response = await fetch("https://admin.mobileswholesale.co.uk//rma-items");
-      
+      const response = await fetch(
+        "https://admin.mobileswholesale.co.uk//rma-items",
+      );
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
-      
-      const filteredItems = data.data.data.filter(item => !item.is_active);
+
+      const filteredItems = data.data.data.filter((item) => !item.is_active);
       setRmaItems(filteredItems);
     } catch (error) {
       console.error("Error fetching RMA items:", error);
@@ -72,150 +72,161 @@ const RmasTable = (props) => {
   // Function to get status badge based on is_active
   const getStatusBadge = (isActive) => {
     return isActive ? (
-      <Badge color="success" className="badge-lg">Active</Badge>
+      <Badge color="success" className="badge-lg">
+        Active
+      </Badge>
     ) : (
-      <Badge color="danger" className="badge-lg">Inactive</Badge>
+      <Badge color="danger" className="badge-lg">
+        Inactive
+      </Badge>
     );
   };
 
+  const [myInvID, setMyInvID] = useState("");
 
-  const [myInvID,setMyInvID]=useState("")
-  
-  const toggleModal = (itemId = null,myData) => {
+  const toggleModal = (itemId = null, myData) => {
     setSelectedItemId(itemId);
 
-    setMyInvID(myData?.inventory_id)
-    console.log("RMA item id: ",myData?.rma_id);
-    console.log("This is my inventory Id",myData?.inventory_id)
-    console.log("This is my customer Id",myData?.rma.customer_id)
-    console.log("This is product quantity ",myData?.quantity)
+    setMyInvID(myData?.inventory_id);
+    console.log("RMA item id: ", myData?.rma_id);
+    console.log("This is my inventory Id", myData?.inventory_id);
+    console.log("This is my customer Id", myData?.rma.customer_id);
+    console.log("This is product quantity ", myData?.quantity);
     setModal(!modal);
   };
-
 
   const handleEditConfirm = async () => {
     try {
       // First fetch the total_price from order-items
-      const orderItemsResponse = await fetch(`https://admin.mobileswholesale.co.uk//order-items?inventory_id=${myInvID}`);
-      
+      const orderItemsResponse = await fetch(
+        `https://admin.mobileswholesale.co.uk//order-items?inventory_id=${myInvID}`,
+      );
+
       if (!orderItemsResponse.ok) {
         throw new Error(`HTTP error! status: ${orderItemsResponse.status}`);
       }
-      
+
       const orderItemsData = await orderItemsResponse.json();
-  
+
       const fetchedTotalPrice = orderItemsData.data.data[0]?.total_price;
       setTotalPrice(fetchedTotalPrice);
-  
+
       const fetchedUnitPrice = orderItemsData.data.data[0]?.unit_price;
       setUnitPrice(fetchedUnitPrice);
-      
+
       console.log("Fetched Total Price:", fetchedTotalPrice);
       console.log("Fetched Unit Price:", fetchedUnitPrice);
-  
+
       // Now update the RMA item
-      const response = await fetch(`https://admin.mobileswholesale.co.uk//rma-items/${selectedItemId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `https://admin.mobileswholesale.co.uk//rma-items/${selectedItemId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            is_active: true,
+          }),
         },
-        body: JSON.stringify({
-          is_active: true 
-        })
-      });
-  
+      );
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      toast.success('RMA item status updated successfully!');
-  
-      
-      const rmaItem = rmaItems.find(item => item.id === selectedItemId);
+      toast.success("RMA item status updated successfully!");
+
+      const rmaItem = rmaItems.find((item) => item.id === selectedItemId);
       const randomNumber = Math.floor(Math.random() * 900) + 100;
-      
-    
+
       const creditNoteData = {
         credit_note_number: `CRE-${randomNumber}`,
         rma_id: rmaItem?.rma_id,
         customer_id: rmaItem?.rma.customer_id,
-        issue_date: new Date().toISOString().split('T')[0], 
+        issue_date: new Date().toISOString().split("T")[0],
         total_amount: fetchedTotalPrice,
         status: "Issued",
-        created_by: 13
+        created_by: 13,
       };
-  
-      
-      const creditNoteResponse = await fetch("https://admin.mobileswholesale.co.uk//credit-notes", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+
+      const creditNoteResponse = await fetch(
+        "https://admin.mobileswholesale.co.uk//credit-notes",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(creditNoteData),
         },
-        body: JSON.stringify(creditNoteData)
-      });
-  
+      );
+
       if (!creditNoteResponse.ok) {
         throw new Error(`HTTP error! status: ${creditNoteResponse.status}`);
       }
-  
+
       const creditNoteResult = await creditNoteResponse.json();
       console.log("Credit note created:", creditNoteResult);
-      toast.success('Credit note created successfully!');
+      toast.success("Credit note created successfully!");
 
       const creditNoteItemData = {
-        credit_note_id: creditNoteResult.id, 
+        credit_note_id: creditNoteResult.id,
         inventory_id: rmaItem?.inventory_id,
         quantity: rmaItem?.quantity,
         unit_price: fetchedUnitPrice,
-        total_price: fetchedTotalPrice
+        total_price: fetchedTotalPrice,
       };
-  
+
       console.log("Credit Note Item Data:", creditNoteItemData);
-  
-      const creditNoteItemResponse = await fetch("https://admin.mobileswholesale.co.uk//credit-notes-item", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+
+      const creditNoteItemResponse = await fetch(
+        "https://admin.mobileswholesale.co.uk//credit-notes-item",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(creditNoteItemData),
         },
-        body: JSON.stringify(creditNoteItemData)
-      });
-  
+      );
+
       if (!creditNoteItemResponse.ok) {
         throw new Error(`HTTP error! status: ${creditNoteItemResponse.status}`);
       }
-  
+
       const creditNoteItemResult = await creditNoteItemResponse.json();
       console.log("Credit note item created:", creditNoteItemResult);
-      toast.success('Credit note item created successfully!');
-  
+      toast.success("Credit note item created successfully!");
+
       await fetchRmaItems();
-      
     } catch (error) {
       console.error("Error in operation:", error);
       toast.error(`Failed to complete operation: ${error.message}`);
     } finally {
-      toggleModal(); 
+      toggleModal();
     }
   };
-
 
   return (
     <React.Fragment>
       <Toaster richColors position="top-right" />
-      
+
       <Row>
         <Col md={12}>
           <Card>
             <CardBody>
               <CardTitle className="h4">Inactive RMA Items</CardTitle>
               <p className="card-title-desc">
-                List of Return Merchandise Authorization items that are not active.
+                List of Return Merchandise Authorization items that are not
+                active.
               </p>
 
               <div className="table-responsive">
                 {loading ? (
                   <p>Loading RMA items...</p>
                 ) : error ? (
-                  <p className="text-danger">Error loading RMA items: {error}</p>
+                  <p className="text-danger">
+                    Error loading RMA items: {error}
+                  </p>
                 ) : (
                   <Table className="table mb-0">
                     <thead>
@@ -237,16 +248,18 @@ const RmasTable = (props) => {
                             <td>{item.rma?.rma_number}</td>
                             <td>{item.rma?.customer?.user?.name}</td>
                             <td>{item.rma?.order?.order_number}</td>
-                            <td>{item.inventory?.variant?.product?.model_name}</td>
+                            <td>
+                              {item.inventory?.variant?.product?.model_name}
+                            </td>
                             <td>{item.quantity}</td>
                             <td>{item.reason}</td>
                             <td>{getStatusBadge(item.is_active)}</td>
                             <td>
                               <div className="d-flex gap-2">
-                                <Button 
-                                  color="primary" 
+                                <Button
+                                  color="primary"
                                   size="mm"
-                                  onClick={() => toggleModal(item.id,item)}
+                                  onClick={() => toggleModal(item.id, item)}
                                 >
                                   Edit
                                 </Button>
@@ -273,9 +286,7 @@ const RmasTable = (props) => {
       {/* Confirmation Modal */}
       <Modal isOpen={modal} toggle={toggleModal}>
         <ModalHeader toggle={toggleModal}>Confirm Edit</ModalHeader>
-        <ModalBody>
-          Are you sure you want to activate this RMA item?
-        </ModalBody>
+        <ModalBody>Are you sure you want to activate this RMA item?</ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={toggleModal}>
             No

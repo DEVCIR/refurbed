@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Calendar } from "lucide-react";
-import blogAPI from "../../../services/blogAPI";
-import { BASE_URL } from "../../../service";
+import blogAPI from "@/services/blogAPI";
+import { BASE_URL } from "@/service";
 
 const BlogPost = ({ blogId, onBack }) => {
   const [blog, setBlog] = useState(null);

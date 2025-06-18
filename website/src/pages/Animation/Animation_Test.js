@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { runConfetti } from "./Animation";
+import { runConfetti } from "./Index";
 
 const Animation_Test = () => {
   const [showText, setShowText] = useState(false);
@@ -11,11 +11,11 @@ const Animation_Test = () => {
 
     const timer = setTimeout(() => {
       setFadeOut(true);
-    }, 2000); 
+    }, 2000);
 
     const hideTimer = setTimeout(() => {
       setShowText(false);
-      setFadeOut(false); 
+      setFadeOut(false);
     }, 3000);
 
     return () => {
@@ -32,7 +32,9 @@ const Animation_Test = () => {
             fadeOut ? "opacity-0 scale-50" : "opacity-100 scale-100"
           }`}
         >
-       <p className="text-2xl leading-normal tracking-normal">Target  Achieved</p>
+          <p className="text-2xl leading-normal tracking-normal">
+            Target Achieved
+          </p>
         </div>
       )}
     </div>
@@ -40,19 +42,3 @@ const Animation_Test = () => {
 };
 
 export default Animation_Test;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

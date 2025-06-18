@@ -6,30 +6,28 @@ import { setProducts } from "./features/products/productSlice";
 import { fetchAllProducts } from "./features/products/fetchProduct";
 import { Toaster } from "sonner";
 
-import Header from "./components/Header/Header";
-import Footer from "./components/Footer/Footer";
+import Header from "./components/Header/Index";
+import Footer from "./components/Footer/Index";
 
 // Lazy-loaded pages
-const Home = lazy(() => import("./pages/Home/Home"));
-const Products = lazy(() => import("./pages/Products/Products"));
-const ProductDetails = lazy(
-  () => import("./pages/ProductDetails/ProductDetails"),
-);
-const Cart = lazy(() => import("./pages/Cart/Cart"));
-const Contact = lazy(() => import("./pages/Contact/Contact"));
-const Categories = lazy(() => import("./pages/Categories/Categories"));
-const ClaimRefund = lazy(() => import("./pages/ClaimRefund/ClaimRefund"));
-const Blog = lazy(() => import("./pages/Blog/Blog"));
-const Account = lazy(() => import("./pages/Accounts/Account"));
-const Checkout = lazy(() => import("./pages/Checkout/Checkout"));
+const Home = lazy(() => import("./pages/Home/Index"));
+const Products = lazy(() => import("./pages/Products/Index"));
+const ProductDetails = lazy(() => import("./pages/ProductDetails/Index"));
+const Cart = lazy(() => import("./pages/Cart/Index"));
+const Contact = lazy(() => import("./pages/Contact/Index"));
+const Categories = lazy(() => import("./pages/Categories/Index"));
+const ClaimRefund = lazy(() => import("./pages/ClaimRefund/Index"));
+const Blog = lazy(() => import("./pages/Blog/Index"));
+const Account = lazy(() => import("./pages/Accounts/Index"));
+const Checkout = lazy(() => import("./pages/Checkout/Index"));
 const PaymentPage = lazy(() => import("./pages/Checkout/PaymentPage"));
 const OrderSuccessPage = lazy(
   () => import("./pages/Checkout/OrderSuccessPage"),
 );
-const Accessories = lazy(() => import("./pages/Accessories/Accessories"));
-const Sell = lazy(() => import("./pages/Sell/Sell"));
-const Faq = lazy(() => import("./pages/Faq/Faq"));
-const Benefits = lazy(() => import("./pages/Benefits/Benefits"));
+const Accessories = lazy(() => import("./pages/Accessories/Index"));
+const Sell = lazy(() => import("./pages/Sell/Index"));
+const Faq = lazy(() => import("./pages/Faq/Index"));
+const Benefits = lazy(() => import("./pages/Benefits/Index"));
 
 const App = () => {
   const dispatch = useDispatch();

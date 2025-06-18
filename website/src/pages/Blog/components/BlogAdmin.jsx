@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import blogAPI from "../../../services/blogAPI";
+import blogAPI from "@/services/blogAPI";
 
 const BlogAdmin = ({ onBack }) => {
   const [blogs, setBlogs] = useState([]);
