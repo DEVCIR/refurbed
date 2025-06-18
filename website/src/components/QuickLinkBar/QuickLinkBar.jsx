@@ -25,7 +25,11 @@ const QuickLinkBar = () => {
             <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-custom-pri to-transparent z-10"></div>
             <div className="relative flex items-center px-10 py-3 gap-6 font-light overflow-x-auto quicklink-scrollbar-hide">
               {categories.map((category) => (
-                <Link to={`/c/${category.name.toLowerCase()}`} className="hover:text-custom-grey-text" key={category.id}>
+                <Link
+                  to={`/c/${category.name.toLowerCase()}`}
+                  className="hover:text-custom-grey-text"
+                  key={category.id}
+                >
                   {category.name}
                 </Link>
               ))}
@@ -53,7 +57,10 @@ const QuickLinkBar = () => {
               </p>
               <ul className="space-y-4 pt-4">
                 {categories.map((category) => (
-                  <Link to={`/c/${category.name.toLowerCase()}`} key={category.id}>
+                  <Link
+                    to={`/c/${category.name.toLowerCase()}`}
+                    key={category.id}
+                  >
                     <li className="hover:bg-purple-100 px-2 py-2 rounded text-custom-pri">
                       {category.name}
                     </li>

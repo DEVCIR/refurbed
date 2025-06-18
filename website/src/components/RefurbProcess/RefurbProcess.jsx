@@ -9,27 +9,27 @@ const steps = [
   {
     id: 1,
     title: "Supplier buys pre-loved tech",
-    img: refurbImg,
+    img: "../../../public/refurbish_1.webp",
   },
   {
     id: 2,
     title: "Data cleanse",
-    img: refurbImg,
+    img: "../../../public/refurbish_2.webp",
   },
   {
     id: 3,
     title: "Swap of faulty parts",
-    img: refurbImg,
+    img: "../../../public/refurbish_3.webp",
   },
   {
     id: 4,
     title: "External preparation",
-    img: refurbImg,
+    img: "../../../public/refurbish_4.webp",
   },
   {
     id: 5,
     title: "Sold via refurbed",
-    img: refurbImg,
+    img: "../../../public/refurbish_5.webp",
   },
 ];
 
