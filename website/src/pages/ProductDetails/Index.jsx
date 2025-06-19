@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ProductView from "@/components/ProductView/Index";
 import RecommendedProducts from "@/components/RecommendedProducts/Index";
-import Description from "@/components/Description/Description";
+import Description from "@/components/Description/Index";
 import RefurbProcess from "@/components/RefurbProcess/Index";
 import bgImg from "./../../assets/background-images/refurbishment_process.webp";
 import Review from "@/components/Review/Index";

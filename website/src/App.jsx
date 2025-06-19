@@ -28,6 +28,8 @@ const Accessories = lazy(() => import("./pages/Accessories/Index"));
 const Sell = lazy(() => import("./pages/Sell/Index"));
 const Faq = lazy(() => import("./pages/Faq/Index"));
 const Benefits = lazy(() => import("./pages/Benefits/Index"));
+const RefurbedProcess = lazy(() => import("./pages/RefurbedProcess/Index"));
+const Sustainability = lazy(() => import("./pages/Sustainability/Index"));
 
 const App = () => {
   const dispatch = useDispatch();
@@ -75,6 +77,8 @@ const App = () => {
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/order-success" element={<OrderSuccessPage />} />
           <Route path="/accessories" element={<Accessories />} />
+          <Route path="/refurbed-process" element={<RefurbedProcess />} />
+          <Route path="/sustainability" element={<Sustainability />} />
         </Routes>
       </Suspense>
       {!shouldHideHeaderFooter && <Footer />}
