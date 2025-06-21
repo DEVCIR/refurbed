@@ -61,43 +61,23 @@ const Footer = () => {
               <h3 className="font-light text-custom-grey-text mb-4">COMPANY</h3>
               <ul className="space-y-2 font-normal text-sm">
                 <li>
-                  <Link to="/" className="hover:text-gray-300">
-                    Why refurbed
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/" className="hover:text-gray-300">
+                  <Link to="/refurbed-process" className="hover:text-gray-300">
                     Refurbishing Process
                   </Link>
                 </li>
                 <li>
-                  <Link to="/" className="hover:text-gray-300">
+                  <Link to="/sustainability" className="hover:text-gray-300">
                     Sustainability
                   </Link>
                 </li>
                 <li>
-                  <Link to="/" className="hover:text-gray-300">
+                  <Link to="/about" className="hover:text-gray-300">
                     About Us
                   </Link>
                 </li>
                 <li>
-                  <Link to="/" className="hover:text-gray-300">
-                    Careers
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/" className="hover:text-gray-300">
+                  <Link to="/blog" className="hover:text-gray-300">
                     Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/" className="hover:text-gray-300">
-                    Press
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/" className="hover:text-gray-300">
-                    Engineering
                   </Link>
                 </li>
               </ul>
@@ -108,22 +88,17 @@ const Footer = () => {
               <h3 className="font-light text-custom-grey-text mb-4">HELP</h3>
               <ul className="space-y-2 font-normal text-sm">
                 <li>
-                  <Link to="/" className="hover:text-gray-300">
+                  <Link to="/faq" className="hover:text-gray-300">
                     FAQ
                   </Link>
                 </li>
                 <li>
-                  <Link to="/" className="hover:text-gray-300">
-                    Product Appearance
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/" className="hover:text-gray-300">
+                  <Link to="/return" className="hover:text-gray-300">
                     Return
                   </Link>
                 </li>
                 <li>
-                  <Link to="/" className="hover:text-gray-300">
+                  <Link to="/warranty" className="hover:text-gray-300">
                     Warranty Conditions
                   </Link>
                 </li>
@@ -133,13 +108,8 @@ const Footer = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/" className="hover:text-gray-300">
+                  <Link to="/status" className="hover:text-gray-300">
                     Delivery Status
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/" className="hover:text-gray-300">
-                    Become a Supplier
                   </Link>
                 </li>
               </ul>
@@ -222,17 +192,11 @@ const Footer = () => {
             <Link to="/" className="hover:text-gray-300">
               T&C
             </Link>
-            <Link to="/" className="hover:text-gray-300">
+            <Link to="/privacy" className="hover:text-gray-300">
               Privacy Policy
             </Link>
-            <Link to="/" className="hover:text-gray-300">
+            <Link to="/imprint" className="hover:text-gray-300">
               Imprint
-            </Link>
-            <Link to="/" className="hover:text-gray-300">
-              Legal Notices
-            </Link>
-            <Link to="/" className="hover:text-gray-300">
-              Cookie Policy
             </Link>
           </div>
         </div>
