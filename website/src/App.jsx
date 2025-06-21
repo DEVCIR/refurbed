@@ -27,6 +27,7 @@ const OrderSuccessPage = lazy(
 const Accessories = lazy(() => import("./pages/Accessories/Index"));
 const Sell = lazy(() => import("./pages/Sell/Index"));
 const Faq = lazy(() => import("./pages/Faq/Index"));
+const Warranty = lazy(() => import("./pages/Warranty/Index"));
 const Benefits = lazy(() => import("./pages/Benefits/Index"));
 const RefurbedProcess = lazy(() => import("./pages/RefurbedProcess/Index"));
 const Sustainability = lazy(() => import("./pages/Sustainability/Index"));
@@ -50,7 +51,7 @@ const App = () => {
   }, [dispatch]);
 
   const location = useLocation();
-  const hideHeaderFooterRoutes = ["/cart"];
+  const hideHeaderFooterRoutes = ["/cart", "/sustainability"];
   const shouldHideHeaderFooter = hideHeaderFooterRoutes.includes(
     location.pathname,
   );
@@ -81,6 +82,7 @@ const App = () => {
           <Route path="/refurbed-process" element={<RefurbedProcess />} />
           <Route path="/sustainability" element={<Sustainability />} />
           <Route path="/product-conditions" element={<ProductConditions />} />
+          <Route path="/warranty" element={<Warranty />} />
         </Routes>
       </Suspense>
       {!shouldHideHeaderFooter && <Footer />}

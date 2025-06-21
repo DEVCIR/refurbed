@@ -9,6 +9,8 @@ export default {
       fontFamily: {
         pri: ["Readex Pro", "sans-serif"],
         sec: ["Poppins", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
+        paytone: ['"Paytone One"', "sans-serif"],
       },
       colors: {
         "custom-pri": "#332D82",
@@ -21,6 +23,19 @@ export default {
         "custom-light-text": "#FFFFFF",
         "custom-grey-text": "#989898",
         "refurbed-blue": "#2F4FDD", // or from CSS in screenshot: rgb(47, 48, 97)
+
+        // Sustainability page colors
+        "sustainability-primary": "#2d8a7a",
+        "sustainability-accent": "#7ed321",
+        "sustainability-accent-hover": "#6bc91a",
+        "sustainability-highlight": "#e4edd7",
+        "sustainability-dark": "#006356",
+        "sustainability-light": "#f1ffde",
+        "sustainability-purple": "#4a4a8a",
+        "sustainability-purple-hover": "#3a3a7a",
+        "sustainability-green": "#80FF80",
+        "sustainability-green-hover": "#22c55e",
+        "sustainability-beige": "#f5f5dc",
       },
       screens: {
         sm: "480px",
