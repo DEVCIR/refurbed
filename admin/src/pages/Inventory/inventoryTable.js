@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 
-import { Row, Col, Card, CardBody, Button, CardTitle, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Dropdown, DropdownToggle, DropdownMenu, Badge } from "reactstrap";
+import { Row, Col, Card, CardBody, Button, CardTitle, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Dropdown, DropdownToggle, DropdownMenu } from "reactstrap";
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table"
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css"
 import { connect } from "react-redux";
@@ -8,104 +8,6 @@ import { setBreadcrumbItems } from "../../store/actions";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { API_BASE_URL } from '../../Service';
-
-// Add custom CSS for better table responsiveness
-const customTableStyles = `
-    @media (max-width: 1600px) {
-        .inventory-table-container {
-            font-size: 0.75rem !important;
-        }
-        .inventory-table-container th,
-        .inventory-table-container td {
-            padding: 0.35rem 0.25rem !important;
-        }
-        .inventory-table-container .btn {
-            font-size: 0.65rem !important;
-            padding: 0.25rem 0.35rem !important;
-        }
-        .inventory-table-container .badge {
-            font-size: 0.65rem !important;
-            padding: 0.25rem 0.35rem !important;
-        }
-    }
-    @media (max-width: 1400px) {
-        .inventory-table-container {
-            font-size: 0.7rem !important;
-        }
-        .inventory-table-container th,
-        .inventory-table-container td {
-            padding: 0.3rem 0.2rem !important;
-        }
-        .inventory-table-container .btn {
-            font-size: 0.6rem !important;
-            padding: 0.2rem 0.3rem !important;
-        }
-        .inventory-table-container .badge {
-            font-size: 0.6rem !important;
-            padding: 0.2rem 0.3rem !important;
-        }
-    }
-    @media (max-width: 1200px) {
-        .inventory-table-container {
-            font-size: 0.65rem !important;
-        }
-        .inventory-table-container th,
-        .inventory-table-container td {
-            padding: 0.25rem 0.15rem !important;
-        }
-        .inventory-table-container .btn {
-            font-size: 0.55rem !important;
-            padding: 0.15rem 0.25rem !important;
-        }
-        .inventory-table-container .badge {
-            font-size: 0.55rem !important;
-            padding: 0.15rem 0.25rem !important;
-        }
-    }
-    @media (max-width: 1000px) {
-        .inventory-table-container {
-            font-size: 0.6rem !important;
-        }
-        .inventory-table-container th,
-        .inventory-table-container td {
-            padding: 0.2rem 0.1rem !important;
-        }
-        .inventory-table-container .btn {
-            font-size: 0.5rem !important;
-            padding: 0.1rem 0.2rem !important;
-        }
-        .inventory-table-container .badge {
-            font-size: 0.5rem !important;
-            padding: 0.1rem 0.2rem !important;
-        }
-    }
-    @media (max-width: 800px) {
-        .inventory-table-container {
-            font-size: 0.55rem !important;
-        }
-        .inventory-table-container th,
-        .inventory-table-container td {
-            padding: 0.15rem 0.05rem !important;
-        }
-        .inventory-table-container .btn {
-            font-size: 0.45rem !important;
-            padding: 0.05rem 0.15rem !important;
-        }
-        .inventory-table-container .badge {
-            font-size: 0.45rem !important;
-            padding: 0.05rem 0.15rem !important;
-        }
-    }
-    .inventory-table-container table {
-        width: 100% !important;
-        table-layout: fixed !important;
-    }
-    .inventory-table-container th,
-    .inventory-table-container td {
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-    }
-`;
 
 const InventoryTable = ( props ) =>
 {
@@ -354,7 +256,6 @@ const InventoryTable = ( props ) =>
         try
         {
             const increment = parseFloat( incrementValue ) || 0;
-
             const excelData = inventoryData.map( ( item ) => ( {
                 brand_name: item.variant?.product?.brand?.brand_name || "",
                 model_name: item.variant?.product?.model_name || "",
@@ -398,189 +299,24 @@ const InventoryTable = ( props ) =>
         }
     };
 
-    // Custom styles for responsive table
-    const tableStyles = {
-        container: {
-            overflowX: 'auto',
-            minWidth: '100%'
-        },
-        table: {
-            minWidth: '100%', // Changed from 800px to 100% to fit container
-            fontSize: '0.75rem', // Reduced font size for better fit
-            tableLayout: 'fixed' // Fixed table layout for better column control
-        },
-        mobileCard: {
-            border: '1px solid #dee2e6',
-            borderRadius: '0.375rem',
-            marginBottom: '1rem',
-            padding: '1rem'
-        },
-        mobileRow: {
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '0.5rem 0',
-            borderBottom: '1px solid #f8f9fa'
-        },
-        mobileLabel: {
-            fontWeight: 'bold',
-            color: '#6c757d',
-            minWidth: '120px'
-        },
-        mobileValue: {
-            textAlign: 'right',
-            flex: '1'
-        },
-        buttonGroup: {
-            display: 'flex',
-            gap: '0.25rem',
-            flexWrap: 'wrap'
-        },
-        // New styles for better column management
-        imageCell: {
-            width: '40px',
-            minWidth: '40px',
-            maxWidth: '40px'
-        },
-        modelCell: {
-            width: '12%',
-            minWidth: '80px',
-            maxWidth: '120px'
-        },
-        skuCell: {
-            width: '10%',
-            minWidth: '70px',
-            maxWidth: '100px'
-        },
-        serialCell: {
-            width: '12%',
-            minWidth: '80px',
-            maxWidth: '120px'
-        },
-        brandCell: {
-            width: '10%',
-            minWidth: '70px',
-            maxWidth: '100px'
-        },
-        conditionCell: {
-            width: '8%',
-            minWidth: '60px',
-            maxWidth: '80px'
-        },
-        supplierCell: {
-            width: '12%',
-            minWidth: '80px',
-            maxWidth: '120px'
-        },
-        priceCell: {
-            width: '8%',
-            minWidth: '60px',
-            maxWidth: '80px'
-        },
-        actionCell: {
-            width: '15%',
-            minWidth: '100px',
-            maxWidth: '150px'
-        }
-    };
-
-    // Mobile card view component
-    const MobileCardView = ( { item } ) => (
-        <div style={tableStyles.mobileCard}>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-                <img
-                    src={item.variant.product.feature_imageUrl}
-                    alt={item.variant.product.model_name}
-                    style={{ width: '60px', height: '60px', marginRight: '1rem', borderRadius: '0.375rem' }}
-                />
-                <div>
-                    <h6 style={{ margin: 0, fontWeight: 'bold' }}>{item.variant.product.model_name}</h6>
-                    <small style={{ color: '#6c757d' }}>{item.variant.product.brand.brand_name}</small>
-                </div>
-            </div>
-
-            <div style={tableStyles.mobileRow}>
-                <span style={tableStyles.mobileLabel}>SKU:</span>
-                <span style={tableStyles.mobileValue}>{item.variant.product.sku}</span>
-            </div>
-
-            <div style={tableStyles.mobileRow}>
-                <span style={tableStyles.mobileLabel}>Serial No:</span>
-                <span style={tableStyles.mobileValue}>{item.serial_no}</span>
-            </div>
-
-            <div style={tableStyles.mobileRow}>
-                <span style={tableStyles.mobileLabel}>Condition:</span>
-                <span style={tableStyles.mobileValue}>
-                    <Badge color={item.condition === 'Excellent' ? 'success' : item.condition === 'Good' ? 'warning' : 'secondary'}>
-                        {item.condition}
-                    </Badge>
-                </span>
-            </div>
-
-            <div style={tableStyles.mobileRow}>
-                <span style={tableStyles.mobileLabel}>Purchase Price:</span>
-                <span style={tableStyles.mobileValue}>${item.purchase_price}</span>
-            </div>
-
-            <div style={tableStyles.mobileRow}>
-                <span style={tableStyles.mobileLabel}>Selling Price:</span>
-                <span style={tableStyles.mobileValue}>${item.selling_price}</span>
-            </div>
-
-            <div style={tableStyles.mobileRow}>
-                <span style={tableStyles.mobileLabel}>Discounted Price:</span>
-                <span style={tableStyles.mobileValue}>
-                    ${item.discount_type === 'percentage'
-                        ? ( item.selling_price - ( item.selling_price * ( item.discount_price / 100 ) ) ).toFixed( 2 )
-                        : ( item.selling_price - item.discount_price ).toFixed( 2 )}
-                </span>
-            </div>
-
-            <div style={tableStyles.mobileRow}>
-                <span style={tableStyles.mobileLabel}>Supplier:</span>
-                <span style={tableStyles.mobileValue}>{item.supplier.user.name}</span>
-            </div>
-
-            <div style={{ marginTop: '1rem' }}>
-                <div style={tableStyles.buttonGroup}>
-                    <Button
-                        size="sm"
-                        color={item.variant.product.is_active ? "success" : "secondary"}
-                        onClick={() => handleStatusChange( item.id, "Add" )}
-                    >
-                        Available
-                    </Button>
-                    <Button
-                        size="sm"
-                        color={!item.variant.product.is_active ? "danger" : "secondary"}
-                        onClick={() => handleStatusChange( item.id, "Remove" )}
-                    >
-                        Out of Stock
-                    </Button>
-                </div>
-            </div>
-        </div>
-    );
 
     return (
         <React.Fragment>
-            <style>{customTableStyles}</style>
             <Row style={{ minHeight: '70vh' }}>
                 <Col>
                     <Card>
                         <CardBody>
-                            <div style={{ 'display': 'flex', 'justifyContent': 'space-between', 'marginBottom': '10px', flexWrap: 'wrap', gap: '0.5rem' }}>
+                            <div style={{ 'display': 'flex', 'justifyContent': 'space-between', 'marginBottom': '10px' }}>
 
                                 <Col>
                                     <CardTitle className="h4">Inventory Table</CardTitle>
                                 </Col>
-                                <Col style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }} className="text-end">
-                                    <Button color="primary" size="sm" onClick={handleDownloadWithIncrement}>Download with Increment</Button>
-                                    <Button color="info" size="sm" onClick={handleDownloadExcel}>Download Excel</Button>
-                                    <Button color="secondary" size="sm" onClick={() => { navigate( '/live-inventory' ) }}>Upload Products By Name</Button>
-                                    <Button color="secondary" size="sm" onClick={() => { navigate( '/inventory-upload' ) }}>Upload Products File</Button>
-                                    <Button color="success" size="sm" onClick={props.onAddProductClick}>Add Inventory</Button>
+                                <Col style={{ display: 'flex' }} className="text-end">
+                                    <Button color="primary" style={{ marginLeft: 2, marginRight: 2, padding: '10px 0' }} onClick={handleDownloadWithIncrement}>Download with Increment</Button>
+                                    <Button color="info" style={{ marginRight: 2, padding: '10px 0' }} onClick={handleDownloadExcel}>Download Excel</Button>
+                                    <Button color="secondary" style={{ marginRight: 2, padding: '10px 0' }} onClick={() => { navigate( '/live-inventory' ) }}>Upload Products By Name</Button>
+                                    <Button color="secondary" style={{ marginRight: 2, padding: '10px 0' }} onClick={() => { navigate( '/inventory-upload' ) }}>Upload Products File</Button>
+                                    <Button color="success" style={{ marginLeft: 2, padding: '10px 0' }} onClick={props.onAddProductClick}>Add Inventory</Button>
                                 </Col>
                             </div>
                             <Row className="mb-3">
@@ -591,15 +327,14 @@ const InventoryTable = ( props ) =>
                                         </DropdownToggle>
 
                                         <DropdownMenu style={{
-                                            width: '90vw',
-                                            maxWidth: '600px',
-                                            height: '60vh',
+                                            width: '40%',
+                                            height: '40vh',
                                             overflowY: 'scroll',
                                             padding: '10px'
                                         }}>
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                                 <div className="row" style={{ margin: 0 }}>
-                                                    <div className="col-md-6">
+                                                    <div className="col-md-4">
                                                         <Label>Model Name</Label>
                                                         <Input
                                                             type="text"
@@ -608,7 +343,7 @@ const InventoryTable = ( props ) =>
                                                             placeholder="Enter model"
                                                         />
                                                     </div>
-                                                    <div className="col-md-6">
+                                                    <div className="col-md-4">
                                                         <Label>Brand Name</Label>
                                                         <Input
                                                             type="text"
@@ -733,7 +468,7 @@ const InventoryTable = ( props ) =>
                                                         </div>
 
                                                         <div className="row" style={{ margin: 0 }}>
-                                                            <div className="col-md-6">
+                                                            <div className="col-md-4">
                                                                 <Label>Network Type</Label>
                                                                 <Input
                                                                     type="text"
@@ -742,7 +477,7 @@ const InventoryTable = ( props ) =>
                                                                     placeholder="Network type"
                                                                 />
                                                             </div>
-                                                            <div className="col-md-6">
+                                                            <div className="col-md-4">
                                                                 <Label>Category</Label>
                                                                 <Input
                                                                     type="text"
@@ -785,155 +520,76 @@ const InventoryTable = ( props ) =>
                                     </Dropdown>
                                 </Col>
                             </Row>
-
-                            {/* Mobile Card View */}
-                            <div className="d-md-none">
-                                {Array.isArray( inventoryData ) ? inventoryData.map( item => (
-                                    <MobileCardView key={item.id} item={item} />
-                                ) ) : (
-                                    <div className="text-center p-4">No inventory data available.</div>
-                                )}
-                            </div>
-
-                            {/* Desktop Table View */}
-                            <div className="d-none d-md-block inventory-table-container">
-                                <div className="table-rep-plugin">
-                                    <div
-                                        className="table-responsive mb-0"
-                                        data-pattern="priority-columns"
-                                        style={tableStyles.container}
+                            <div className="table-rep-plugin">
+                                <div
+                                    className="table-responsive mb-0"
+                                    data-pattern="priority-columns"
+                                >
+                                    <Table
+                                        id="tech-companies-1"
+                                        className="table table-striped table-bordered"
                                     >
-                                        <Table
-                                            id="tech-companies-1"
-                                            className="table table-striped table-bordered"
-                                            style={tableStyles.table}
-                                        >
-                                            <Thead>
-                                                <Tr>
-                                                    <Th style={tableStyles.imageCell}>Img</Th>
-                                                    <Th style={tableStyles.modelCell}>Model</Th>
-                                                    <Th style={tableStyles.skuCell}>SKU</Th>
-                                                    <Th style={tableStyles.serialCell}>Serial</Th>
-                                                    <Th style={tableStyles.brandCell}>Brand</Th>
-                                                    <Th style={tableStyles.conditionCell}>Cond</Th>
-                                                    <Th style={tableStyles.supplierCell}>Supplier</Th>
-                                                    <Th style={tableStyles.priceCell}>Purchase</Th>
-                                                    <Th style={tableStyles.priceCell}>Selling</Th>
-                                                    <Th style={tableStyles.priceCell}>Discounted</Th>
-                                                    <Th style={tableStyles.actionCell}>Action</Th>
+                                        <Thead>
+                                            <Tr>
+                                                <Th>Feature_ImageURL</Th>
+                                                <Th>Model</Th>
+                                                <Th>SKU</Th>
+                                                <Th>Serial No</Th>
+                                                <Th>Brand Name</Th>
+                                                <Th>Model</Th>
+                                                <Th>Condition</Th>
+                                                <Th>Supplier ID</Th>
+                                                <Th>Purchase Price</Th>
+                                                <Th>Selling Price</Th>
+                                                <Th>Discount Type</Th>
+                                                <Th>Discount</Th>
+                                                <Th>Discounted Price</Th>
+                                                <Th>Action</Th>
+                                            </Tr>
+                                        </Thead>
+                                        <Tbody>
+                                            {Array.isArray( inventoryData ) ? inventoryData.map( item => (
+                                                <Tr key={item.id}>
+                                                    <Td className="text-center">
+                                                        <img src={item.variant.product.feature_imageUrl} alt={item.variant.product.model_name} style={{ width: '50px', height: '50px' }} />
+                                                    </Td>
+                                                    <Td>{item.variant.product.model_name}</Td>
+                                                    <Td>{item.variant.product.sku}</Td>
+                                                    <Td>{item.serial_no}</Td>
+                                                    <Td>{item.variant.product.brand.brand_name}</Td>
+                                                    <Td>{item.variant.product.model_name}</Td>
+                                                    <Td>{item.condition}</Td>
+                                                    <Td>{item.supplier.user.name}</Td>
+                                                    <Td>{item.purchase_price}</Td>
+                                                    <Td>{item.selling_price}</Td>
+                                                    <Td>{item.discount_type}</Td>
+                                                    <Td>{item.discount_price}</Td>
+                                                    <Td> {item.discount_type === 'percentage'
+                                                        ? ( item.selling_price - ( item.selling_price * ( item.discount_price / 100 ) ) ).toFixed( 2 )
+                                                        : ( item.selling_price - item.discount_price ).toFixed( 2 )}
+                                                    </Td>
+                                                    <Td>
+                                                        <Button
+                                                            color={item.variant.product.is_active ? "success" : "secondary"}
+                                                            onClick={() => handleStatusChange( item.id, "Add" )}
+                                                        >
+                                                            Available
+                                                        </Button>
+                                                        <Button
+                                                            color={!item.variant.product.is_active ? "danger" : "secondary"}
+                                                            onClick={() => handleStatusChange( item.id, "Remove" )}
+                                                        >
+                                                            Out of Stock
+                                                        </Button>
+                                                    </Td>
                                                 </Tr>
-                                            </Thead>
-                                            <Tbody>
-                                                {Array.isArray( inventoryData ) ? inventoryData.map( item => (
-                                                    <Tr key={item.id}>
-                                                        <Td style={tableStyles.imageCell}>
-                                                            <img
-                                                                src={item.variant.product.feature_imageUrl}
-                                                                alt={item.variant.product.model_name}
-                                                                style={{
-                                                                    width: '30px',
-                                                                    height: '30px',
-                                                                    borderRadius: '0.25rem',
-                                                                    objectFit: 'cover'
-                                                                }}
-                                                            />
-                                                        </Td>
-                                                        <Td style={tableStyles.modelCell}>
-                                                            <div style={{
-                                                                overflow: 'hidden',
-                                                                textOverflow: 'ellipsis',
-                                                                whiteSpace: 'nowrap'
-                                                            }}>
-                                                                {item.variant.product.model_name}
-                                                            </div>
-                                                        </Td>
-                                                        <Td style={tableStyles.skuCell}>
-                                                            <div style={{
-                                                                overflow: 'hidden',
-                                                                textOverflow: 'ellipsis',
-                                                                whiteSpace: 'nowrap'
-                                                            }}>
-                                                                {item.variant.product.sku}
-                                                            </div>
-                                                        </Td>
-                                                        <Td style={tableStyles.serialCell}>
-                                                            <div style={{
-                                                                overflow: 'hidden',
-                                                                textOverflow: 'ellipsis',
-                                                                whiteSpace: 'nowrap'
-                                                            }}>
-                                                                {item.serial_no}
-                                                            </div>
-                                                        </Td>
-                                                        <Td style={tableStyles.brandCell}>
-                                                            <div style={{
-                                                                overflow: 'hidden',
-                                                                textOverflow: 'ellipsis',
-                                                                whiteSpace: 'nowrap'
-                                                            }}>
-                                                                {item.variant.product.brand.brand_name}
-                                                            </div>
-                                                        </Td>
-                                                        <Td style={tableStyles.conditionCell}>
-                                                            <Badge
-                                                                color={item.condition === 'Excellent' ? 'success' : item.condition === 'Good' ? 'warning' : 'secondary'}
-                                                            >
-                                                                {item.condition === 'Excellent' ? 'Exc' : item.condition === 'Good' ? 'Good' : item.condition}
-                                                            </Badge>
-                                                        </Td>
-                                                        <Td style={tableStyles.supplierCell}>
-                                                            <div style={{
-                                                                overflow: 'hidden',
-                                                                textOverflow: 'ellipsis',
-                                                                whiteSpace: 'nowrap'
-                                                            }}>
-                                                                {item.supplier.user.name}
-                                                            </div>
-                                                        </Td>
-                                                        <Td style={tableStyles.priceCell}>
-                                                            <div>
-                                                                ${parseFloat( item.purchase_price ).toFixed( 0 )}
-                                                            </div>
-                                                        </Td>
-                                                        <Td style={tableStyles.priceCell}>
-                                                            <div>
-                                                                ${parseFloat( item.selling_price ).toFixed( 0 )}
-                                                            </div>
-                                                        </Td>
-                                                        <Td style={tableStyles.priceCell}>
-                                                            <div>
-                                                                ${item.discount_type === 'percentage'
-                                                                    ? ( item.selling_price - ( item.selling_price * ( item.discount_price / 100 ) ) ).toFixed( 0 )
-                                                                    : ( item.selling_price - item.discount_price ).toFixed( 0 )}
-                                                            </div>
-                                                        </Td>
-                                                        <Td style={tableStyles.actionCell}>
-                                                            <div style={tableStyles.buttonGroup}>
-                                                                <Button
-                                                                    size="sm"
-                                                                    color={item.variant.product.is_active ? "success" : "secondary"}
-                                                                    onClick={() => handleStatusChange( item.id, "Add" )}
-                                                                >
-                                                                    Avail
-                                                                </Button>
-                                                                <Button
-                                                                    size="sm"
-                                                                    color={!item.variant.product.is_active ? "danger" : "secondary"}
-                                                                    onClick={() => handleStatusChange( item.id, "Remove" )}
-                                                                >
-                                                                    Out
-                                                                </Button>
-                                                            </div>
-                                                        </Td>
-                                                    </Tr>
-                                                ) ) : (
-                                                    <Tr>
-                                                        <Td colSpan="11">No inventory data available.</Td>
-                                                    </Tr>
-                                                )}
-                                            </Tbody>
-                                        </Table>
-                                    </div>
+                                            ) ) : (
+                                                <Tr>
+                                                    <Td colSpan="6">No inventory data available.</Td>
+                                                </Tr>
+                                            )}
+                                        </Tbody>
+                                    </Table>
                                 </div>
                             </div>
                         </CardBody>

@@ -1,0 +1,332 @@
+/* Inventory Table Styles */
+
+/* Base styles for all screen sizes */
+.inventory-table-container {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  width: 100%;
+  max-width: 100vw;
+}
+
+.inventory-table-container table {
+  width: 100% !important;
+  table-layout: fixed !important;
+  min-width: 100% !important;
+}
+
+.inventory-table-container th,
+.inventory-table-container td {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  vertical-align: middle;
+  padding: 0.75rem 0.5rem !important;
+}
+
+.inventory-table-container .btn {
+  font-size: 0.75rem !important;
+  padding: 0.375rem 0.5rem !important;
+  margin: 0.125rem;
+}
+
+.inventory-table-container .badge {
+  font-size: 0.7rem !important;
+  padding: 0.25rem 0.5rem !important;
+}
+
+/* Large screens (1600px and above) */
+@media (min-width: 1600px) {
+  .inventory-table-container {
+    font-size: 1rem !important;
+  }
+  .inventory-table-container th,
+  .inventory-table-container td {
+    padding: 1rem 0.75rem !important;
+  }
+  .inventory-table-container .btn {
+    font-size: 0.875rem !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+  .inventory-table-container .badge {
+    font-size: 0.8rem !important;
+    padding: 0.375rem 0.625rem !important;
+  }
+  .inventory-table-container .product-image {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Medium-large screens (1200px to 1599px) */
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .inventory-table-container {
+    font-size: 0.9rem !important;
+  }
+  .inventory-table-container th,
+  .inventory-table-container td {
+    padding: 0.875rem 0.625rem !important;
+  }
+  .inventory-table-container .btn {
+    font-size: 0.8rem !important;
+    padding: 0.4375rem 0.625rem !important;
+  }
+  .inventory-table-container .badge {
+    font-size: 0.75rem !important;
+    padding: 0.3125rem 0.5625rem !important;
+  }
+}
+
+/* Medium screens (992px to 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .inventory-table-container {
+    font-size: 0.85rem !important;
+  }
+  .inventory-table-container th,
+  .inventory-table-container td {
+    padding: 0.75rem 0.5rem !important;
+  }
+  .inventory-table-container .btn {
+    font-size: 0.75rem !important;
+    padding: 0.375rem 0.5rem !important;
+  }
+  .inventory-table-container .badge {
+    font-size: 0.7rem !important;
+    padding: 0.25rem 0.5rem !important;
+  }
+}
+
+/* Small-medium screens (768px to 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .inventory-table-container {
+    font-size: 0.8rem !important;
+  }
+  .inventory-table-container th,
+  .inventory-table-container td {
+    padding: 0.625rem 0.375rem !important;
+  }
+  .inventory-table-container .btn {
+    font-size: 0.7rem !important;
+    padding: 0.3125rem 0.4375rem !important;
+  }
+  .inventory-table-container .badge {
+    font-size: 0.65rem !important;
+    padding: 0.1875rem 0.4375rem !important;
+  }
+}
+
+/* Small screens (576px to 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .inventory-table-container {
+    font-size: 0.75rem !important;
+  }
+  .inventory-table-container th,
+  .inventory-table-container td {
+    padding: 0.5rem 0.25rem !important;
+  }
+  .inventory-table-container .btn {
+    font-size: 0.65rem !important;
+    padding: 0.25rem 0.375rem !important;
+  }
+  .inventory-table-container .badge {
+    font-size: 0.6rem !important;
+    padding: 0.125rem 0.375rem !important;
+  }
+}
+
+/* Extra small screens (below 576px) */
+@media (max-width: 575px) {
+  .inventory-table-container {
+    font-size: 0.7rem !important;
+  }
+  .inventory-table-container th,
+  .inventory-table-container td {
+    padding: 0.375rem 0.125rem !important;
+  }
+  .inventory-table-container .btn {
+    font-size: 0.6rem !important;
+    padding: 0.1875rem 0.3125rem !important;
+  }
+  .inventory-table-container .badge {
+    font-size: 0.55rem !important;
+    padding: 0.0625rem 0.3125rem !important;
+  }
+}
+
+/* Ensure table fits within viewport */
+.inventory-table-container .table-responsive {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Column width management */
+.inventory-table-container .img-column {
+  width: 50px !important;
+  min-width: 50px !important;
+  max-width: 50px !important;
+  text-align: center;
+}
+
+.inventory-table-container .model-column {
+  width: 15% !important;
+  min-width: 100px !important;
+  max-width: 150px !important;
+}
+
+.inventory-table-container .sku-column {
+  width: 12% !important;
+  min-width: 80px !important;
+  max-width: 120px !important;
+}
+
+.inventory-table-container .serial-column {
+  width: 12% !important;
+  min-width: 90px !important;
+  max-width: 130px !important;
+}
+
+.inventory-table-container .brand-column {
+  width: 10% !important;
+  min-width: 70px !important;
+  max-width: 100px !important;
+}
+
+.inventory-table-container .condition-column {
+  width: 8% !important;
+  min-width: 60px !important;
+  max-width: 80px !important;
+}
+
+.inventory-table-container .supplier-column {
+  width: 12% !important;
+  min-width: 80px !important;
+  max-width: 120px !important;
+}
+
+.inventory-table-container .price-column {
+  width: 8% !important;
+  min-width: 60px !important;
+  max-width: 80px !important;
+}
+
+.inventory-table-container .action-column {
+  width: 15% !important;
+  min-width: 100px !important;
+  max-width: 150px !important;
+}
+
+/* Text truncation for better fit */
+.inventory-table-container .text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Ensure buttons don't wrap */
+.inventory-table-container .btn-group {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.25rem;
+}
+
+/* Image sizing */
+.inventory-table-container .product-image {
+  width: 35px;
+  height: 35px;
+  border-radius: 0.25rem;
+  object-fit: cover;
+}
+
+@media (max-width: 767px) {
+  .inventory-table-container .product-image {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* Mobile Card View Styles */
+.mobile-card {
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.mobile-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.mobile-card-image {
+  width: 60px;
+  height: 60px;
+  margin-right: 1rem;
+  border-radius: 0.375rem;
+}
+
+.mobile-card-title {
+  margin: 0;
+  font-weight: bold;
+}
+
+.mobile-card-subtitle {
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+.mobile-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f8f9fa;
+}
+
+.mobile-row:last-child {
+  border-bottom: none;
+}
+
+.mobile-label {
+  font-weight: bold;
+  color: #6c757d;
+  min-width: 120px;
+}
+
+.mobile-value {
+  text-align: right;
+  flex: 1;
+}
+
+.mobile-button-group {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+/* Filter dropdown styles */
+.filter-dropdown {
+  width: 90vw;
+  max-width: 600px;
+  height: 60vh;
+  overflow-y: scroll;
+  padding: 10px;
+}
+
+.filter-row {
+  margin: 0;
+}
+
+.filter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Responsive adjustments for filter */
+@media (max-width: 768px) {
+  .filter-dropdown {
+    width: 95vw;
+    max-width: none;
+    height: 70vh;
+  }
+}

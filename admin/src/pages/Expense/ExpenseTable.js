@@ -8,7 +8,8 @@ import { setBreadcrumbItems } from "../../store/actions";
 import { toast } from "sonner";
 import { API_BASE_URL } from "../../Service";
 
-const ExpenseTable = (props) => {
+const ExpenseTable = ( props ) =>
+{
   document.title =
     "Responsive Table | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
@@ -18,55 +19,65 @@ const ExpenseTable = (props) => {
     { title: "Responsive Table", link: "#" },
   ];
 
-  const [customers, setCustomers] = useState([]);
+  const [ customers, setCustomers ] = useState( [] );
 
-  const fetchExpenses = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/expenses`);
+  const fetchExpenses = async () =>
+  {
+    try
+    {
+      const response = await fetch( `${API_BASE_URL}/expenses` );
       const result = await response.json();
-      setCustomers(result.data.data);
-    } catch (error) {
-      console.error("Error fetching expense data:", error);
+      setCustomers( result.data.data );
+    } catch ( error )
+    {
+      console.error( "Error fetching expense data:", error );
     }
   };
 
-  useEffect(() => {
-    props.setBreadcrumbItems("Responsive Table", breadcrumbItems);
+  useEffect( () =>
+  {
+    props.setBreadcrumbItems( "Responsive Table", breadcrumbItems );
     fetchExpenses();
-  }, [props]);
+  }, [ props ] );
 
-  const onEdit = (customerId) => {
-    props.onEditCustomer(customerId);
+  const onEdit = ( customerId ) =>
+  {
+    props.onEditCustomer( customerId );
   };
 
-  const handleDelete = async (customerId) => {
+  const handleDelete = async ( customerId ) =>
+  {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this Expense?",
     );
-    if (!confirmDelete) return;
+    if ( !confirmDelete ) return;
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/expenses/${customerId}`, {
+    try
+    {
+      const response = await fetch( `${API_BASE_URL}/expenses/${customerId}`, {
         method: "DELETE",
         headers: {
           Authorization: "Bearer YOUR_TOKEN_HERE",
         },
-      });
+      } );
 
-      if (response.ok) {
-        toast.success("Customer deleted successfully");
+      if ( response.ok )
+      {
+        toast.success( "Customer deleted successfully" );
         // Update the state to remove the deleted customer
         setCustomers(
-          customers.filter((customer) => customer.id !== customerId),
+          customers.filter( ( customer ) => customer.id !== customerId ),
         );
         fetchExpenses();
-      } else {
+      } else
+      {
         const errorResult = await response.json();
-        console.error("Error deleting customer:", errorResult);
-        toast.error("Error deleting customer. Please try again.");
+        console.error( "Error deleting customer:", errorResult );
+        toast.error( "Error deleting customer. Please try again." );
       }
-    } catch (error) {
-      console.error("Error:", error);
+    } catch ( error )
+    {
+      console.error( "Error:", error );
       toast.error(
         "An error occurred while deleting the customer. Please try again.",
       );
@@ -92,8 +103,7 @@ const ExpenseTable = (props) => {
                 <div style={{ display: "flex" }} className="text-end">
                   <Button
                     color="success"
-                    style={{ marginLeft: 2, padding: "10px 0" }}
-                    onClick={props.onAddBuyerClick}
+                  onClick={props.onAddBuyerClick}
                   >
                     Add Expense
                   </Button>
@@ -120,7 +130,7 @@ const ExpenseTable = (props) => {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {customers.map((expense) => (
+                      {customers.map( ( expense ) => (
                         <Tr key={expense.id}>
                           <Td>{expense.category.category_name}</Td>
                           <Td>{expense.description}</Td>
@@ -134,20 +144,20 @@ const ExpenseTable = (props) => {
                           <Td>
                             <Button
                               color="primary"
-                              onClick={() => onEdit(expense.id)}
+                              onClick={() => onEdit( expense.id )}
                             >
                               Edit
                             </Button>
                             <Button
                               color="danger"
-                              onClick={() => handleDelete(expense.id)}
+                              onClick={() => handleDelete( expense.id )}
                               style={{ marginLeft: "5px" }}
                             >
                               Delete
                             </Button>
                           </Td>
                         </Tr>
-                      ))}
+                      ) )}
                     </Tbody>
                   </Table>
                 </div>
@@ -159,4 +169,4 @@ const ExpenseTable = (props) => {
     </React.Fragment>
   );
 };
-export default connect(null, { setBreadcrumbItems })(ExpenseTable);
+export default connect( null, { setBreadcrumbItems } )( ExpenseTable );

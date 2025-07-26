@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from "react";
 
-import {
-  Card,
-  CardBody,
-  Col,
-  Row,
-  CardTitle,
-  Form,
-  Label,
-  Input,
-  Button,
-} from "reactstrap";
+import
+  {
+    Card,
+    CardBody,
+    Col,
+    Row,
+    CardTitle,
+    Form,
+    Label,
+    Input,
+    Button,
+  } from "reactstrap";
 import { connect } from "react-redux";
 import { setBreadcrumbItems } from "../../store/actions";
 import Select from "react-select";
 import { Toaster, toast } from "sonner";
 import { API_BASE_URL } from "../../Service";
 
-function AddExpense({ props, onBackClick }) {
+function AddExpense( { props, onBackClick } )
+{
   document.title =
     "Add Expense | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
@@ -27,7 +29,7 @@ function AddExpense({ props, onBackClick }) {
     { title: "Add Expense", link: "#" },
   ];
 
-  const [formData, setFormData] = useState({
+  const [ formData, setFormData ] = useState( {
     category_id: "",
     amount: "",
     expense_date: "",
@@ -36,45 +38,54 @@ function AddExpense({ props, onBackClick }) {
     reference_no: "",
     recorded_by: "",
     is_active: true,
-  });
+  } );
 
-  const [categories, setCategories] = useState([]);
-  const [users, setUsers] = useState([]);
+  const [ categories, setCategories ] = useState( [] );
+  const [ users, setUsers ] = useState( [] );
 
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/expense-categories`);
+  const fetchCategories = async () =>
+  {
+    try
+    {
+      const response = await fetch( `${API_BASE_URL}/expense-categories` );
       const result = await response.json();
-      setCategories(result.data.data);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
+      setCategories( result.data.data );
+    } catch ( error )
+    {
+      console.error( "Error fetching categories:", error );
     }
   };
 
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/users`);
+  const fetchUsers = async () =>
+  {
+    try
+    {
+      const response = await fetch( `${API_BASE_URL}/users` );
       const result = await response.json();
-      setUsers(result.data);
-    } catch (error) {
-      console.error("Error fetching users:", error);
+      setUsers( result.data );
+    } catch ( error )
+    {
+      console.error( "Error fetching users:", error );
     }
   };
 
-  useEffect(() => {
+  useEffect( () =>
+  {
     fetchCategories();
     fetchUsers();
-  }, []);
+  }, [] );
 
-  const handleChange = (e) => {
+  const handleChange = ( e ) =>
+  {
     const { name, value } = e.target;
-    setFormData({
+    setFormData( {
       ...formData,
-      [name]: value,
-    });
+      [ name ]: value,
+    } );
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async ( e ) =>
+  {
     e.preventDefault();
 
     const expenseData = {
@@ -88,27 +99,31 @@ function AddExpense({ props, onBackClick }) {
       is_active: formData.is_active,
     };
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/expenses`, {
+    try
+    {
+      const response = await fetch( `${API_BASE_URL}/expenses`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer YOUR_TOKEN_HERE",
         },
-        body: JSON.stringify(expenseData),
-      });
+        body: JSON.stringify( expenseData ),
+      } );
 
       const result = await response.json();
-      if (response.ok) {
-        toast.success("Expense created successfully");
+      if ( response.ok )
+      {
+        toast.success( "Expense created successfully" );
         onBackClick();
-      } else {
-        console.error("Error creating expense:", result);
-        toast.error("Error creating expense. Please try again.");
+      } else
+      {
+        console.error( "Error creating expense:", result );
+        toast.error( "Error creating expense. Please try again." );
       }
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("An error occurred. Please try again.");
+    } catch ( error )
+    {
+      console.error( "Error:", error );
+      toast.error( "An error occurred. Please try again." );
     }
   };
 
@@ -153,11 +168,11 @@ function AddExpense({ props, onBackClick }) {
                       required
                     >
                       <option value="">Select Category</option>
-                      {categories.map((category) => (
+                      {categories.map( ( category ) => (
                         <option key={category.id} value={category.id}>
                           {category.category_name}
                         </option>
-                      ))}
+                      ) )}
                     </Input>
                   </Col>
                 </Row>
@@ -268,11 +283,11 @@ function AddExpense({ props, onBackClick }) {
                       required
                     >
                       <option value="">Select User</option>
-                      {users.map((user) => (
+                      {users.map( ( user ) => (
                         <option key={user.id} value={user.id}>
                           {user.name} {user.last_name}
                         </option>
-                      ))}
+                      ) )}
                     </Input>
                   </Col>
                 </Row>
@@ -293,4 +308,4 @@ function AddExpense({ props, onBackClick }) {
   );
 }
 
-export default connect(null, { setBreadcrumbItems })(AddExpense);
+export default connect( null, { setBreadcrumbItems } )( AddExpense );

@@ -5,7 +5,8 @@ import { setBreadcrumbItems } from "../../store/actions";
 import { Toaster, toast } from "sonner";
 import { API_BASE_URL } from "../../Service";
 
-const ExpenseCategoryTable = (props) => {
+const ExpenseCategoryTable = ( props ) =>
+{
   document.title =
     "Expense Categories | Lexa - Responsive Bootstrap 5 Admin Dashboard";
 
@@ -14,57 +15,70 @@ const ExpenseCategoryTable = (props) => {
     { title: "Expense Categories", link: "#" },
   ];
 
-  const [categoryData, setCategoryData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [ categoryData, setCategoryData ] = useState( [] );
+  const [ loading, setLoading ] = useState( true );
 
-  const fetchCategoryData = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/expense-categories`);
+  const fetchCategoryData = async () =>
+  {
+    try
+    {
+      const response = await fetch( `${API_BASE_URL}/expense-categories` );
       const result = await response.json();
 
-      if (result.data?.data && Array.isArray(result.data.data)) {
-        setCategoryData(result.data.data);
-        console.log("Expense categories loaded:", result.data.data);
-      } else {
-        setCategoryData([]);
-        console.warn("Unexpected data format:", result);
+      if ( result.data?.data && Array.isArray( result.data.data ) )
+      {
+        setCategoryData( result.data.data );
+        console.log( "Expense categories loaded:", result.data.data );
+      } else
+      {
+        setCategoryData( [] );
+        console.warn( "Unexpected data format:", result );
       }
-    } catch (error) {
-      console.error("Error fetching expense category data:", error);
-      setCategoryData([]);
-    } finally {
-      setLoading(false);
+    } catch ( error )
+    {
+      console.error( "Error fetching expense category data:", error );
+      setCategoryData( [] );
+    } finally
+    {
+      setLoading( false );
     }
   };
 
-  useEffect(() => {
-    props.setBreadcrumbItems("Expense Categories", breadcrumbItems);
+  useEffect( () =>
+  {
+    props.setBreadcrumbItems( "Expense Categories", breadcrumbItems );
     fetchCategoryData();
-  }, []);
+  }, [] );
 
-  const displayField = (value) => {
+  const displayField = ( value ) =>
+  {
     return value ? value : "N/A";
   };
 
-  const handleDeleteCategory = async (id) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/expense-categories/${id}`, {
+  const handleDeleteCategory = async ( id ) =>
+  {
+    try
+    {
+      const response = await fetch( `${API_BASE_URL}/expense-categories/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-      });
+      } );
 
-      if (response.ok) {
-        toast.success("Expense category deleted successfully");
+      if ( response.ok )
+      {
+        toast.success( "Expense category deleted successfully" );
         fetchCategoryData();
-      } else {
+      } else
+      {
         const errorData = await response.json();
-        toast.error(errorData.message || "Failed to delete expense category");
+        toast.error( errorData.message || "Failed to delete expense category" );
       }
-    } catch (error) {
-      console.error("Error deleting expense category:", error);
-      toast.error("An error occurred while deleting the expense category");
+    } catch ( error )
+    {
+      console.error( "Error deleting expense category:", error );
+      toast.error( "An error occurred while deleting the expense category" );
     }
   };
 
@@ -85,17 +99,12 @@ const ExpenseCategoryTable = (props) => {
                 <Col>
                   <CardTitle className="h4">Expense Categories</CardTitle>
                 </Col>
-                <Col
-                  style={{ display: "flex", gap: "10px" }}
-                  className="text-end"
+                <Button
+                  color="success"
+                  onClick={props.onAddExpenseCategoryClick}
                 >
-                  <Button
-                    color="success"
-                    onClick={props.onAddExpenseCategoryClick}
-                  >
-                    Add Expense Category
-                  </Button>
-                </Col>
+                  Add Expense Category
+                </Button>
               </div>
 
               {loading ? (
@@ -112,16 +121,16 @@ const ExpenseCategoryTable = (props) => {
                     </thead>
                     <tbody>
                       {categoryData.length > 0 ? (
-                        categoryData.map((category) => (
+                        categoryData.map( ( category ) => (
                           <tr key={category.id}>
-                            <td>{displayField(category.category_name)}</td>
-                            <td>{displayField(category.description)}</td>
+                            <td>{displayField( category.category_name )}</td>
+                            <td>{displayField( category.description )}</td>
                             <td>
                               <Button
                                 color="primary"
                                 size="sm"
                                 onClick={() =>
-                                  props.onEditCategoryClick(category)
+                                  props.onEditCategoryClick( category )
                                 }
                                 className="me-2"
                               >
@@ -131,14 +140,14 @@ const ExpenseCategoryTable = (props) => {
                                 color="danger"
                                 size="sm"
                                 onClick={() =>
-                                  handleDeleteCategory(category.id)
+                                  handleDeleteCategory( category.id )
                                 }
                               >
                                 Delete
                               </Button>
                             </td>
                           </tr>
-                        ))
+                        ) )
                       ) : (
                         <tr>
                           <td colSpan="3" className="text-center">
@@ -158,4 +167,4 @@ const ExpenseCategoryTable = (props) => {
   );
 };
 
-export default connect(null, { setBreadcrumbItems })(ExpenseCategoryTable);
+export default connect( null, { setBreadcrumbItems } )( ExpenseCategoryTable );

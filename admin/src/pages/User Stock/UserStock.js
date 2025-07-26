@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
-import {
-  Row,
-  Col,
-  Card,
-  CardBody,
-  CardTitle,
-  Button,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  Input,
-  Label,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "reactstrap";
+import
+  {
+    Row,
+    Col,
+    Card,
+    CardBody,
+    CardTitle,
+    Button,
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    Input,
+    Label,
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+  } from "reactstrap";
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 import { connect } from "react-redux";
@@ -25,39 +26,40 @@ import { Toaster, toast } from "sonner";
 import * as XLSX from "xlsx";
 import { API_BASE_URL } from "../../Service";
 
-const UserStock = (props) => {
+const UserStock = ( props ) =>
+{
   document.title =
     "Products Table | Lexa - Responsive Bootstrap 5 Admin Dashboard";
   const navigate = useNavigate();
 
-  const [products, setProducts] = useState([]);
-  const [showAddProduct, setShowAddProduct] = useState(false);
-  const [incrementModal, setIncrementModal] = useState(false);
-  const [incrementValue, setIncrementValue] = useState(0);
+  const [ products, setProducts ] = useState( [] );
+  const [ showAddProduct, setShowAddProduct ] = useState( false );
+  const [ incrementModal, setIncrementModal ] = useState( false );
+  const [ incrementValue, setIncrementValue ] = useState( 0 );
 
-  const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
-  const [isFilterApplied, setIsFilterApplied] = useState(false);
-  const [showMoreFilters, setShowMoreFilters] = useState(false);
-  const [modelNameFilter, setModelNameFilter] = useState("");
-  const [brandNameFilter, setBrandNameFilter] = useState("");
-  const [skuFilter, setSkuFilter] = useState("");
-  const [conditionFilter, setConditionFilter] = useState("");
+  const [ filterDropdownOpen, setFilterDropdownOpen ] = useState( false );
+  const [ isFilterApplied, setIsFilterApplied ] = useState( false );
+  const [ showMoreFilters, setShowMoreFilters ] = useState( false );
+  const [ modelNameFilter, setModelNameFilter ] = useState( "" );
+  const [ brandNameFilter, setBrandNameFilter ] = useState( "" );
+  const [ skuFilter, setSkuFilter ] = useState( "" );
+  const [ conditionFilter, setConditionFilter ] = useState( "" );
 
-  const [purchasePriceFilter, setPurchasePriceFilter] = useState("");
-  const [sellingPriceFilter, setSellingPriceFilter] = useState("");
-  const [discountPriceFilter, setDiscountPriceFilter] = useState("");
-  const [wholesalePriceFilter, setWholesalePriceFilter] = useState("");
-  const [serialNoFilter, setSerialNoFilter] = useState("");
-  const [discountTypeFilter, setDiscountTypeFilter] = useState("");
-  const [purchaseOrderNoFilter, setPurchaseOrderNoFilter] = useState("");
-  const [stockStatusFilter, setStockStatusFilter] = useState("");
-  const [colorFilter, setColorFilter] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
-  const [purchasePriceFilterType, setPurchasePriceFilterType] = useState("min");
-  const [sellingPriceFilterType, setSellingPriceFilterType] = useState("min");
-  const [discountPriceFilterType, setDiscountPriceFilterType] = useState("min");
-  const [wholesalePriceFilterType, setWholesalePriceFilterType] =
-    useState("min");
+  const [ purchasePriceFilter, setPurchasePriceFilter ] = useState( "" );
+  const [ sellingPriceFilter, setSellingPriceFilter ] = useState( "" );
+  const [ discountPriceFilter, setDiscountPriceFilter ] = useState( "" );
+  const [ wholesalePriceFilter, setWholesalePriceFilter ] = useState( "" );
+  const [ serialNoFilter, setSerialNoFilter ] = useState( "" );
+  const [ discountTypeFilter, setDiscountTypeFilter ] = useState( "" );
+  const [ purchaseOrderNoFilter, setPurchaseOrderNoFilter ] = useState( "" );
+  const [ stockStatusFilter, setStockStatusFilter ] = useState( "" );
+  const [ colorFilter, setColorFilter ] = useState( "" );
+  const [ categoryFilter, setCategoryFilter ] = useState( "" );
+  const [ purchasePriceFilterType, setPurchasePriceFilterType ] = useState( "min" );
+  const [ sellingPriceFilterType, setSellingPriceFilterType ] = useState( "min" );
+  const [ discountPriceFilterType, setDiscountPriceFilterType ] = useState( "min" );
+  const [ wholesalePriceFilterType, setWholesalePriceFilterType ] =
+    useState( "min" );
 
   const breadcrumbItems = [
     { title: "Lexa", link: "#" },
@@ -65,41 +67,48 @@ const UserStock = (props) => {
     { title: "Products Table", link: "#" },
   ];
 
-  useEffect(() => {
-    props.setBreadcrumbItems("Products Table", breadcrumbItems);
+  useEffect( () =>
+  {
+    props.setBreadcrumbItems( "Products Table", breadcrumbItems );
     fetchProducts();
-  }, [showAddProduct]);
+  }, [ showAddProduct ] );
 
-  const fetchProducts = async (filters = {}) => {
-    try {
+  const fetchProducts = async ( filters = {} ) =>
+  {
+    try
+    {
       let url = `${API_BASE_URL}/inventory`;
       const params = new URLSearchParams();
 
-      if (filters.modelName) params.append("model_name", filters.modelName);
-      if (filters.brandName) params.append("brand_name", filters.brandName);
-      if (filters.sku) params.append("sku", filters.sku);
-      if (filters.condition) params.append("condition", filters.condition);
+      if ( filters.modelName ) params.append( "model_name", filters.modelName );
+      if ( filters.brandName ) params.append( "brand_name", filters.brandName );
+      if ( filters.sku ) params.append( "sku", filters.sku );
+      if ( filters.condition ) params.append( "condition", filters.condition );
 
-      if (filters.purchasePrice) {
-        params.append("purchase_price", filters.purchasePrice);
+      if ( filters.purchasePrice )
+      {
+        params.append( "purchase_price", filters.purchasePrice );
         params.append(
           "purchase_price_type",
           filters.purchasePriceType || "min",
         );
       }
-      if (filters.sellingPrice) {
-        params.append("selling_price", filters.sellingPrice);
-        params.append("selling_price_type", filters.sellingPriceType || "min");
+      if ( filters.sellingPrice )
+      {
+        params.append( "selling_price", filters.sellingPrice );
+        params.append( "selling_price_type", filters.sellingPriceType || "min" );
       }
-      if (filters.discountPrice) {
-        params.append("discount_price", filters.discountPrice);
+      if ( filters.discountPrice )
+      {
+        params.append( "discount_price", filters.discountPrice );
         params.append(
           "discount_price_type",
           filters.discountPriceType || "min",
         );
       }
-      if (filters.wholesalePrice) {
-        params.append("wholesale_price", filters.wholesalePrice);
+      if ( filters.wholesalePrice )
+      {
+        params.append( "wholesale_price", filters.wholesalePrice );
         params.append(
           "wholesale_price_type",
           filters.wholesalePriceType || "min",
@@ -107,34 +116,38 @@ const UserStock = (props) => {
       }
 
       // Additional filters
-      if (filters.serialNo) params.append("serial_no", filters.serialNo);
-      if (filters.discountType)
-        params.append("discount_type", filters.discountType);
-      if (filters.purchaseOrderNo)
-        params.append("purchase_order_no", filters.purchaseOrderNo);
-      if (filters.stockStatus)
-        params.append("stock_status", filters.stockStatus);
-      if (filters.color) params.append("color", filters.color);
-      if (filters.category) params.append("category", filters.category);
+      if ( filters.serialNo ) params.append( "serial_no", filters.serialNo );
+      if ( filters.discountType )
+        params.append( "discount_type", filters.discountType );
+      if ( filters.purchaseOrderNo )
+        params.append( "purchase_order_no", filters.purchaseOrderNo );
+      if ( filters.stockStatus )
+        params.append( "stock_status", filters.stockStatus );
+      if ( filters.color ) params.append( "color", filters.color );
+      if ( filters.category ) params.append( "category", filters.category );
 
-      if (params.toString()) {
+      if ( params.toString() )
+      {
         url += `?${params.toString()}`;
       }
 
-      const response = await fetch(url);
+      const response = await fetch( url );
       const data = await response.json();
-      setProducts(data.data.data);
-    } catch (error) {
-      console.error("Error fetching products:", error);
+      setProducts( data.data.data );
+    } catch ( error )
+    {
+      console.error( "Error fetching products:", error );
     }
   };
 
-  const handleDownloadWithIncrement = () => {
-    setIncrementModal(true);
+  const handleDownloadWithIncrement = () =>
+  {
+    setIncrementModal( true );
   };
 
-  const applyFilter = () => {
-    fetchProducts({
+  const applyFilter = () =>
+  {
+    fetchProducts( {
       modelName: modelNameFilter,
       brandName: brandNameFilter,
       sku: skuFilter,
@@ -153,49 +166,54 @@ const UserStock = (props) => {
       stockStatus: stockStatusFilter,
       color: colorFilter,
       category: categoryFilter,
-    });
-    setIsFilterApplied(true);
-    setFilterDropdownOpen(false);
+    } );
+    setIsFilterApplied( true );
+    setFilterDropdownOpen( false );
   };
 
-  const clearFilter = () => {
-    setModelNameFilter("");
-    setBrandNameFilter("");
-    setSkuFilter("");
-    setConditionFilter("");
-    setPurchasePriceFilter("");
-    setSellingPriceFilter("");
-    setDiscountPriceFilter("");
-    setWholesalePriceFilter("");
-    setPurchasePriceFilterType("min");
-    setSellingPriceFilterType("min");
-    setDiscountPriceFilterType("min");
-    setWholesalePriceFilterType("min");
-    setSerialNoFilter("");
-    setDiscountTypeFilter("");
-    setPurchaseOrderNoFilter("");
-    setStockStatusFilter("");
-    setColorFilter("");
-    setCategoryFilter("");
+  const clearFilter = () =>
+  {
+    setModelNameFilter( "" );
+    setBrandNameFilter( "" );
+    setSkuFilter( "" );
+    setConditionFilter( "" );
+    setPurchasePriceFilter( "" );
+    setSellingPriceFilter( "" );
+    setDiscountPriceFilter( "" );
+    setWholesalePriceFilter( "" );
+    setPurchasePriceFilterType( "min" );
+    setSellingPriceFilterType( "min" );
+    setDiscountPriceFilterType( "min" );
+    setWholesalePriceFilterType( "min" );
+    setSerialNoFilter( "" );
+    setDiscountTypeFilter( "" );
+    setPurchaseOrderNoFilter( "" );
+    setStockStatusFilter( "" );
+    setColorFilter( "" );
+    setCategoryFilter( "" );
     fetchProducts();
-    setIsFilterApplied(false);
+    setIsFilterApplied( false );
   };
 
-  const handleBackToTable = () => {
-    setShowAddProduct(false);
+  const handleBackToTable = () =>
+  {
+    setShowAddProduct( false );
   };
 
-  const handleDownloadExcel = () => {
-    if (!products || products.length === 0) {
-      console.error("No data available to download");
+  const handleDownloadExcel = () =>
+  {
+    if ( !products || products.length === 0 )
+    {
+      console.error( "No data available to download" );
       return;
     }
 
-    try {
+    try
+    {
       // Map only the specified fields
       const excelData = products
-        .filter((product) => product.variant.product.is_active)
-        .map((item) => ({
+        .filter( ( product ) => product.variant.product.is_active )
+        .map( ( item ) => ( {
           brand_name: item.variant?.product?.brand?.brand_name || "",
           model_name: item.variant?.product?.model_name || "",
           storage_gb: item.variant?.storage_gb || "",
@@ -210,44 +228,48 @@ const UserStock = (props) => {
           selling_price:
             item.discount_type === "percentage"
               ? (
-                  item.selling_price -
-                  item.selling_price * (item.discount_price / 100)
-                ).toFixed(2)
-              : (item.selling_price - item.discount_price).toFixed(2) || "",
+                item.selling_price -
+                item.selling_price * ( item.discount_price / 100 )
+              ).toFixed( 2 )
+              : ( item.selling_price - item.discount_price ).toFixed( 2 ) || "",
           discount_type: item.discount_type || "",
           discount_price: item.discount_price || "",
           purchase_order_no: item.purchase_order_no || "",
           supplier: item.supplier.user.name || "",
           notes: item.notes || "",
-        }));
+        } ) );
 
       // Create a new workbook
       const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.json_to_sheet(excelData);
+      const ws = XLSX.utils.json_to_sheet( excelData );
 
       // Add the worksheet to the workbook
-      XLSX.utils.book_append_sheet(wb, ws, "Stocklist Data");
+      XLSX.utils.book_append_sheet( wb, ws, "Stocklist Data" );
 
       // Generate the Excel file and trigger download
-      XLSX.writeFile(wb, "Stocklist_Data.xlsx");
-    } catch (error) {
-      console.error("Error generating Excel file:", error);
+      XLSX.writeFile( wb, "Stocklist_Data.xlsx" );
+    } catch ( error )
+    {
+      console.error( "Error generating Excel file:", error );
     }
   };
 
-  const confirmDownloadWithIncrement = () => {
-    if (!products || products.length === 0) {
-      console.error("No data available to download");
+  const confirmDownloadWithIncrement = () =>
+  {
+    if ( !products || products.length === 0 )
+    {
+      console.error( "No data available to download" );
       return;
     }
 
-    try {
-      const increment = parseFloat(incrementValue) || 0;
+    try
+    {
+      const increment = parseFloat( incrementValue ) || 0;
 
       // Map the fields and add increment to specified fields
       const excelData = products
-        .filter((product) => product.variant.product.is_active)
-        .map((item) => ({
+        .filter( ( product ) => product.variant.product.is_active )
+        .map( ( item ) => ( {
           brand_name: item.variant?.product?.brand?.brand_name || "",
           model_name: item.variant?.product?.model_name || "",
           storage_gb: item.variant?.storage_gb || "",
@@ -262,52 +284,53 @@ const UserStock = (props) => {
           description: item?.variant?.product?.description || "",
           // purchase_price: (parseFloat(item.purchase_price) || 0) + (parseFloat(item.purchase_price) * parseFloat(increment / 100)),
           selling_Price_Before_Discount:
-            (parseFloat(item.selling_price) || 0) +
-            parseFloat(item.selling_price) * parseFloat(increment / 100),
+            ( parseFloat( item.selling_price ) || 0 ) +
+            parseFloat( item.selling_price ) * parseFloat( increment / 100 ),
           discount_type: item.discount_type || "",
           discount_price:
-            (parseFloat(item.discount_price) || 0) +
-            parseFloat(item.discount_price) * parseFloat(increment / 100),
+            ( parseFloat( item.discount_price ) || 0 ) +
+            parseFloat( item.discount_price ) * parseFloat( increment / 100 ),
           selling_price_After_Discount:
             item.discount_type === "percentage"
               ? (
+                item.selling_price -
+                item.selling_price * ( item.discount_price / 100 ) +
+                parseFloat(
                   item.selling_price -
-                  item.selling_price * (item.discount_price / 100) +
-                  parseFloat(
-                    item.selling_price -
-                      item.selling_price * (item.discount_price / 100),
-                  ) *
-                    parseFloat(increment / 100)
-                ).toFixed(2)
+                  item.selling_price * ( item.discount_price / 100 ),
+                ) *
+                parseFloat( increment / 100 )
+              ).toFixed( 2 )
               : (
-                  item.selling_price -
-                  item.discount_price +
-                  parseFloat(item.selling_price - item.discount_price) *
-                    parseFloat(increment / 100)
-                ).toFixed(2),
+                item.selling_price -
+                item.discount_price +
+                parseFloat( item.selling_price - item.discount_price ) *
+                parseFloat( increment / 100 )
+              ).toFixed( 2 ),
           // wholesale_price: (parseFloat(item.wholesale_price) || 0) + (parseFloat(item.wholesale_price) * parseFloat(increment / 100)),
           purchase_order_no: item.purchase_order_no || "",
           supplier_id: item.supplier_id || "",
           stock_status: item.stock_status || "",
           notes: item.notes || "",
           is_active: item.is_active ? "Yes" : "No",
-        }));
+        } ) );
 
       // Create a new workbook
       const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.json_to_sheet(excelData);
+      const ws = XLSX.utils.json_to_sheet( excelData );
 
       // Add the worksheet to the workbook
-      XLSX.utils.book_append_sheet(wb, ws, "Inventory Data");
+      XLSX.utils.book_append_sheet( wb, ws, "Inventory Data" );
 
       // Generate the Excel file and trigger download
-      XLSX.writeFile(wb, `Inventory_Data_with_Increment_${increment}.xlsx`);
+      XLSX.writeFile( wb, `Inventory_Data_with_Increment_${increment}.xlsx` );
 
       // Close the modal
-      setIncrementModal(false);
-      setIncrementValue(0);
-    } catch (error) {
-      console.error("Error generating Excel file with increment:", error);
+      setIncrementModal( false );
+      setIncrementValue( 0 );
+    } catch ( error )
+    {
+      console.error( "Error generating Excel file with increment:", error );
     }
   };
 
@@ -326,7 +349,6 @@ const UserStock = (props) => {
                   <Col className="text-end">
                     <Button
                       color="info"
-                      style={{ marginRight: 2, padding: "10px 0" }}
                       onClick={handleDownloadExcel}
                     >
                       Download Excel
@@ -359,7 +381,7 @@ const UserStock = (props) => {
                 <Col>
                   <Dropdown
                     isOpen={filterDropdownOpen}
-                    toggle={() => setFilterDropdownOpen(!filterDropdownOpen)}
+                    toggle={() => setFilterDropdownOpen( !filterDropdownOpen )}
                   >
                     <DropdownToggle color="light" caret>
                       Filter
@@ -380,7 +402,7 @@ const UserStock = (props) => {
                           <Input
                             type="text"
                             value={modelNameFilter}
-                            onChange={(e) => setModelNameFilter(e.target.value)}
+                            onChange={( e ) => setModelNameFilter( e.target.value )}
                             placeholder="Enter model"
                           />
                         </div>
@@ -389,7 +411,7 @@ const UserStock = (props) => {
                           <Input
                             type="text"
                             value={brandNameFilter}
-                            onChange={(e) => setBrandNameFilter(e.target.value)}
+                            onChange={( e ) => setBrandNameFilter( e.target.value )}
                             placeholder="Enter brand"
                           />
                         </div>
@@ -405,7 +427,7 @@ const UserStock = (props) => {
                           <Input
                             type="text"
                             value={skuFilter}
-                            onChange={(e) => setSkuFilter(e.target.value)}
+                            onChange={( e ) => setSkuFilter( e.target.value )}
                             placeholder="Enter SKU"
                           />
                         </div>
@@ -414,7 +436,7 @@ const UserStock = (props) => {
                           <Input
                             type="text"
                             value={conditionFilter}
-                            onChange={(e) => setConditionFilter(e.target.value)}
+                            onChange={( e ) => setConditionFilter( e.target.value )}
                             placeholder="Enter condition"
                           />
                         </div>
@@ -436,16 +458,16 @@ const UserStock = (props) => {
                             <Input
                               type="number"
                               value={purchasePriceFilter}
-                              onChange={(e) =>
-                                setPurchasePriceFilter(e.target.value)
+                              onChange={( e ) =>
+                                setPurchasePriceFilter( e.target.value )
                               }
                               placeholder="Amount"
                               style={{ flex: 1 }}
                             />
                             <select
                               value={purchasePriceFilterType}
-                              onChange={(e) =>
-                                setPurchasePriceFilterType(e.target.value)
+                              onChange={( e ) =>
+                                setPurchasePriceFilterType( e.target.value )
                               }
                               style={{ width: "80px" }}
                             >
@@ -466,16 +488,16 @@ const UserStock = (props) => {
                             <Input
                               type="number"
                               value={sellingPriceFilter}
-                              onChange={(e) =>
-                                setSellingPriceFilter(e.target.value)
+                              onChange={( e ) =>
+                                setSellingPriceFilter( e.target.value )
                               }
                               placeholder="Amount"
                               style={{ flex: 1 }}
                             />
                             <select
                               value={sellingPriceFilterType}
-                              onChange={(e) =>
-                                setSellingPriceFilterType(e.target.value)
+                              onChange={( e ) =>
+                                setSellingPriceFilterType( e.target.value )
                               }
                               style={{ width: "80px" }}
                             >
@@ -502,16 +524,16 @@ const UserStock = (props) => {
                             <Input
                               type="number"
                               value={discountPriceFilter}
-                              onChange={(e) =>
-                                setDiscountPriceFilter(e.target.value)
+                              onChange={( e ) =>
+                                setDiscountPriceFilter( e.target.value )
                               }
                               placeholder="Amount"
                               style={{ flex: 1 }}
                             />
                             <select
                               value={discountPriceFilterType}
-                              onChange={(e) =>
-                                setDiscountPriceFilterType(e.target.value)
+                              onChange={( e ) =>
+                                setDiscountPriceFilterType( e.target.value )
                               }
                               style={{ width: "80px" }}
                             >
@@ -532,16 +554,16 @@ const UserStock = (props) => {
                             <Input
                               type="number"
                               value={wholesalePriceFilter}
-                              onChange={(e) =>
-                                setWholesalePriceFilter(e.target.value)
+                              onChange={( e ) =>
+                                setWholesalePriceFilter( e.target.value )
                               }
                               placeholder="Amount"
                               style={{ flex: 1 }}
                             />
                             <select
                               value={wholesalePriceFilterType}
-                              onChange={(e) =>
-                                setWholesalePriceFilterType(e.target.value)
+                              onChange={( e ) =>
+                                setWholesalePriceFilterType( e.target.value )
                               }
                               style={{ width: "80px" }}
                             >
@@ -557,7 +579,7 @@ const UserStock = (props) => {
                         <Button
                           color="link"
                           size="sm"
-                          onClick={() => setShowMoreFilters(!showMoreFilters)}
+                          onClick={() => setShowMoreFilters( !showMoreFilters )}
                         >
                           {showMoreFilters ? (
                             <span>
@@ -583,8 +605,8 @@ const UserStock = (props) => {
                               <Input
                                 type="text"
                                 value={serialNoFilter}
-                                onChange={(e) =>
-                                  setSerialNoFilter(e.target.value)
+                                onChange={( e ) =>
+                                  setSerialNoFilter( e.target.value )
                                 }
                                 placeholder="Enter serial no"
                               />
@@ -594,8 +616,8 @@ const UserStock = (props) => {
                               <Input
                                 type="text"
                                 value={discountTypeFilter}
-                                onChange={(e) =>
-                                  setDiscountTypeFilter(e.target.value)
+                                onChange={( e ) =>
+                                  setDiscountTypeFilter( e.target.value )
                                 }
                                 placeholder="Enter discount type"
                               />
@@ -610,8 +632,8 @@ const UserStock = (props) => {
                               <Input
                                 type="text"
                                 value={purchaseOrderNoFilter}
-                                onChange={(e) =>
-                                  setPurchaseOrderNoFilter(e.target.value)
+                                onChange={( e ) =>
+                                  setPurchaseOrderNoFilter( e.target.value )
                                 }
                                 placeholder="Enter PO number"
                               />
@@ -621,8 +643,8 @@ const UserStock = (props) => {
                               <Input
                                 type="text"
                                 value={stockStatusFilter}
-                                onChange={(e) =>
-                                  setStockStatusFilter(e.target.value)
+                                onChange={( e ) =>
+                                  setStockStatusFilter( e.target.value )
                                 }
                                 placeholder="Enter stock status"
                               />
@@ -637,7 +659,7 @@ const UserStock = (props) => {
                               <Input
                                 type="text"
                                 value={colorFilter}
-                                onChange={(e) => setColorFilter(e.target.value)}
+                                onChange={( e ) => setColorFilter( e.target.value )}
                                 placeholder="Enter color"
                               />
                             </div>
@@ -646,8 +668,8 @@ const UserStock = (props) => {
                               <Input
                                 type="text"
                                 value={categoryFilter}
-                                onChange={(e) =>
-                                  setCategoryFilter(e.target.value)
+                                onChange={( e ) =>
+                                  setCategoryFilter( e.target.value )
                                 }
                                 placeholder="Enter category"
                               />
@@ -704,13 +726,13 @@ const UserStock = (props) => {
                       </Thead>
                       <Tbody>
                         {products.filter(
-                          (product) => product.variant.product.is_active,
+                          ( product ) => product.variant.product.is_active,
                         ).length > 0 ? (
                           products
                             .filter(
-                              (product) => product.variant.product.is_active,
+                              ( product ) => product.variant.product.is_active,
                             )
-                            .map((product) => (
+                            .map( ( product ) => (
                               <Tr key={product.id}>
                                 <Td>
                                   <img
@@ -735,17 +757,17 @@ const UserStock = (props) => {
                                 <Td>
                                   {product.discount_type === "percentage"
                                     ? (
-                                        product.selling_price -
-                                        product.selling_price *
-                                          (product.discount_price / 100)
-                                      ).toFixed(2)
+                                      product.selling_price -
+                                      product.selling_price *
+                                      ( product.discount_price / 100 )
+                                    ).toFixed( 2 )
                                     : (
-                                        product.selling_price -
-                                        product.discount_price
-                                      ).toFixed(2)}
+                                      product.selling_price -
+                                      product.discount_price
+                                    ).toFixed( 2 )}
                                 </Td>
                               </Tr>
-                            ))
+                            ) )
                         ) : (
                           <Tr>
                             <Td colSpan="10">No products available.</Td>
@@ -762,9 +784,9 @@ const UserStock = (props) => {
       </Row>
       <Modal
         isOpen={incrementModal}
-        toggle={() => setIncrementModal(!incrementModal)}
+        toggle={() => setIncrementModal( !incrementModal )}
       >
-        <ModalHeader toggle={() => setIncrementModal(!incrementModal)}>
+        <ModalHeader toggle={() => setIncrementModal( !incrementModal )}>
           Enter Increment Value
         </ModalHeader>
         <ModalBody>
@@ -775,7 +797,7 @@ const UserStock = (props) => {
             type="number"
             id="incrementValue"
             value={incrementValue}
-            onChange={(e) => setIncrementValue(e.target.value)}
+            onChange={( e ) => setIncrementValue( e.target.value )}
             placeholder="Enter increment value"
           />
         </ModalBody>
@@ -783,7 +805,7 @@ const UserStock = (props) => {
           <Button color="primary" onClick={confirmDownloadWithIncrement}>
             Download with Increment
           </Button>{" "}
-          <Button color="secondary" onClick={() => setIncrementModal(false)}>
+          <Button color="secondary" onClick={() => setIncrementModal( false )}>
             Cancel
           </Button>
         </ModalFooter>
@@ -792,4 +814,4 @@ const UserStock = (props) => {
   );
 };
 
-export default connect(null, { setBreadcrumbItems })(UserStock);
+export default connect( null, { setBreadcrumbItems } )( UserStock );
