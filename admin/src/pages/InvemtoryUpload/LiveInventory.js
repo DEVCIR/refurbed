@@ -72,7 +72,7 @@ function LiveInventory({ props, setShowAddProduct }) {
     const fetchPlatforms = async () => {
       try {
         const response = await fetch(
-          "http://127.0.0.1:8000/api/listing-platforms",
+          `${API_BASE_URL}/api/listing-platforms`,
           {
             method: "GET",
             headers: {
@@ -156,7 +156,7 @@ function LiveInventory({ props, setShowAddProduct }) {
     if (brand_name && model_name) {
       try {
         const response = await fetch(
-          `http://127.0.0.1:5000/scrape-phone?name=${brand_name} ${model_name}`,
+          `${API_BASE_URL}/scrape-phone?name=${brand_name} ${model_name}`,
         );
         const data = await response.json();
 

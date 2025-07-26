@@ -3,6 +3,7 @@ import { Toaster, toast } from "sonner";
 import { connect } from "react-redux";
 import { Search } from "lucide-react";
 import GenerateCreditNote from "./generateCreditNote";
+import { API_BASE_URL } from "@/service";
 
 const ClaimRefund = (props) => {
   document.title = "Credit Note";
@@ -307,7 +308,7 @@ const ClaimRefund = (props) => {
                             {/* Product Image */}
                             <div className="relative h-48 bg-gray-200 flex items-center justify-center">
                               <img
-                                src={`http://localhost:8000/storage/${item.inventory?.variant?.product?.feature_imageUrl}`}
+                                src={`${API_BASE_URL}/storage/${item.inventory?.variant?.product?.feature_imageUrl}`}
                                 className="h-40 w-auto object-contain"
                                 alt="Product"
                               />

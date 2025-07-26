@@ -6,7 +6,6 @@ import EditInventory from './editInventory'
 const Inventory = () => {
     const [view, setView] = useState('table');
     const [editProductId, setEditProductId] = useState(null);
-
     const handleToggleView = (viewName, productId = null) => {
         setView(viewName);
         setEditProductId(productId);
